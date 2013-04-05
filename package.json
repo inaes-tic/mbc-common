@@ -10,7 +10,7 @@
         "url": "https://github.com/inaes-tic/mbc-common"
     },
     "dependencies" : {
-        "mongoskin"   : "0.4.x",
+        "mongoskin"   : "0.4.x"
     },
     "license": "agplv3",
     "engines": {
