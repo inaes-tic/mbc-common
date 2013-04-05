@@ -1,5 +1,4 @@
 exports = module.exports = function(config) {
-    //var conf = require('config').MediaDB;
     var conf = config || {
         dbName: "mediadb",
         dbHost: "localhost",
