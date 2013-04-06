@@ -1,3 +1,4 @@
 exports = module.exports = {
-    db: require('./db')
+    db: require('./db'),
+    JSONredis: require('./json-redis')
 }
