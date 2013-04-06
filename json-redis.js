@@ -1,4 +1,5 @@
 var redis = require('redis')
+var _ = require('underscore')
 
 exports = module.exports = _.clone(redis);
 exports.createJSONClient = function(port_arg, host_arg, options) {
