@@ -12,7 +12,8 @@
     "dependencies" : {
         "mongoskin"   : "0.4.x",
         "redis": "0.8.x",
-        "underscore": "1.2.x"
+        "underscore": "1.2.x",
+        "mubsub"      : "git://github.com/inaes-tic/mubsub.git"
     },
     "license": "agplv3",
     "engines": {
