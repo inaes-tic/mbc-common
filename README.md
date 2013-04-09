@@ -5,7 +5,7 @@ Common code for mbc-playout and mbc-mosto
 
 Versioning
 ----------
-<major>.<minor>.<patch>
+major.minor.patch
 * major: backwards-incompatible changes
 * minor: new features
 * patch: bugfix
