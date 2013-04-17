@@ -13,7 +13,8 @@
         "mongoskin"   : "0.4.x",
         "redis": "0.8.x",
         "underscore": "1.2.x",
-        "mubsub"      : "git://github.com/inaes-tic/mubsub.git"
+        "mubsub"      : "git://github.com/inaes-tic/mubsub.git",
+        "config"      : "git://github.com/inaes-tic/node-config.git"
     },
     "license": "agplv3",
     "engines": {
