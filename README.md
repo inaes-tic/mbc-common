@@ -13,7 +13,8 @@ major.minor.patch
 CHANGELOG
 =========
 
-0.0.1: database connection
-0.1.0: JSONredis object
-0.1.1: refactor db
-1.0.0: rename JSONredis to pubsub
+- 0.0.1: database connection
+- 0.1.0: JSONredis object
+- 0.1.1: refactor db
+- 1.0.0: rename JSONredis to pubsub
+- 1.1.0: add caspa config
