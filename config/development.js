@@ -50,6 +50,33 @@ module.exports = {
             name: 'MBC Mosto',
             description: 'MBC Playout\'s playlist juggler',
         },
+        General: {
+            fps: "25", 
+            resolution: "hd", 
+            playout_mode: "direct", 
+            playlist_maxlength: "4 hours", 
+            scheduled_playlist_maxlength: "04:00:00", 
+            timer_interval: "1000",
+            black: path.join(cwd, 'images', 'black.png'),
+            reload_timer_diff: "20000",
+            playlist_server: "mongo",
+            mvcp_server: "melted",
+        },
+        Melted: {
+            playlists_xml_dir: path.join(cwd , 'test', 'playlists'),
+        },
+        Mvcp: {
+           host: "localhost",
+           port: "5250",
+        },
+        Mongo: {
+            load_time: 120,
+        },
+        Json: {
+            to_read:    path.join(cwd ,'playlists','to_read'),
+            playing:    path.join(cwd ,'playlists', 'playing'),
+            old:    path.join(cwd ,'playlists','old'),
+        },
     },
     Common: {
         Info: {
