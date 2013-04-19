@@ -63,7 +63,7 @@ module.exports = {
             mvcp_server: "melted",
         },
         Melted: {
-            playlists_xml_dir: path.join(cwd , 'test', 'playlists'),
+            playlists_xml_dir: path.join('test', 'playlists'),
         },
         Mvcp: {
            host: "localhost",
