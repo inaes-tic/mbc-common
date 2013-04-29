@@ -20,10 +20,13 @@ major.minor.patch
 CHANGELOG
 =========
 
-- 0.0.1: database connection
-- 0.1.0: JSONredis object
-- 0.1.1: refactor db
-- 1.0.0: rename JSONredis to pubsub
-- 1.1.0: add caspa config
-- 1.1.1: add mosto config
-- 2.0.0: change default pubsub client to redis
+### 0.0.1
+
+* database connection
+* JSONredis object
+* refactor db
+* rename JSONredis to pubsub
+* add caspa config
+* add mosto config
+* change default pubsub client to redis
+

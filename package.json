@@ -1,7 +1,7 @@
 {
     "name": "mbc-common",
     "description": "@mbc-mosto and @mbc-playout's common components",
-    "version": "2.0.0",
+    "version": "0.0.1",
     "author": "Tomas Neme <lacrymology@gmail.com>",
     "contributors": [ ],
     "main": "index",
@@ -14,7 +14,7 @@
         "redis": "0.8.x",
         "underscore": "1.2.x",
         "mubsub"      : "git://github.com/inaes-tic/mubsub.git",
-        "config"      : "git://github.com/inaes-tic/node-config.git"
+        "config"      : "0.4.24"
     },
     "license": "agplv3",
     "engines": {
