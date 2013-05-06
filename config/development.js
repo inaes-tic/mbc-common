@@ -63,11 +63,12 @@ module.exports = {
             mvcp_server: "melted",
         },
         Melted: {
+            bin: "melted",
+            root: cwd,
+            host: "localhost",
+            port: 5250,
+            output: "sdl",
             playlists_xml_dir: path.join('test', 'playlists'),
-        },
-        Mvcp: {
-           host: "localhost",
-           port: "5250",
         },
         Mongo: {
             load_time: 120,
