@@ -19,10 +19,9 @@ if (!_ && (typeof require !== 'undefined')) _ = require('underscore');
 var BackboneIO = root.BackboneIO;
 if ((typeof require !== 'undefined')) Backbone = require('backbone');
 
-App.Model = Backbone.Model.extend({
+App.Collection = Backbone.Collection.extend({
     urlRoot: 'app',
     backend: 'appbackend',
-    idAttribute: '_id',
     initialize: function () {
         if (!server) {
             this.bindBackend();
@@ -31,10 +30,10 @@ App.Model = Backbone.Model.extend({
                 console.log ('got from backend:', method, model);
             });
         }
-        console.log ('creating new App.Model');
+        console.log ('creating new App.Collection');
 
-        return Backbone.Model.prototype.initialize.call (this);
-    },
+        Backbone.Collection.prototype.initialize.call (this);
+    }
 });
 
 App.Status = Backbone.Model.extend ({
