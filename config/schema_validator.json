@@ -1,0 +1,285 @@
+{
+    "type" : "object",
+    "title" : "",
+    "description" : "",
+    "properties" : {
+        "Caspa" : {
+            "type" : "object",
+            "title" : "General UI Caspa config",
+            "description" : "fine tune all configuration",
+            "properties" : {
+                "Branding" : {
+                    "type" : "object",
+                    "title" : "Branding",
+                    "description" : "Application Info",
+                    "properties" : {
+                        "name" : {
+                            "type": "string",
+                            "title": "Name",
+                            "description" : "An application name"
+                        },
+                        "description" : {
+                            "type": "string",
+                            "title": "Description",
+                            "description" : "Description for Application"
+                        }
+                    }
+                },
+                "Dirs" : {
+                    "type" : "object",
+                    "title" : "Directories",
+                    "description" : "All directories configurables in app",
+                    "properties" : {
+                        "pub" : {
+                            "type": "string",
+                            "title": "Pub",
+                            "description" : "Public directory"
+                        },
+                         "views" : {
+                            "type": "string",
+                            "title": "Views",
+                            "description" : ""
+                        },
+                         "styles" : {
+                            "type": "string",
+                            "title": "Styles",
+                            "description" : "Css - Styling Stuff"
+                        },
+                         "models" : {
+                            "type": "string",
+                            "title": "Models",
+                            "description" : "Models "
+                        },
+                         "vendor" : {
+                            "type": "string",
+                            "title": "Vendor",
+                            "description" : "Third party libraries"
+                        },
+                         "uploads" : {
+                            "type": "string",
+                            "title": "Uploads",
+                            "description" : "File upload directory"
+                        },
+                         "screenshots" : {
+                            "type": "string",
+                            "title": "Screenshots",
+                            "description" : ""
+                        },
+                         "scrape" : {
+                            "type": "string",
+                            "title": "Scrape",
+                            "description" : ""
+                        }
+                    }
+                },
+                "Others" : {
+                    "type" : "object",
+                    "title" : "Other",
+                    "description" : "Any other configuration",
+                    "properties" : {
+                        "timezone" : {
+                            "type": "string",
+                            "title": "Timezone",
+                            "description" : ""
+                        }
+                    }
+
+                }
+            }
+        },
+        "Mosto" : {
+            "type" : "object",
+            "title" : "General UI Mosto config",
+            "description" : "fine tune all configuration",
+            "properties" : {
+                "Branding" : {
+                    "type" : "object",
+                    "title" : "Branding",
+                    "description" : "Application Info",
+                    "properties" : {
+                        "name" : {
+                            "type": "string",
+                            "title": "Name",
+                            "description" : ""
+                        },
+                        "description" : {
+                            "type": "string",
+                            "title": "Description",
+                            "description" : ""
+                        }
+                    }
+                },
+                "General" : {
+                    "type" : "object",
+                    "title" : "General",
+                    "description" : "",
+                    "properties" : {
+                        "fps" : {
+                            "type": "string",
+                            "title": "Frames per second",
+                            "description" : ""
+                        },
+                        "resolution" : {
+                            "type": "string",
+                            "title": "Resolution",
+                            "description" : ""
+                        },
+                        "playout_mode" : {
+                            "type": "string",
+                            "title": "Playout Mode",
+                            "description" : ""
+                        },
+                        "playlist_maxlength" : {
+                            "type": "string",
+                            "title": "Playlist Maxlength",
+                            "description" : ""
+                        },
+                        "scheduled_playlist_maxlength" : {
+                            "type": "string",
+                            "title": "Scheduled Playlist Maxlength",
+                            "description" : ""
+                        },
+                        "timer_interval" : {
+                            "type": "string",
+                            "title": "Time interval",
+                            "description" : ""
+                        },
+                        "black" : {
+                            "type": "string",
+                            "title": "Black Image",
+                            "description" : ""
+                        },
+                        "reload_timer_diff" : {
+                            "type": "string",
+                            "title": "Reload time difference",
+                            "description" : ""
+                        },
+                        "playlist_server" : {
+                            "type": "string",
+                            "title": "Playlist Server",
+                            "description" : ""
+                        },
+                        "mvcp_server" : {
+                            "type": "string",
+                            "title": "Mvcp Server",
+                            "description" : ""
+                        }
+                    }
+                },
+                "Melted" : {
+                    "type" : "object",
+                    "title" : "Melted",
+                    "description" : "",
+                    "properties" : {
+                        "playlists_xml_dir" : {
+                            "type": "string",
+                            "title": "Playlist Xml directory",
+                            "description" : ""
+                        }
+                    }
+                },
+                "Mvcp" : {
+                    "type" : "object",
+                    "title" : "Mvcp",
+                    "description" : "",
+                    "properties" : {
+                        "host" : {
+                            "type": "string",
+                            "title": "Host",
+                            "description" : ""
+                        },
+                        "port" : {
+                            "type": "string",
+                            "title": "Port",
+                            "description" : ""
+                        }
+
+                    }
+
+                },
+                "Mongo" : {
+                    "type" : "object",
+                    "title" : "Mongo DB",
+                    "description" : "",
+                    "properties" : {
+                        "load_time" : {
+                            "type": "integer",
+                            "title": "Load time",
+                            "description" : ""
+                        }
+                    }
+                },
+                "Json" : {
+                    "type" : "object",
+                    "title" : "Javascript Object Notation",
+                    "description" : "",
+                    "properties" : {
+                        "to_read" : {
+                            "type": "string",
+                            "title": "To read",
+                            "description" : ""
+                        },
+                        "playing" : {
+                            "type": "string",
+                            "title": "Playing",
+                            "description" : ""
+                        },
+                        "old" : {
+                            "type": "string",
+                            "title": "Old",
+                            "description" : ""
+                        }
+
+                    }
+
+                }
+            }
+        },
+        "Common" : {
+            "type" : "object",
+            "title" : "General UI Common config",
+            "description" : "fine tune all configuration",
+            "properties" : {
+                "Branding" : {
+                    "type" : "object",
+                    "title" : "Branding",
+                    "description" : "Application Info",
+                    "properties" : {
+                         "name" : {
+                            "type": "string",
+                            "title": "Name",
+                            "description" : ""
+                        },
+                        "description" : {
+                            "type": "string",
+                            "title": "Description",
+                            "description" : ""
+                        }
+                    }
+                },
+                "MediaDB" : {
+                    "type" : "object",
+                    "title" : "Database",
+                    "description" : "Authentication params",
+                    "properties" : {
+                        "dbName" : {
+                            "type": "string",
+                            "title": "Name",
+                            "description" : ""
+                        },
+                        "dbHost" : {
+                            "type": "string",
+                            "title": "Host",
+                            "description" : ""
+                        },
+                        "dbPort" : {
+                            "type": "integer",
+                            "title": "Port",
+                            "description" : ""
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
