@@ -171,18 +171,16 @@
                     "title" : "Melted",
                     "description" : "",
                     "properties" : {
-                        "playlists_xml_dir" : {
+                        "bin" : {
                             "type": "string",
-                            "title": "Playlist Xml directory",
+                            "title": "Binary",
                             "description" : ""
-                        }
-                    }
-                },
-                "Mvcp" : {
-                    "type" : "object",
-                    "title" : "Mvcp",
-                    "description" : "",
-                    "properties" : {
+                        },
+                        "root" : {
+                            "type": "string",
+                            "title": "Root directory",
+                            "description" : ""
+                        },
                         "host" : {
                             "type": "string",
                             "title": "Host",
@@ -192,10 +190,18 @@
                             "type": "string",
                             "title": "Port",
                             "description" : ""
+                        },
+                        "out" : {
+                            "type": "string",
+                            "title": "Output Driver",
+                            "description" : ""
+                        },
+                        "playlists_xml_dir" : {
+                            "type": "string",
+                            "title": "Playlist Xml directory",
+                            "description" : ""
                         }
-
                     }
-
                 },
                 "Mongo" : {
                     "type" : "object",
