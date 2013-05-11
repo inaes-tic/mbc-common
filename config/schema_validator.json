@@ -115,7 +115,7 @@
                     "description" : "",
                     "properties" : {
                         "fps" : {
-                            "type": "string",
+                            "type": "integer",
                             "title": "Frames per second",
                             "description" : ""
                         },
@@ -140,7 +140,7 @@
                             "description" : ""
                         },
                         "timer_interval" : {
-                            "type": "string",
+                            "type": "integer",
                             "title": "Time interval",
                             "description" : ""
                         },
@@ -150,7 +150,7 @@
                             "description" : ""
                         },
                         "reload_timer_diff" : {
-                            "type": "string",
+                            "type": "integer",
                             "title": "Reload time difference",
                             "description" : ""
                         },
@@ -187,11 +187,11 @@
                             "description" : ""
                         },
                         "port" : {
-                            "type": "string",
+                            "type": "integer",
                             "title": "Port",
                             "description" : ""
                         },
-                        "out" : {
+                        "output" : {
                             "type": "string",
                             "title": "Output Driver",
                             "description" : ""
