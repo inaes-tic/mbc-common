@@ -1,6 +1,6 @@
 var path = require('path'),
     cwd  = process.cwd();
-  
+
 module.exports = {
     Caspa: {
         Branding: {
@@ -28,10 +28,10 @@ module.exports = {
         },
         General: {
             fps: 25,
-            resolution: "hd", 
-            playout_mode: "direct", 
-            playlist_maxlength: "4 hours", 
-            scheduled_playlist_maxlength: "04:00:00", 
+            resolution: "hd",
+            playout_mode: "direct",
+            playlist_maxlength: "4 hours",
+            scheduled_playlist_maxlength: "04:00:00",
             timer_interval: 1000,
             black: path.join(cwd, 'images', 'black.png'),
             reload_timer_diff: 20000,
