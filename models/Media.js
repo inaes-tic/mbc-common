@@ -8,8 +8,10 @@ var Media, server = false;
 if (typeof exports !== 'undefined') {
     Media = exports;
     server = true;
+    var uuid = require('node-uuid');
 } else {
     Media = root.Media = {};
+    var uuid = root.uuid;
 }
 
 // Require Underscore, Backbone & BackboneIO, if we're on the server, and it's not already present.
