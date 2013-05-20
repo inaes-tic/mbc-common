@@ -10,11 +10,11 @@
         "url": "https://github.com/inaes-tic/mbc-common"
     },
     "dependencies" : {
-        "mongoskin"   : "0.4.x",
-        "redis": "0.8.x",
+        "mongoskin" : "0.4.x",
+        "redis"     : "0.8.x",
         "underscore": "1.2.x",
-        "mubsub"      : "git://github.com/inaes-tic/mubsub.git",
-        "config"      : "git://github.com/inaes-tic/node-config.git",
+        "mubsub"    : "git://github.com/inaes-tic/mubsub.git",
+        "config"    : "git://github.com/inaes-tic/node-config.git",
         "backbone"  : "0.9.x",
         "node-uuid" : "1.3.x"
     },
