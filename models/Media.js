@@ -342,3 +342,5 @@ Media.Schedule = Media.Universe.extend ({
     }
 });
 
+if(server) module.exports = Media;
+else root.Media = Media;
