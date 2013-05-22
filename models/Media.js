@@ -198,7 +198,7 @@ Media.List = Media.Model.extend ({
     // If the server returns an attributes hash that differs, the model's
     // state will be `set` again.
     save: function(key, val, options) {
-        var attrs, success, method, xhr, attributes = this.attributes;
+        var attrs, method, xhr, attributes = this.attributes;
 
         // Handle both `"key", value` and `{key: value}` -style arguments.
         if (key == null || typeof key === 'object') {
@@ -225,8 +225,9 @@ Media.List = Media.Model.extend ({
         // After a successful server-side save, the client is (optionally)
         // updated with the server-side state.
         if (options.parse === void 0) options.parse = true;
-        success = options.success;
-        options.success = function(model, resp, options) {
+        var model = this;
+        var success = options.success;
+        options.success = function(resp) {
             // Ensure attributes are restored during synchronous saves.
             model.attributes = attributes;
             var serverAttrs = model.parse(resp, options);
@@ -237,6 +238,7 @@ Media.List = Media.Model.extend ({
                 return false;
             }
             if (success) success(model, resp, options);
+            model.trigger('sync',model, resp, options);
         };
 
         // Finish configuring and sending the Ajax request.
