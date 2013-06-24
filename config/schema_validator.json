@@ -282,6 +282,16 @@
                             "type": "integer",
                             "title": "Port",
                             "description" : ""
+                        },
+                        "dbUser" : {
+                            "type": "string",
+                            "title": "User",
+                            "description" : ""
+                        },
+                        "dbPassword" : {
+                            "type": "string",
+                            "title": "Password",
+                            "description" : ""
                         }
                     }
                 }

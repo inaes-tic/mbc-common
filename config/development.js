@@ -64,6 +64,8 @@ module.exports = {
             dbName: "mediadb",
             dbHost: "localhost",
             dbPort: 27017,
+            dbUser: "",
+            dbPassword: "",
         },
     }
 }
