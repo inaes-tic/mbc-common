@@ -1,8 +1,9 @@
 var redis = require('redis')
 var _ = require('underscore')
 
-exports = module.exports = function() {
-    return exports.createJSONClient();
+exports = module.exports = function(config) {
+    var conf = config || require('config').Common.Redis;
+    return exports.createJSONClient(conf);
 }
 
 exports.redis = _.clone(redis);
@@ -15,8 +16,13 @@ function parse(msg) {
     }
 }
 
-exports.createJSONClient = function(port_arg, host_arg, options) {
-    var redis_client = this.redis.createClient(port_arg, host_arg, options);
+exports.createJSONClient = function(conf) {
+    var redis_client = this.redis.createClient(conf.port, conf.host);
+    if (conf.password) {
+        redis_client.auth(conf.password, function() {
+            console.log('Redis client connected');
+        });
+    }
 
     redis_client.publishJSON = function(chan, obj) {
         return this.publish(chan, JSON.stringify(obj));
