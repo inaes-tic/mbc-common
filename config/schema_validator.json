@@ -294,6 +294,28 @@
                             "description" : ""
                         }
                     }
+                },
+                "Redis" : {
+                    "type" : "object",
+                    "title" : "Redis",
+                    "description" : "Authentication params",
+                    "properties" : {
+                        "host" : {
+                            "type": "string",
+                            "title": "Host",
+                            "description" : ""
+                        },
+                        "port" : {
+                            "type": "integer",
+                            "title": "Port",
+                            "description" : ""
+                        },
+                        "password" : {
+                            "type": "string",
+                            "title": "Password",
+                            "description" : ""
+                        }
+                    }
                 }
             }
         }

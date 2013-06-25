@@ -67,5 +67,10 @@ module.exports = {
             dbUser: "",
             dbPassword: "",
         },
+        Redis: {
+            host: "localhost",
+            port: 6379,
+            password: "",
+        },
     }
 }
