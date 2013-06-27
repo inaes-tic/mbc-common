@@ -115,7 +115,7 @@
                     "description" : "",
                     "properties" : {
                         "fps" : {
-                            "type": "integer",
+                            "type": "float",
                             "title": "Frames per second",
                             "description" : ""
                         },
