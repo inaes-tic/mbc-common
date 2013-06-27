@@ -129,15 +129,10 @@
                             "title": "Playout Mode",
                             "description" : ""
                         },
-                        "playlist_maxlength" : {
+                        "min_scheduled_hours" : {
                             "type": "string",
-                            "title": "Playlist Maxlength",
-                            "description" : ""
-                        },
-                        "scheduled_playlist_maxlength" : {
-                            "type": "string",
-                            "title": "Scheduled Playlist Maxlength",
-                            "description" : ""
+                            "title": "Mininum Hours Scheduled",
+                            "description" : "Minimum amount of hours to be scheduled"
                         },
                         "timer_interval" : {
                             "type": "integer",
