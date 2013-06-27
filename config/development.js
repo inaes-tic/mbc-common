@@ -32,7 +32,7 @@ module.exports = {
             playout_mode: "snap",
             min_scheduled_hours: "4",
             timer_interval: 1000,
-            black: path.join(cwd, 'images', 'black.png'),
+            blank: path.join(cwd, 'images', 'blank.xml'),
             reload_timer_diff: 20000,
             playlist_server: "mongo",
             mvcp_server: "melted",

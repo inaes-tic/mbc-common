@@ -139,10 +139,10 @@
                             "title": "Time interval",
                             "description" : ""
                         },
-                        "black" : {
+                        "blank" : {
                             "type": "string",
-                            "title": "Black Image",
-                            "description" : ""
+                            "title": "Blank Clip",
+                            "description" : "Clip to play if nothing scheduled"
                         },
                         "reload_timer_diff" : {
                             "type": "integer",
