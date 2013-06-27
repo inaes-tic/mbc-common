@@ -112,22 +112,22 @@
                 "General" : {
                     "type" : "object",
                     "title" : "General",
-                    "description" : "",
+                    "description" : "Mosto General Configuration",
                     "properties" : {
                         "fps" : {
                             "type": "float",
                             "title": "Frames per second",
-                            "description" : ""
+                            "description" : "Default fps if it cant be obtained from clip"
                         },
                         "resolution" : {
                             "type": "string",
                             "title": "Resolution",
-                            "description" : ""
+                            "description" : "Default resolution"
                         },
                         "playout_mode" : {
                             "type": "string",
                             "title": "Playout Mode",
-                            "description" : ""
+                            "description" : "direct or snap"
                         },
                         "min_scheduled_hours" : {
                             "type": "string",
@@ -152,12 +152,12 @@
                         "playlist_server" : {
                             "type": "string",
                             "title": "Playlist Server",
-                            "description" : ""
+                            "description" : "mongo or json"
                         },
                         "mvcp_server" : {
                             "type": "string",
                             "title": "Mvcp Server",
-                            "description" : ""
+                            "description" : "Only melted at the moment"
                         }
                     }
                 },
