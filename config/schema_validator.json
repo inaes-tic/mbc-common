@@ -112,42 +112,37 @@
                 "General" : {
                     "type" : "object",
                     "title" : "General",
-                    "description" : "",
+                    "description" : "Mosto General Configuration",
                     "properties" : {
                         "fps" : {
-                            "type": "integer",
+                            "type": "number",
                             "title": "Frames per second",
-                            "description" : ""
+                            "description" : "Default fps if it cant be obtained from clip"
                         },
                         "resolution" : {
                             "type": "string",
                             "title": "Resolution",
-                            "description" : ""
+                            "description" : "Default resolution"
                         },
                         "playout_mode" : {
                             "type": "string",
                             "title": "Playout Mode",
-                            "description" : ""
+                            "description" : "direct or snap"
                         },
-                        "playlist_maxlength" : {
+                        "min_scheduled_hours" : {
                             "type": "string",
-                            "title": "Playlist Maxlength",
-                            "description" : ""
-                        },
-                        "scheduled_playlist_maxlength" : {
-                            "type": "string",
-                            "title": "Scheduled Playlist Maxlength",
-                            "description" : ""
+                            "title": "Mininum Hours Scheduled",
+                            "description" : "Minimum amount of hours to be scheduled"
                         },
                         "timer_interval" : {
                             "type": "integer",
                             "title": "Time interval",
                             "description" : ""
                         },
-                        "black" : {
+                        "blank" : {
                             "type": "string",
-                            "title": "Black Image",
-                            "description" : ""
+                            "title": "Blank Clip",
+                            "description" : "Clip to play if nothing scheduled"
                         },
                         "reload_timer_diff" : {
                             "type": "integer",
@@ -157,12 +152,12 @@
                         "playlist_server" : {
                             "type": "string",
                             "title": "Playlist Server",
-                            "description" : ""
+                            "description" : "mongo or json"
                         },
                         "mvcp_server" : {
                             "type": "string",
                             "title": "Mvcp Server",
-                            "description" : ""
+                            "description" : "Only melted at the moment"
                         }
                     }
                 },
