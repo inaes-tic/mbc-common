@@ -274,7 +274,7 @@ Media.Occurrence = Backbone.RelationalModel.extend({
         relatedModel: 'Media.Playlist',
         reverseRelation: {
             key: 'occurrences',
-            collectionType: 'Media.PlaylistCollection',
+            collectionType: 'Media.Schedule',
             includeInJSON: '_id',
             type: Backbone.HasMany
         }
@@ -340,11 +340,6 @@ Media.Occurrence = Backbone.RelationalModel.extend({
     defaults: {
         event: null,
     },
-});
-
-Media.PlaylistCollection = Backbone.Collection.extend({
-    url: 'list',
-    model: Media.Playlist
 });
 
 Media.Schedule = Backbone.Collection.extend({
