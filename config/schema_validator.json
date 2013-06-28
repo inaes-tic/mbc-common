@@ -115,7 +115,7 @@
                     "description" : "Mosto General Configuration",
                     "properties" : {
                         "fps" : {
-                            "type": "float",
+                            "type": "number",
                             "title": "Frames per second",
                             "description" : "Default fps if it cant be obtained from clip"
                         },
