@@ -59,12 +59,76 @@ var arrayDuration = function (a) {
 
 var Media = {};
 
-Media.Model = Backbone.Model.extend({
-    urlRoot: "media",
-    idAttribute: "_id",
+Media.Transform = Backbone.RelationalModel.extend({
+    urlRoot: 'transform',
+    idAttribute: '_id',
+    relations: [{
+        type: Backbone.HasOne,
+        key: 'piece',
+        relatedModel:'Media.Piece',
+        includeInJSON: '_id',
+        reverseRelation: {
+            key: 'transform',
+            includeInJSON: '_id',
+            type: Backbone.HasOne
+        }
+    },
+    {
+        type: Backbone.HasOne,
+        key: 'playlist',
+        relatedModel:'Media.Playlist',
+        includeInJSON: '_id',
+        reverseRelation: {
+            key: 'transform',
+            includeInJSON: '_id',
+            type: Backbone.HasOne
+        }
+    },
+    {
+        type: Backbone.HasOne,
+        key: 'occurrence',
+        relatedModel:'Media.Occurrence',
+        includeInJSON: '_id',
+        reverseRelation: {
+            key: 'transform',
+            includeInJSON: '_id',
+            type: Backbone.HasOne
+        }
+    }],
+    defaults: {
+        trim: {
+            timein:  0,
+            timeout: 0,
+        },
+        overlay: [],
+        starts: 0,
+        ends: 0,
+    },
+});
+
+Media.TransformCollection = Backbone.Collection.extend({
+    model: Media.Transform,
+    url: 'transform',
+    backend: 'transformbackend',
+    initialize: function () {
+        if (!server) {
+            this.bindBackend();
+            this.bind('backend', function(method, model) {
+                console.log ('got from backend:', method, model);
+            });
+        }
+        console.log ('creating new Media.TransformCollection');
+        Backbone.Collection.prototype.initialize.call (this);
+    },
+});
+
+Media.Model = Backbone.RelationalModel.extend({
+    urlRoot: 'media',
+    idAttribute: '_id',
     initialize: function () {
         console.log ('creating new Media.Model');
     },
+
     validate: function (attrs) {
         console.log ("checking -> ", attrs);
         if (attrs.file && ! attrs.file.length) {
@@ -87,11 +151,10 @@ Media.Model = Backbone.Model.extend({
         audio: "None",
         video: "None",
         template: 'mediaview',
-        notes: "",
+        notes: ""
     }
 });
 
-/* all methods are overriden in Default.js */
 Media.Collection = Backbone.Collection.extend({
     model: Media.Model,
     url: 'media',
@@ -99,191 +162,130 @@ Media.Collection = Backbone.Collection.extend({
     initialize: function () {
         if (!server) {
             this.bindBackend();
-
             this.bind('backend', function(method, model) {
                 console.log ('got from backend:', method, model);
             });
         }
         console.log ('creating new Media.Collection');
-
         Backbone.Collection.prototype.initialize.call (this);
-    }
+    },
+    pretty_duration: function () {
+        return prettyTime(arrayDuration(this.pluck('durationraw')));
+    },
 });
 
-
-Media.Piece = Media.Model.extend ({
+Media.Piece = Backbone.RelationalModel.extend({
     urlRoot: 'piece',
-    idAttribute: "_id",
-    defaults: {
-        trim: {
-            timein:  0,
-            timeout: 0,
-        },
-        overlay: [],
-        starts: 0,
-        ends: 0,
-    },
-    initialize: function (attributes, options) {
+    idAttribute: '_id',
+    initialize: function () {
         console.log ('creating new Media.Piece');
-        if (this.idAttribute in attributes) {
-            // we got a Media id, replace it with an uuid.
-            if ( !attributes['_id'].match(/-/) ) {
-                this.set(this.idAttribute, uuid.v4(), {silent: true});
-            }
-        }
     },
-
 });
 
-Media.Block = Media.Collection.extend ({
-    model: Media.Piece,
+Media.PieceCollection = Backbone.Collection.extend({
     url: 'piece',
-    backend: 'blockbackend',
+    model: Media.Piece,
+    backend: 'piecebackend',
     initialize: function () {
-        if (!server)
+        if (!server) {
             this.bindBackend();
-        console.log ('creating new Media.Block');
+            this.bind('backend', function(method, model) {
+                console.log ('got from backend:', method, model);
+            });
+        }
+        console.log ('creating new Media.PieceCollection');
+        Backbone.Collection.prototype.initialize.call (this);
     },
-
 });
 
-Media.List = Media.Model.extend ({
-    urlRoot: 'list',
-    newCol: function (models, opts) {
-        return new Media.Block (models, opts);
-    },
-    initialize: function () {
-        var models = this.get('models')
-        var col    = this.get('collection')
-
-        if (!models)
-            return false;
-
-        console.log ("creating new Media.List", models, col);
-        if (!col || col instanceof Array) {
-            console.log ('col is array ! recreating as collection', col, models);
-            col = this.newCol(models, {connectable: true});
+Media.Playlist = Backbone.RelationalModel.extend({
+  urlRoot: 'list',
+  idAttribute: '_id',
+  relations: [{
+        type: Backbone.HasMany,
+        key: 'pieces',
+        relatedModel: 'Media.Piece',
+        collectionType: 'Media.PieceCollection',
+        includeInJSON: '_id',
+        reverseRelation: {
+            key: 'pl',
+            includeInJSON: '_id',
+            type: Backbone.HasOne
         }
-
+    }],
+    initialize: function () {
         var self = this;
-        col.wrapper = this;
+        var pieces = this.get('pieces');
 
-        col.bind('all', function (a, b) {
-            var models = self.get('collection').models;
-            self.set({models: models});
-            self.update_duration(col);
-            console.log ('-----got a change in the force', a, b);
+        pieces.bind('relational:change relational:add relational:reset relational:remove', function(){
+            self.update_duration(pieces);
         }, this);
 
-        this.set ({collection: col, models: col.models});
-        Media.Model.prototype.initialize.call (this);
+        console.log ('creating new Media.Playlist');
+        Backbone.RelationalModel.prototype.initialize.call (this);
     },
-    update_duration: function (col) {
-        this.set({duration : arrayDuration(col.pluck('durationraw'))});
+    save: function(attributes, options) {
+        //XXX We need Full relation Serialization toJSON
+        // Check https://github.com/PaulUithol/Backbone-relational/pull/183
+
+        if (typeof this.getRelation === 'function') {
+            var instance_rel = this.getRelation('pieces');
+            // change to just Serialize _id
+            instance_rel.options.includeInJSON = '_id';
+        }
+
+        Backbone.Model.prototype.save.call(this, attributes, options);
+    },
+    update_duration: function (pieces) {
+        this.set({duration : arrayDuration(pieces.pluck('durationraw'))});
     },
     pretty_duration: function () {
         return prettyTime (this.get('duration'));
     },
-
     defaults: {
-        collection: null,
-        models: [],
         name: null,
         fixed: false,
         duration: 0,
         pos: 0,
-    },
-
-    // Set a hash of model attributes, and sync the model to the server.
-    // If the server returns an attributes hash that differs, the model's
-    // state will be `set` again.
-    save: function(key, val, options) {
-        var attrs, method, xhr, attributes = this.attributes;
-
-        // Handle both `"key", value` and `{key: value}` -style arguments.
-        if (key == null || typeof key === 'object') {
-            attrs = key;
-            options = val;
-        } else {
-            (attrs = {})[key] = val;
-        }
-
-//XXX:
-        // If we're not waiting and attributes exist, save acts as `set(attr).save(null, opts)`.
-        if (attrs && (!options || !options.wait) && !this.set(attrs, options)) return false;
-
-        options = _.extend({validate: true}, options);
-
-        // Do not persist invalid models.
-        if (!this._validate(attrs, options)) return false;
-
-        // Set temporary attributes if `{wait: true}`.
-        if (attrs && options.wait) {
-            this.attributes = _.extend({}, attributes, attrs);
-        }
-
-        // After a successful server-side save, the client is (optionally)
-        // updated with the server-side state.
-        if (options.parse === void 0) options.parse = true;
-        var model = this;
-        var success = options.success;
-        options.success = function(resp) {
-            // Ensure attributes are restored during synchronous saves.
-            model.attributes = attributes;
-            var serverAttrs = model.parse(resp, options);
-//XXX:
-            delete serverAttrs['collection'];
-            if (options.wait) serverAttrs = _.extend(attrs || {}, serverAttrs);
-            if (_.isObject(serverAttrs) && !model.set(serverAttrs, options)) {
-                return false;
-            }
-            if (success) success(model, resp, options);
-            model.trigger('sync',model, resp, options);
-        };
-
-        // Finish configuring and sending the Ajax request.
-        method = this.isNew() ? 'create' : (options.patch ? 'patch' : 'update');
-        if (method === 'patch') options.attrs = attrs;
-        xhr = this.sync(method, this, options);
-
-        // Restore attributes.
-        if (attrs && options.wait) this.attributes = attributes;
-
-        return xhr;
-    },
-
-
+    }
 });
 
-Media.Universe = Media.Collection.extend ({
+Media.Universe = Backbone.Collection.extend({
     url: 'list',
-    model: Media.List,
+    model: Media.Playlist,
     backend: 'listbackend',
+    comparator: '_id',
     initialize: function () {
-        if (!server)
+        if (!server) {
             this.bindBackend();
+            this.bind('backend', function(method, model) {
+                console.log ('got from backend:', method, model);
+            });
+        }
         console.log ('creating new Media.Universe');
+        Backbone.Collection.prototype.initialize.call (this);
     },
 });
 
-Media.Occurrence = Media.List.extend ({
+Media.Occurrence = Backbone.RelationalModel.extend({
     urlRoot: 'occur',
-    defaults: {
-        event: null,
-    },
+    idAttribute: '_id',
+    relations: [{
+        type: Backbone.HasOne,
+        key: 'playlist',
+        relatedModel: 'Media.Playlist',
+        reverseRelation: {
+            key: 'occurrences',
+            collectionType: 'Media.Schedule',
+            includeInJSON: '_id',
+            type: Backbone.HasMany
+        }
+    }],
     initialize: function () {
         console.log ('creating new Media.Occurrence', this);
         this.overlapsWith = [];
     },
-    newCol: function (models, opts) {
-        return new Media.Occurrence (models, opts);
-    },
-    update: function (attrs) {
-        for (a in this.attributes) {
-            if (attrs.hasOwnProperty(a))
-                this.set(a, attrs[a]);
-        }
-    },
+
     getOverlappingEvents: function() {
         // Get all events that overlap with this one
         var self = this;
@@ -306,9 +308,9 @@ Media.Occurrence = Media.List.extend ({
             this.collection.trigger('overlap', true);
             return overlapping
         } else {
-            /* When this event is no longer overlapping, the other events could be valid.
-               validationError would be unset after this function returns, but I need if before
-               I call checkOverlap. Could be improved. */
+            // When this event is no longer overlapping, the other events could be valid.
+            //   validationError would be unset after this function returns, but I need if before
+            //   I call checkOverlap. Could be improved.
 
             delete this.validationError;
             // Prevent infinite loops by first emptying the list
@@ -319,20 +321,43 @@ Media.Occurrence = Media.List.extend ({
                 oc.save();
             });
 
-            this.collection.checkOverlap();
+            if(this.collection) {
+                this.collection.checkOverlap();
+            }
         }
+    },
+    save: function(attributes, options) {
+        //XXX We need Full relation Serialization toJSON
+        // Check https://github.com/PaulUithol/Backbone-relational/pull/183
+        var playlist = this.get('playlist');
+
+        if (playlist && typeof playlist.getRelation === 'function') {
+            var instance_rel = playlist.getRelation('pieces');
+            // change to full Serialization
+            instance_rel.options.includeInJSON = true;
+        }
+
+        Backbone.Model.prototype.save.call(this, attributes, options);
+    },
+    defaults: {
+        event: null,
     },
 });
 
-Media.Schedule = Media.Universe.extend ({
+Media.Schedule = Backbone.Collection.extend({
     url: 'occur',
     model: Media.Occurrence,
     backend: 'schedbackend',
     initialize: function () {
-        if (!server)
+        if (!server) {
             this.bindBackend();
+            this.bind('backend', function(method, model) {
+                console.log ('got from backend:', method, model);
+            });
+        }
+        this.on('add remove', this.checkOverlap);
         console.log ('creating new Media.Schedule');
-        this.on('add remove', this.checkOverlap)
+        Backbone.Collection.prototype.initialize.call (this);
     },
     comparator: "start",
     getInvalid: function() {
@@ -345,6 +370,12 @@ Media.Schedule = Media.Universe.extend ({
         this.trigger('overlap', elems.length);
     }
 });
+
+Media.Transform.setup();
+Media.Model.setup();
+Media.Piece.setup();
+Media.Playlist.setup();
+Media.Occurrence.setup();
 
 if(server) module.exports = Media;
 else root.Media = Media;
