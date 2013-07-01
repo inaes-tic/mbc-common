@@ -266,6 +266,7 @@ Media.Universe = Backbone.Collection.extend({
     url: 'list',
     model: Media.Playlist,
     backend: 'listbackend',
+    comparator: '_id',
     initialize: function () {
         if (!server) {
             this.bindBackend();
