@@ -93,6 +93,7 @@ Media.Transform = Backbone.RelationalModel.extend({
         includeInJSON: '_id',
         reverseRelation: {
             key: 'transform',
+            includeInJSON: '_id',
             type: Backbone.HasOne
         }
     }],
