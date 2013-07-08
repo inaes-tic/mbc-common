@@ -9,6 +9,7 @@ if (typeof exports !== 'undefined') {
     Media = exports;
     server = true;
     var uuid = require('node-uuid');
+    var moment = require('moment');
 } else {
     Media = root.Media = {};
     var uuid = root.uuid;
@@ -21,11 +22,13 @@ if (!_ && (typeof require !== 'undefined')) _ = require('underscore');
 var BackboneIO = root.BackboneIO;
 if ((typeof require !== 'undefined')) Backbone = require('backbone');
 
-var leadingZero = function (num) {
+var Media = {};
+
+Media.leadingZero = function (num) {
     return (num < 10) ? "0"+num : num;
 }
 
-var toMilliseconds = function (time) {
+Media.toMilliseconds = function (time) {
     if (!time) {
         console.log ("No time");
         return 0;
@@ -43,21 +46,19 @@ var toMilliseconds = function (time) {
     return d.asMilliseconds();
 };
 
-var prettyTime =  function (m) {
+Media.prettyTime =  function (m) {
     d = moment.duration(m);
-    var p = leadingZero(d.hours())   + ':'
-        + leadingZero(d.minutes()) + ':'
-        + leadingZero(d.seconds()) + '.'
-        + leadingZero(d.milliseconds()/10);
+    var p = Media.leadingZero(d.hours())   + ':'
+        + Media.leadingZero(d.minutes()) + ':'
+        + Media.leadingZero(d.seconds()) + '.'
+        + Media.leadingZero(d.milliseconds()/10);
     return p;
 };
 
-var arrayDuration = function (a) {
+Media.arrayDuration = function (a) {
     return  _.reduce(a, function (m, n) {
-        return m + toMilliseconds (n);}, 0);
+        return m + Media.toMilliseconds (n);}, 0);
 };
-
-var Media = {};
 
 Media.Model = Backbone.Model.extend({
     urlRoot: "media",
@@ -179,10 +180,10 @@ Media.List = Media.Model.extend ({
         Media.Model.prototype.initialize.call (this);
     },
     update_duration: function (col) {
-        this.set({duration : arrayDuration(col.pluck('durationraw'))});
+        this.set({duration : Media.arrayDuration(col.pluck('durationraw'))});
     },
     pretty_duration: function () {
-        return prettyTime (this.get('duration'));
+        return Media.prettyTime (this.get('duration'));
     },
 
     defaults: {
