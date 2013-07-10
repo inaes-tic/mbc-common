@@ -247,6 +247,10 @@ Media.List = Media.Model.extend ({
             if (_.isObject(serverAttrs) && !model.set(serverAttrs, options)) {
                 return false;
             }
+            //XXX 2:
+            // Had to do this because i was receiving a model with an Array of Object instead of Blocks
+            model.initialize();
+
             if (success) success(model, resp, options);
             model.trigger('sync',model, resp, options);
         };
