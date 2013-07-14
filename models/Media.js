@@ -9,6 +9,7 @@ if (typeof exports !== 'undefined') {
     Media = exports;
     server = true;
     var uuid = require('node-uuid');
+    var PageableCollection = require("backbone-pageable");
 } else {
     Media = root.Media = {};
     var uuid = root.uuid;
@@ -92,7 +93,7 @@ Media.Model = Backbone.Model.extend({
 });
 
 /* all methods are overriden in Default.js */
-Media.Collection = Backbone.Collection.extend({
+Media.Collection = Backbone.PageableCollection.extend({
     model: Media.Model,
     url: 'media',
     backend: 'mediabackend',
@@ -107,7 +108,37 @@ Media.Collection = Backbone.Collection.extend({
         console.log ('creating new Media.Collection');
 
         Backbone.Collection.prototype.initialize.call (this);
-    }
+    },
+    state: {
+        firstPage: 0,
+        currentPage: 0,
+        pageSize: 10,
+        query: {}
+    },
+    queryParams: {
+      query: function() { return this.state.query; },
+      currentPage: "page",
+      pageSize: "per_page",
+      totalPages: "total_pages",
+      totalRecords: "total_entries",
+      sortKey: "sort_by",
+      order: "order",
+      directions: {
+        "-1": "asc",
+        "1": "desc"
+      }
+    },
+    setQuery: function (query, page_size) {
+        var state = this.state;
+        if(query != state.query) {
+            state = _.clone(this._initState)
+            state.pageSize = page_size;
+        }
+        state = this.state = this._checkState(_.extend({}, state, {
+            query: query,
+        }));
+    },
+
 });
 
 
