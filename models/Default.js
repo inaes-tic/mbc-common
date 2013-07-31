@@ -44,3 +44,17 @@ Backbone.PageableCollection.prototype.setQuery = function (query, page_size) {
         query: query,
     }));
 };
+
+_.mixin({
+    pluck: function(obj, key) {
+        if (key.indexOf(".") === -1) {
+            return _.map(obj, function(value){ return value[key]; });
+        }
+        var keys = key.split(".").reverse();
+        while(keys.length) {
+            obj = _.pluck(obj, keys[keys.length - 1]);
+            keys.pop();
+        }
+        return obj;
+    }
+});
