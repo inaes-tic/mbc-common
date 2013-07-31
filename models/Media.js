@@ -307,15 +307,11 @@ Media.Occurrence = Media.List.extend ({
                 this.set(a, attrs[a]);
         }
     },
+
     getOverlappingEvents: function() {
-        // Get all events that overlap with this one
-        var self = this;
-        return this.collection.filter(function(oc) {
-            return (oc.get('_id') != self.get('_id') &&
-                    oc.get('start') < self.get('end') &&
-                    oc.get('end') > self.get('start'));
-        });
+        return this.collection.getOverlappingEvents(this);
     },
+
     validate: function(attrs, options) {
         // Do not validate when fetching from the server
         if (options.parse) return;
@@ -366,7 +362,44 @@ Media.Schedule = Media.Universe.extend ({
     checkOverlap: function() {
         var elems = this.getInvalid();
         this.trigger('overlap', elems.length);
-    }
+    },
+    getOverlappingEvents: function(oc) {
+        // Get all events that overlap with this one
+        return this.filter(function(elem) {
+            return (elem.get('_id') != oc.get('_id') &&
+                    elem.get('start') < oc.get('end') &&
+                    elem.get('end') > oc.get('start'));
+        });
+    },
+    simulateOverlap: function(occurrence) {
+        var self = this;
+
+        function pusherMapper(pusher) {
+            return function(elem) {
+                return {
+                    pusher: pusher,
+                    elem: elem,
+                };
+            };
+        };
+
+        // Processing queue
+        var queue = self.getOverlappingEvents(occurrence).map(pusherMapper(occurrence));
+
+        var target;
+        while (target = queue.pop()) {
+            // Adjust target time
+            var duration = target.elem.get("end") - target.elem.get("start");
+            target.elem.set({
+                start: target.pusher.get("end"),
+                end: target.pusher.get("end") + duration,
+            });
+
+            // Check new overlaps and process them first
+            var new_overlaps = self.getOverlappingEvents(target.elem).map(pusherMapper(target.elem));
+            queue = queue.concat(new_overlaps);
+        }
+    },
 });
 
 if(server) module.exports = Media;
