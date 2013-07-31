@@ -13,6 +13,7 @@ if (typeof exports !== 'undefined') {
 } else {
     Media = root.Media = {};
     var uuid = root.uuid;
+    var PageableCollection = root.Backbone.PageableCollection;
 }
 
 // Require Underscore, Backbone & BackboneIO, if we're on the server, and it's not already present.
@@ -93,7 +94,7 @@ Media.Model = Backbone.Model.extend({
 });
 
 /* all methods are overriden in Default.js */
-Media.Collection = Backbone.PageableCollection.extend({
+Media.Collection = PageableCollection.extend({
     model: Media.Model,
     url: 'media',
     backend: 'mediabackend',
@@ -128,17 +129,6 @@ Media.Collection = Backbone.PageableCollection.extend({
         "1": "desc"
       }
     },
-    setQuery: function (query, page_size) {
-        var state = this.state;
-        if(query != state.query) {
-            state = _.clone(this._initState)
-            state.pageSize = page_size;
-        }
-        state = this.state = this._checkState(_.extend({}, state, {
-            query: query,
-        }));
-    },
-
 });
 
 
@@ -294,6 +284,25 @@ Media.Universe = Media.Collection.extend ({
         if (!server)
             this.bindBackend();
         console.log ('creating new Media.Universe');
+    },
+    state: {
+        firstPage: 0,
+        currentPage: 0,
+        pageSize: 20,
+        query: {}
+    },
+    queryParams: {
+      query: function() { return this.state.query; },
+      currentPage: "page",
+      pageSize: "per_page",
+      totalPages: "total_pages",
+      totalRecords: "total_entries",
+      sortKey: "sort_by",
+      order: "order",
+      directions: {
+        "-1": "asc",
+        "1": "desc"
+      }
     },
 });
 
