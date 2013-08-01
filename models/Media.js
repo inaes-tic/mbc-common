@@ -118,19 +118,8 @@ Media.Collection = PageableCollection.extend({
     },
     queryParams: {
       query: function() { return this.state.query; },
-      currentPage: "page",
-      pageSize: "per_page",
-      totalPages: "total_pages",
-      totalRecords: "total_entries",
-      sortKey: "sort_by",
-      order: "order",
-      directions: {
-        "-1": "asc",
-        "1": "desc"
-      }
     },
 });
-
 
 Media.Piece = Media.Model.extend ({
     urlRoot: 'piece',
@@ -293,16 +282,6 @@ Media.Universe = Media.Collection.extend ({
     },
     queryParams: {
       query: function() { return this.state.query; },
-      currentPage: "page",
-      pageSize: "per_page",
-      totalPages: "total_pages",
-      totalRecords: "total_entries",
-      sortKey: "sort_by",
-      order: "order",
-      directions: {
-        "-1": "asc",
-        "1": "desc"
-      }
     },
 });
 
