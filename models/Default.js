@@ -38,7 +38,7 @@ Backbone.PageableCollection.prototype.setQuery = function (query, page_size) {
     var state = this.state;
     if(query != state.query) {
         state = _.clone(this._initState)
-        state.pageSize = page_size;
+        state.pageSize = page_size || state.pageSize;
     }
     state = this.state = this._checkState(_.extend({}, state, {
         query: query,
