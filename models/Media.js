@@ -9,9 +9,11 @@ if (typeof exports !== 'undefined') {
     Media = exports;
     server = true;
     var uuid = require('node-uuid');
+    var PageableCollection = require("backbone-pageable");
 } else {
     Media = root.Media = {};
     var uuid = root.uuid;
+    var PageableCollection = root.Backbone.PageableCollection;
 }
 
 // Require Underscore, Backbone & BackboneIO, if we're on the server, and it's not already present.
@@ -92,7 +94,7 @@ Media.Model = Backbone.Model.extend({
 });
 
 /* all methods are overriden in Default.js */
-Media.Collection = Backbone.Collection.extend({
+Media.Collection = PageableCollection.extend({
     model: Media.Model,
     url: 'media',
     backend: 'mediabackend',
@@ -107,9 +109,17 @@ Media.Collection = Backbone.Collection.extend({
         console.log ('creating new Media.Collection');
 
         Backbone.Collection.prototype.initialize.call (this);
-    }
+    },
+    state: {
+        firstPage: 0,
+        currentPage: 0,
+        pageSize: 10,
+        query: {}
+    },
+    queryParams: {
+      query: function() { return this.state.query; },
+    },
 });
-
 
 Media.Piece = Media.Model.extend ({
     urlRoot: 'piece',
@@ -263,6 +273,15 @@ Media.Universe = Media.Collection.extend ({
         if (!server)
             this.bindBackend();
         console.log ('creating new Media.Universe');
+    },
+    state: {
+        firstPage: 0,
+        currentPage: 0,
+        pageSize: 20,
+        query: {}
+    },
+    queryParams: {
+      query: function() { return this.state.query; },
     },
 });
 

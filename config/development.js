@@ -71,5 +71,28 @@ module.exports = {
             port: 6379,
             password: "",
         },
+    },
+    Search: {
+        Medias: {
+            fulltxt: [ 'name', 'title' ],
+            facets:  [
+                'durationsec',
+                'video.resolution.w',
+                'video.resolution.h',
+                'video.fps',
+                'video.bitrate',
+                'video.container',
+                'video.codec',
+                'audio.codec'
+            ],
+            max_facets: 100
+        },
+        Lists: {
+            fulltxt: [ 'name' ],
+            facets: [
+                'duration',
+            ],
+            max_facets: 100
+        }
     }
 }

@@ -33,3 +33,28 @@ Backbone.View.prototype.moveDOM = function (id, from, to) {
     }
     return dest;
 };
+
+Backbone.PageableCollection.prototype.setQuery = function (query, page_size) {
+    var state = this.state;
+    if(query != state.query) {
+        state = _.clone(this._initState)
+        state.pageSize = page_size || state.pageSize;
+    }
+    state = this.state = this._checkState(_.extend({}, state, {
+        query: query,
+    }));
+};
+
+_.mixin({
+    pluck: function(obj, key) {
+        if (key.indexOf(".") === -1) {
+            return _.map(obj, function(value){ return value[key]; });
+        }
+        var keys = key.split(".").reverse();
+        while(keys.length) {
+            obj = _.pluck(obj, keys[keys.length - 1]);
+            keys.pop();
+        }
+        return obj;
+    }
+});

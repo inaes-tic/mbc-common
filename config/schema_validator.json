@@ -313,6 +313,57 @@
                     }
                 }
             }
+        },
+        "Search" : {
+            "type" : "object",
+            "title" : "Search options",
+            "description" : "Text and facets to search",
+            "properties" : {
+                "Medias" : {
+                    "type" : "object",
+                    "title": "Medias",
+                    "description" : "",
+                    "properties" : {
+                        "fulltxt" : {
+                            "type": "array",
+                            "title": "Fulltxt",
+                            "description": ""
+                        },
+                        "facets" : {
+                            "type": "array",
+                            "title": "Facets",
+                            "description": ""
+                        },
+                        "max_facets" : {
+                             "type": "integer",
+                            "title": "Max Facets",
+                            "description": ""
+                        }
+                    }
+                },
+                "Lists" : {
+                    "type" : "object",
+                    "title": "List",
+                    "description" : "",
+                    "properties" : {
+                        "fulltxt" : {
+                            "type": "array",
+                            "title": "Fulltxt",
+                            "description": ""
+                        },
+                        "facets" : {
+                            "type": "array",
+                            "title": "Facets",
+                            "description": ""
+                        },
+                        "max_facets" : {
+                             "type": "integer",
+                            "title": "Max Facets",
+                            "description": ""
+                        }
+                    }
+                }
+            }
         }
     }
 }
