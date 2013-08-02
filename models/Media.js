@@ -351,7 +351,11 @@ Media.Schedule = Media.Universe.extend ({
         if (!server)
             this.bindBackend();
         console.log ('creating new Media.Schedule');
+        this.start_memento();
         this.on('add remove', this.checkOverlap)
+    },
+    start_memento: function() {
+        this.memento = new Backbone.Memento(this);
     },
     comparator: "start",
     getInvalid: function() {
@@ -371,7 +375,7 @@ Media.Schedule = Media.Universe.extend ({
                     elem.get('end') > oc.get('start'));
         });
     },
-    simulateOverlap: function(occurrence) {
+    simulateOverlap: function(occurrence, save) {
         var self = this;
 
         function pusherMapper(pusher) {
@@ -394,6 +398,10 @@ Media.Schedule = Media.Universe.extend ({
                 start: target.pusher.get("end"),
                 end: target.pusher.get("end") + duration,
             });
+
+            if (save) {
+                target.elem.save();
+            }
 
             // Check new overlaps and process them first
             var new_overlaps = self.getOverlappingEvents(target.elem).map(pusherMapper(target.elem));
