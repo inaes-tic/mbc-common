@@ -85,6 +85,7 @@ module.exports = {
                 'video.codec',
                 'audio.codec'
             ],
+            criteria: {},
             max_facets: 100
         },
         Lists: {
@@ -92,6 +93,13 @@ module.exports = {
             facets: [
                 'duration',
             ],
+            criteria: {},
+            max_facets: 100
+        },
+        Scheds: {
+            fulltxt: [ 'title' ],
+            facets: [],
+            criteria: { between: '{ "start": { "$gte": %value% }, "end": { "$lt" : %value% } }' },
             max_facets: 100
         }
     }

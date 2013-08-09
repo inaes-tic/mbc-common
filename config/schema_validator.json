@@ -334,6 +334,11 @@
                             "title": "Facets",
                             "description": ""
                         },
+                        "criteria" : {
+                            "type": "object",
+                            "title": "Criteria",
+                            "description": ""
+                        },
                         "max_facets" : {
                              "type": "integer",
                             "title": "Max Facets",
@@ -354,6 +359,38 @@
                         "facets" : {
                             "type": "array",
                             "title": "Facets",
+                            "description": ""
+                        },
+                        "criteria" : {
+                            "type": "object",
+                            "title": "Criteria",
+                            "description": ""
+                        },
+                        "max_facets" : {
+                             "type": "integer",
+                            "title": "Max Facets",
+                            "description": ""
+                        }
+                    }
+                },
+                "Scheds" : {
+                    "type" : "object",
+                    "title": "Scheds",
+                    "description" : "",
+                    "properties" : {
+                        "fulltxt" : {
+                            "type": "array",
+                            "title": "Fulltxt",
+                            "description": ""
+                        },
+                        "facets" : {
+                            "type": "array",
+                            "title": "Facets",
+                            "description": ""
+                        },
+                        "criteria" : {
+                            "type": "object",
+                            "title": "Criteria",
                             "description": ""
                         },
                         "max_facets" : {
