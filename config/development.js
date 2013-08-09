@@ -74,7 +74,7 @@ module.exports = {
     },
     Search: {
         Medias: {
-            fulltxt: [ 'name', 'title' ],
+            fulltext: [ 'name', 'title' ],
             facets:  [
                 'durationsec',
                 'video.resolution.w',
@@ -85,13 +85,21 @@ module.exports = {
                 'video.codec',
                 'audio.codec'
             ],
+            criteria: {},
             max_facets: 100
         },
         Lists: {
-            fulltxt: [ 'name' ],
+            fulltext: [ 'name' ],
             facets: [
                 'duration',
             ],
+            criteria: {},
+            max_facets: 100
+        },
+        Scheds: {
+            fulltext: [ 'title' ],
+            facets: [],
+            criteria: { between: '{ "start": { "$gte": %value% }, "end": { "$lt" : %value% } }' },
             max_facets: 100
         }
     }
