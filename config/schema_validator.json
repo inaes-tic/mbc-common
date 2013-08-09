@@ -317,86 +317,86 @@
         "Search" : {
             "type" : "object",
             "title" : "Search options",
-            "description" : "Text and facets to search",
+            "description" : "Search config for mongo collections",
             "properties" : {
                 "Medias" : {
                     "type" : "object",
                     "title": "Medias",
-                    "description" : "",
+                    "description" : "Mongo Collection",
                     "properties" : {
-                        "fulltxt" : {
+                        "fulltext" : {
                             "type": "array",
-                            "title": "Fulltxt",
-                            "description": ""
+                            "title": "Fulltext",
+                            "description": "Fields array to make a full text search"
                         },
                         "facets" : {
                             "type": "array",
                             "title": "Facets",
-                            "description": ""
+                            "description": "Facets array to make faceted search"
                         },
                         "criteria" : {
                             "type": "object",
                             "title": "Criteria",
-                            "description": ""
+                            "description": "Custom criteria for queries in mongo style"
                         },
                         "max_facets" : {
                              "type": "integer",
                             "title": "Max Facets",
-                            "description": ""
+                            "description": "Maximun limit for faceted queries"
                         }
                     }
                 },
                 "Lists" : {
                     "type" : "object",
                     "title": "List",
-                    "description" : "",
+                    "description" : "Mongo Collection",
                     "properties" : {
-                        "fulltxt" : {
+                        "fulltext" : {
                             "type": "array",
-                            "title": "Fulltxt",
-                            "description": ""
+                            "title": "Fulltext",
+                            "description": "Fields array to make a full text search"
                         },
                         "facets" : {
                             "type": "array",
                             "title": "Facets",
-                            "description": ""
+                             "description": "Facets array to make faceted search"
                         },
                         "criteria" : {
                             "type": "object",
                             "title": "Criteria",
-                            "description": ""
+                            "description": "Custom criteria for queries in mongo style"
                         },
                         "max_facets" : {
                              "type": "integer",
                             "title": "Max Facets",
-                            "description": ""
+                            "description": "Maximun limit for faceted queries"
                         }
                     }
                 },
                 "Scheds" : {
                     "type" : "object",
                     "title": "Scheds",
-                    "description" : "",
+                    "description" : "Mongo Collection",
                     "properties" : {
-                        "fulltxt" : {
+                        "fulltext" : {
                             "type": "array",
-                            "title": "Fulltxt",
-                            "description": ""
+                            "title": "Fulltext",
+                            "description": "Fields array to make a full text search"
                         },
                         "facets" : {
                             "type": "array",
                             "title": "Facets",
-                            "description": ""
+                            "description": "Facets array to make faceted search"
                         },
                         "criteria" : {
                             "type": "object",
                             "title": "Criteria",
-                            "description": ""
+                            "description": "Custom criteria for queries in mongo style"
                         },
                         "max_facets" : {
-                             "type": "integer",
+                            "type": "integer",
                             "title": "Max Facets",
-                            "description": ""
+                            "description": "Maximun limit for faceted queries"
                         }
                     }
                 }
