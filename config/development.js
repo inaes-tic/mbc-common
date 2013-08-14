@@ -99,7 +99,7 @@ module.exports = {
         Scheds: {
             fulltext: [ 'title' ],
             facets: [],
-            criteria: { between: '{ "start": { "$gte": %value% }, "end": { "$lt" : %value% } }' },
+            criteria: { in_window: '{ "end": { "$gt": %value% }, "start": { "$lt" : %value% } }' },
             max_facets: 100
         }
     }
