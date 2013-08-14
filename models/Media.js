@@ -108,7 +108,7 @@ Media.Transform = Backbone.RelationalModel.extend({
     },
 });
 
-Media.TransformCollection = Backbone.Collection.extend({
+Media.TransformCollection = PageableCollection.extend({
     model: Media.Transform,
     url: 'transform',
     backend: 'transformbackend',
@@ -121,6 +121,15 @@ Media.TransformCollection = Backbone.Collection.extend({
         }
         console.log ('creating new Media.TransformCollection');
         Backbone.Collection.prototype.initialize.call (this);
+    },
+    state: {
+        firstPage: 0,
+        currentPage: 0,
+        pageSize: 10,
+        query: {}
+    },
+    queryParams: {
+      query: function() { return this.state.query; },
     },
 });
 
@@ -194,7 +203,7 @@ Media.Piece = Backbone.RelationalModel.extend({
     },
 });
 
-Media.PieceCollection = Backbone.Collection.extend({
+Media.PieceCollection = PageableCollection.extend({
     url: 'piece',
     model: Media.Piece,
     backend: 'piecebackend',
@@ -207,6 +216,15 @@ Media.PieceCollection = Backbone.Collection.extend({
         }
         console.log ('creating new Media.PieceCollection');
         Backbone.Collection.prototype.initialize.call (this);
+    },
+    state: {
+        firstPage: 0,
+        currentPage: 0,
+        pageSize: 10,
+        query: {}
+    },
+    queryParams: {
+      query: function() { return this.state.query; },
     },
 });
 
@@ -262,7 +280,7 @@ Media.Playlist = Backbone.RelationalModel.extend({
     }
 });
 
-Media.Universe = Backbone.Collection.extend({
+Media.Universe = PageableCollection.extend({
     url: 'list',
     model: Media.Playlist,
     backend: 'listbackend',
@@ -358,7 +376,7 @@ Media.Occurrence = Backbone.RelationalModel.extend({
     },
 });
 
-Media.Schedule = Backbone.Collection.extend({
+Media.Schedule = PageableCollection.extend({
     url: 'occur',
     model: Media.Occurrence,
     backend: 'schedbackend',
