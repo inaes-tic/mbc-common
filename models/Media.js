@@ -449,6 +449,15 @@ Media.Schedule = PageableCollection.extend({
             queue = queue.concat(new_overlaps);
         }
     },
+    state: {
+        firstPage: 0,
+        currentPage: 0,
+        pageSize: 10,
+        query: {}
+    },
+    queryParams: {
+      query: function() { return this.state.query; },
+    },
 });
 
 Media.Transform.setup();
