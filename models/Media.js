@@ -254,18 +254,6 @@ Media.Playlist = Backbone.RelationalModel.extend({
         console.log ('creating new Media.Playlist');
         Backbone.RelationalModel.prototype.initialize.call (this);
     },
-    save: function(attributes, options) {
-        //XXX We need Full relation Serialization toJSON
-        // Check https://github.com/PaulUithol/Backbone-relational/pull/183
-
-        if (typeof this.getRelation === 'function') {
-            var instance_rel = this.getRelation('pieces');
-            // change to just Serialize _id
-            instance_rel.options.includeInJSON = '_id';
-        }
-
-        Backbone.Model.prototype.save.call(this, attributes, options);
-    },
     update_duration: function (pieces) {
         this.set({duration : arrayDuration(pieces.pluck('durationraw'))});
     },
@@ -310,6 +298,7 @@ Media.Occurrence = Backbone.RelationalModel.extend({
     urlRoot: 'occur',
     idAttribute: '_id',
     relations: [{
+        includeInJSON: '_id',
         type: Backbone.HasOne,
         key: 'playlist',
         relatedModel: 'Media.Playlist',
@@ -358,19 +347,7 @@ Media.Occurrence = Backbone.RelationalModel.extend({
             }
         }
     },
-    save: function(attributes, options) {
-        //XXX We need Full relation Serialization toJSON
-        // Check https://github.com/PaulUithol/Backbone-relational/pull/183
-        var playlist = this.get('playlist');
 
-        if (playlist && typeof playlist.getRelation === 'function') {
-            var instance_rel = playlist.getRelation('pieces');
-            // change to full Serialization
-            instance_rel.options.includeInJSON = true;
-        }
-
-        Backbone.Model.prototype.save.call(this, attributes, options);
-    },
     defaults: {
         event: null,
     },
