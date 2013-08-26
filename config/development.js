@@ -93,7 +93,7 @@ module.exports = {
             facets: [
                 'duration',
             ],
-            criteria: {},
+            criteria: { ids_in: '{ "_id": { "$in": [%value%] } }', },
             max_facets: 100
         },
         Scheds: {
@@ -101,6 +101,9 @@ module.exports = {
             facets: [],
             criteria: { in_window: '{ "end": { "$gt": %value% }, "start": { "$lt" : %value% } }' },
             max_facets: 100
-        }
+        },
+        Pieces: {
+            criteria: { ids_in: '{ "_id": { "$in": [%value%] } }', },
+        },
     }
 }
