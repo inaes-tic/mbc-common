@@ -232,6 +232,7 @@ Media.PieceCollection = Backbone.Collection.extend({
 
 Media.Playlist = Backbone.RelationalModel.extend({
   urlRoot: 'list',
+  backend: 'listbackend', // Makes HasOne relation from Media.Occurrence work.
   idAttribute: '_id',
   relations: [{
         type: Backbone.HasMany,
