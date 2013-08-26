@@ -205,7 +205,7 @@ Media.Piece = Media.Model.extend({
     },
 });
 
-Media.PieceCollection = PageableCollection.extend({
+Media.PieceCollection = Backbone.Collection.extend({
     url: 'piece',
     model: Media.Piece,
     backend: 'piecebackend',
