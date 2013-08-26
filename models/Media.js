@@ -162,6 +162,8 @@ Media.Model = Backbone.RelationalModel.extend({
         audio: "None",
         video: "None",
         template: 'mediaview',
+        checksum: "",
+        durationraw: "",
         notes: ""
     }
 });
@@ -195,7 +197,7 @@ Media.Collection = PageableCollection.extend({
     },
 });
 
-Media.Piece = Backbone.RelationalModel.extend({
+Media.Piece = Media.Model.extend({
     urlRoot: 'piece',
     idAttribute: '_id',
     initialize: function () {
