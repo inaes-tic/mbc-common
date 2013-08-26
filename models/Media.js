@@ -270,7 +270,24 @@ Media.Playlist = Backbone.RelationalModel.extend({
     }
 });
 
-Media.Universe = PageableCollection.extend({
+Media.Universe = Backbone.Collection.extend({
+    url: 'list',
+    model: Media.Playlist,
+    backend: 'listbackend',
+    comparator: '_id',
+    initialize: function () {
+        if (!server) {
+            this.bindBackend();
+            this.bind('backend', function(method, model) {
+                console.log ('got from backend:', method, model);
+            });
+        }
+        console.log ('creating new Media.Universe');
+        Backbone.Collection.prototype.initialize.call (this);
+    },
+});
+
+Media.UniversePageable = Backbone.PageableCollection.extend({
     url: 'list',
     model: Media.Playlist,
     backend: 'listbackend',
