@@ -23,6 +23,15 @@ Backbone.Collection.prototype.move = function (from, to) {
     this.trigger('change:reorder');
     return model;
 };
+
+Backbone.Collection.prototype.parse = function(resp, options) {
+    if (resp.length && resp.length == 2) {
+        return resp[1];
+    } else {
+        return resp;
+    }
+};
+
 Backbone.View.prototype.moveDOM = function (id, from, to) {
     var jumper = $('#' + id) || console.trace ('ho noes');
     var dest = $('#' +this.collection.models[to].get_id());
