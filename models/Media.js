@@ -258,7 +258,14 @@ Media.Playlist = Backbone.RelationalModel.extend({
         Backbone.RelationalModel.prototype.initialize.call (this);
     },
     update_duration: function (pieces) {
-        this.set({duration : arrayDuration(pieces.pluck('durationraw'))});
+        var durations = pieces.pluck('durationraw');
+        var total_duration = arrayDuration(durations);
+        var all_ok = _.every(durations);
+        console.log("UpdateDuration ~ durationraws:", durations, "total: ", total_duration, " all ok: ", all_ok);
+        if (!all_ok) {
+            return;
+        }
+        this.set("duration", total_duration);
     },
     pretty_duration: function () {
         return prettyTime (this.get('duration'));
