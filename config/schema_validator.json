@@ -311,6 +311,48 @@
                             "description" : ""
                         }
                     }
+                },
+                "Collections" : {
+                    "type" : "object",
+                    "title" : "Collections",
+                    "description" : "Database names for Collections",
+                    "properties" : {
+                        "Medias" : {
+                            "type": "string",
+                            "title": "Medias",
+                            "description" : "Collection name for list of medias"
+                        },
+                        "Pieces" : {
+                            "type": "string",
+                            "title": "Pieces",
+                            "description" : "Collection name for list of pieces"
+                        },
+                        "Lists" : {
+                            "type": "string",
+                            "title": "Lists",
+                            "description" : "Collection name for list of lists"
+                        },
+                        "Scheds" : {
+                            "type": "string",
+                            "title": "Scheds",
+                            "description" : "Collection name for list of scheds"
+                        },
+                        "Transforms" : {
+                            "type": "string",
+                            "title": "Transforms",
+                            "description" : "Collection name for list of transforms"
+                        },
+                        "Status" : {
+                            "type": "string",
+                            "title": "Status",
+                            "description" : "Collection name for list of status"
+                        },
+                        "Mostomessages" : {
+                            "type": "string",
+                            "title": "Mostomessages",
+                            "description" : "Collection name for list of mostomessages"
+                        }
+                    }
                 }
             }
         },
@@ -376,6 +418,114 @@
                 "Scheds" : {
                     "type" : "object",
                     "title": "Scheds",
+                    "description" : "Mongo Collection",
+                    "properties" : {
+                        "fulltext" : {
+                            "type": "array",
+                            "title": "Fulltext",
+                            "description": "Fields array to make a full text search"
+                        },
+                        "facets" : {
+                            "type": "array",
+                            "title": "Facets",
+                            "description": "Facets array to make faceted search"
+                        },
+                        "criteria" : {
+                            "type": "object",
+                            "title": "Criteria",
+                            "description": "Custom criteria for queries in mongo style"
+                        },
+                        "max_facets" : {
+                            "type": "integer",
+                            "title": "Max Facets",
+                            "description": "Maximun limit for faceted queries"
+                        }
+                    }
+                },
+                "Pieces" : {
+                    "type" : "object",
+                    "title": "Pieces",
+                    "description" : "Mongo Collection",
+                    "properties" : {
+                        "fulltext" : {
+                            "type": "array",
+                            "title": "Fulltext",
+                            "description": "Fields array to make a full text search"
+                        },
+                        "facets" : {
+                            "type": "array",
+                            "title": "Facets",
+                            "description": "Facets array to make faceted search"
+                        },
+                        "criteria" : {
+                            "type": "object",
+                            "title": "Criteria",
+                            "description": "Custom criteria for queries in mongo style"
+                        },
+                        "max_facets" : {
+                            "type": "integer",
+                            "title": "Max Facets",
+                            "description": "Maximun limit for faceted queries"
+                        }
+                    }
+                },
+                "Transforms" : {
+                    "type" : "object",
+                    "title": "Transforms",
+                    "description" : "Mongo Collection",
+                    "properties" : {
+                        "fulltext" : {
+                            "type": "array",
+                            "title": "Fulltext",
+                            "description": "Fields array to make a full text search"
+                        },
+                        "facets" : {
+                            "type": "array",
+                            "title": "Facets",
+                            "description": "Facets array to make faceted search"
+                        },
+                        "criteria" : {
+                            "type": "object",
+                            "title": "Criteria",
+                            "description": "Custom criteria for queries in mongo style"
+                        },
+                        "max_facets" : {
+                            "type": "integer",
+                            "title": "Max Facets",
+                            "description": "Maximun limit for faceted queries"
+                        }
+                    }
+                },
+                "Status" : {
+                    "type" : "object",
+                    "title": "Scheds",
+                    "description" : "Mongo Collection",
+                    "properties" : {
+                        "fulltext" : {
+                            "type": "array",
+                            "title": "Fulltext",
+                            "description": "Fields array to make a full text search"
+                        },
+                        "facets" : {
+                            "type": "array",
+                            "title": "Facets",
+                            "description": "Facets array to make faceted search"
+                        },
+                        "criteria" : {
+                            "type": "object",
+                            "title": "Criteria",
+                            "description": "Custom criteria for queries in mongo style"
+                        },
+                        "max_facets" : {
+                            "type": "integer",
+                            "title": "Max Facets",
+                            "description": "Maximun limit for faceted queries"
+                        }
+                    }
+                },
+                "Mostomessages" : {
+                    "type" : "object",
+                    "title": "Mostomessages",
                     "description" : "Mongo Collection",
                     "properties" : {
                         "fulltext" : {

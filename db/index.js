@@ -1,28 +1,27 @@
 var _ = require('underscore');
 
 exports = module.exports = function(config) {
-    var conf = config || require('config').Common.MediaDB;
-    var cols = require('config').Search;
+    var conf = require('config');
+    var mediadb = config || conf.Common.MediaDB;
+    var collections = conf.Common.Collections;
+    var search = conf.Search;
     var getParameterObj = { getParameter:1, textSearchEnabled:1 };
-    var db = require('mongoskin').db(conf.dbHost + ':' + conf.dbPort + '/' + '?auto_reconnect', {
-        database: conf.dbName,
-        username: conf.dbUser,
-        password: conf.dbPassword,
+    var db = require('mongoskin').db(mediadb.dbHost + ':' + mediadb.dbPort + '/' + '?auto_reconnect', {
+        database: mediadb.dbName,
+        username: mediadb.dbUser,
+        password: mediadb.dbPassword,
         safe: true
     });
 
     db.admin.command(getParameterObj, function(err, result) {
         if(result.documents[0].textSearchEnabled) {
-            for(col in cols) {
-                var aFulltext = cols[col].fulltext;
-                if(aFulltext) {
+            for(col in collections) {
+                var aFulltext = search[col].fulltext;
+                if(aFulltext && aFulltext.length) {
                     var indexes = _.object(aFulltext, _.map(aFulltext, function(i) { return 'text'; }));
 
-                    //XXX hack idx to lower case == mongo collection
-                    var col = col.toLowerCase();
-
                     //For all text fields { "$**": "text" }, { name: "TextIndex" }
-                    db.ensureIndex(col.toLowerCase(), indexes, { background: true }, function(err, idx) {
+                    db.ensureIndex(collections[col], indexes, { background: true }, function(err, idx) {
                         if(err) console.log('err: ', err, ' on ', idx );
                     });
                 }

@@ -71,6 +71,15 @@ module.exports = {
             port: 6379,
             password: "",
         },
+        Collections: {
+            Medias: 'medias',
+            Pieces: 'pieces',
+            Lists:  'lists',
+            Scheds: 'scheds',
+            Transforms: 'transforms',
+            Status: 'status',
+            Mostomessages: 'mostomessages',
+        }
     },
     Search: {
         Medias: {
@@ -103,7 +112,28 @@ module.exports = {
             max_facets: 100
         },
         Pieces: {
+            fulltext: [],
+            facets: [],
             criteria: { ids_in: '{ "_id": { "$in": [%value%] } }', },
+            max_facets: 100
+        },
+        Transforms: {
+            fulltext: [],
+            facets: [],
+            criteria: {},
+            max_facets: 100
+        },
+        Status: {
+            fulltext: [],
+            facets: [],
+            criteria: {},
+            max_facets: 100
+        },
+        Mostomessages: {
+            fulltext: [],
+            facets: [],
+            criteria: {},
+            max_facets: 100
         },
     }
 }
