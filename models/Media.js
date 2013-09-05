@@ -278,24 +278,9 @@ Media.Playlist = Backbone.RelationalModel.extend({
     }
 });
 
-Media.Universe = Backbone.Collection.extend({
-    url: 'list',
-    model: Media.Playlist,
-    backend: 'listbackend',
-    comparator: '_id',
-    initialize: function () {
-        if (!server) {
-            this.bindBackend();
-            this.bind('backend', function(method, model) {
-                console.log ('got from backend:', method, model);
-            });
-        }
-        console.log ('creating new Media.Universe');
-        Backbone.Collection.prototype.initialize.call (this);
-    },
-});
 
-Media.UniversePageable = Backbone.PageableCollection.extend({
+
+var Universe = {
     url: 'list',
     model: Media.Playlist,
     backend: 'listbackend',
@@ -310,16 +295,22 @@ Media.UniversePageable = Backbone.PageableCollection.extend({
         console.log ('creating new Media.Universe');
         Backbone.Collection.prototype.initialize.call (this);
     },
+};
+
+var UniversePageable = {
     state: {
         firstPage: 0,
         currentPage: 0,
-        pageSize: 20,
+        pageSize: 10,
         query: {}
     },
     queryParams: {
       query: function() { return this.state.query; },
     },
-});
+};
+
+Media.Universe = Backbone.Collection.extend(Universe);
+Media.UniversePageable = Backbone.PageableCollection.extend(_.extend(Universe, UniversePageable));
 
 Media.Occurrence = Backbone.RelationalModel.extend({
     urlRoot: 'occur',
@@ -380,7 +371,7 @@ Media.Occurrence = Backbone.RelationalModel.extend({
     },
 });
 
-Media.Schedule = PageableCollection.extend({
+var Schedule = {
     url: 'occur',
     model: Media.Occurrence,
     backend: 'schedbackend',
@@ -453,6 +444,9 @@ Media.Schedule = PageableCollection.extend({
             queue = queue.concat(new_overlaps);
         }
     },
+};
+
+var SchedulePageable = {
     state: {
         firstPage: 0,
         currentPage: 0,
@@ -462,7 +456,10 @@ Media.Schedule = PageableCollection.extend({
     queryParams: {
       query: function() { return this.state.query; },
     },
-});
+};
+
+Media.Schedule = Backbone.Collection.extend(Schedule);
+Media.SchedulePageable = Backbone.PageableCollection.extend(_.extend(Schedule, SchedulePageable));
 
 Media.Transform.setup();
 Media.Model.setup();
