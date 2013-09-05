@@ -14,6 +14,7 @@ exports = module.exports = function(config) {
     });
 
     db.admin.command(getParameterObj, function(err, result) {
+        if(err) { console.log(err); return; }
         if(result.documents[0].textSearchEnabled) {
             for(col in collections) {
                 var aFulltext = search[col].fulltext;
