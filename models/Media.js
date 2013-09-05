@@ -59,6 +59,18 @@ var arrayDuration = function (a) {
         return m + toMilliseconds (n);}, 0);
 };
 
+var Pageable = {
+    state: {
+        firstPage: 0,
+        currentPage: 0,
+        pageSize: 10,
+        query: {}
+    },
+    queryParams: {
+      query: function() { return this.state.query; },
+    },
+};
+
 var Media = {};
 
 Media.Transform = Backbone.RelationalModel.extend({
@@ -108,7 +120,7 @@ Media.Transform = Backbone.RelationalModel.extend({
     },
 });
 
-Media.TransformCollection = PageableCollection.extend({
+var TransformCollection = {
     model: Media.Transform,
     url: 'transform',
     backend: 'transformbackend',
@@ -122,16 +134,10 @@ Media.TransformCollection = PageableCollection.extend({
         console.log ('creating new Media.TransformCollection');
         Backbone.Collection.prototype.initialize.call (this);
     },
-    state: {
-        firstPage: 0,
-        currentPage: 0,
-        pageSize: 10,
-        query: {}
-    },
-    queryParams: {
-      query: function() { return this.state.query; },
-    },
-});
+};
+
+Media.TransformCollection = Backbone.Collection.extend(TransformCollection);
+Media.TransformCollectionPageable = Backbone.PageableCollection.extend(_.extend(TransformCollection, Pageable));
 
 Media.Model = Backbone.RelationalModel.extend({
     urlRoot: 'media',
@@ -168,8 +174,7 @@ Media.Model = Backbone.RelationalModel.extend({
     }
 });
 
-/* all methods are overriden in Default.js */
-Media.Collection = PageableCollection.extend({
+var Collection = {
     model: Media.Model,
     url: 'media',
     backend: 'mediabackend',
@@ -183,19 +188,13 @@ Media.Collection = PageableCollection.extend({
         console.log ('creating new Media.Collection');
         Backbone.Collection.prototype.initialize.call (this);
     },
-    state: {
-        firstPage: 0,
-        currentPage: 0,
-        pageSize: 10,
-        query: {}
-    },
-    queryParams: {
-      query: function() { return this.state.query; },
-    },
     pretty_duration: function () {
         return prettyTime(arrayDuration(this.pluck('durationraw')));
     },
-});
+};
+
+Media.Collection = Backbone.Collection.extend(Collection);
+Media.CollectionPageable = Backbone.PageableCollection.extend(_.extend(Collection, Pageable));
 
 Media.Piece = Media.Model.extend({
     urlRoot: 'piece',
@@ -205,7 +204,7 @@ Media.Piece = Media.Model.extend({
     },
 });
 
-Media.PieceCollection = Backbone.Collection.extend({
+var PieceCollection = {
     url: 'piece',
     model: Media.Piece,
     backend: 'piecebackend',
@@ -219,16 +218,10 @@ Media.PieceCollection = Backbone.Collection.extend({
         console.log ('creating new Media.PieceCollection');
         Backbone.Collection.prototype.initialize.call (this);
     },
-    state: {
-        firstPage: 0,
-        currentPage: 0,
-        pageSize: 10,
-        query: {}
-    },
-    queryParams: {
-      query: function() { return this.state.query; },
-    },
-});
+};
+
+Media.PieceCollection = Backbone.Collection.extend(PieceCollection);
+Media.PieceCollectionPageable = Backbone.PageableCollection.extend(_.extend(PieceCollection, Pageable));
 
 Media.Playlist = Backbone.RelationalModel.extend({
   urlRoot: 'list',
@@ -278,8 +271,6 @@ Media.Playlist = Backbone.RelationalModel.extend({
     }
 });
 
-
-
 var Universe = {
     url: 'list',
     model: Media.Playlist,
@@ -297,20 +288,8 @@ var Universe = {
     },
 };
 
-var UniversePageable = {
-    state: {
-        firstPage: 0,
-        currentPage: 0,
-        pageSize: 10,
-        query: {}
-    },
-    queryParams: {
-      query: function() { return this.state.query; },
-    },
-};
-
 Media.Universe = Backbone.Collection.extend(Universe);
-Media.UniversePageable = Backbone.PageableCollection.extend(_.extend(Universe, UniversePageable));
+Media.UniversePageable = Backbone.PageableCollection.extend(_.extend(Universe, Pageable));
 
 Media.Occurrence = Backbone.RelationalModel.extend({
     urlRoot: 'occur',
@@ -446,20 +425,8 @@ var Schedule = {
     },
 };
 
-var SchedulePageable = {
-    state: {
-        firstPage: 0,
-        currentPage: 0,
-        pageSize: 10,
-        query: {}
-    },
-    queryParams: {
-      query: function() { return this.state.query; },
-    },
-};
-
 Media.Schedule = Backbone.Collection.extend(Schedule);
-Media.SchedulePageable = Backbone.PageableCollection.extend(_.extend(Schedule, SchedulePageable));
+Media.SchedulePageable = Backbone.PageableCollection.extend(_.extend(Schedule, Pageable));
 
 Media.Transform.setup();
 Media.Model.setup();
