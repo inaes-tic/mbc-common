@@ -141,6 +141,7 @@ Media.TransformCollectionPageable = Backbone.PageableCollection.extend(_.extend(
 
 Media.Model = Backbone.RelationalModel.extend({
     urlRoot: 'media',
+    backend: 'mediabackend',
     idAttribute: '_id',
     initialize: function () {
         console.log ('creating new Media.Model');
@@ -198,6 +199,7 @@ Media.CollectionPageable = Backbone.PageableCollection.extend(_.extend(Collectio
 
 Media.Piece = Media.Model.extend({
     urlRoot: 'piece',
+    backend: 'piecebackend',
     idAttribute: '_id',
     initialize: function () {
         console.log ('creating new Media.Piece');
