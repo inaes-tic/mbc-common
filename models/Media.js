@@ -235,11 +235,6 @@ Media.Playlist = Backbone.RelationalModel.extend({
         relatedModel: 'Media.Piece',
         collectionType: 'Media.PieceCollection',
         includeInJSON: '_id',
-        reverseRelation: {
-            key: 'parent_playlist',
-            includeInJSON: '_id',
-            type: Backbone.HasOne
-        }
     }],
     initialize: function () {
         var self = this;
