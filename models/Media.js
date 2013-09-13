@@ -247,7 +247,7 @@ Media.Playlist = Backbone.RelationalModel.extend({
         console.log ('creating new Media.Playlist');
         Backbone.RelationalModel.prototype.initialize.call (this);
     },
-    update_duration: function (pieces) {
+    update_duration: _.debounce(function (pieces) {
         var durations = pieces.pluck('durationraw');
         var total_duration = arrayDuration(durations);
         var all_ok = _.every(durations);
@@ -256,7 +256,7 @@ Media.Playlist = Backbone.RelationalModel.extend({
             return;
         }
         this.set("duration", total_duration);
-    },
+    }, 100),
     pretty_duration: function () {
         return prettyTime (this.get('duration'));
     },
