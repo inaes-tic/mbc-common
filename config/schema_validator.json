@@ -69,6 +69,11 @@
                             "type": "string",
                             "title": "Scrape",
                             "description" : ""
+                        },
+                        "logs" : {
+                            "type": "string",
+                            "title": "Logs",
+                            "description" : "Logging directory"
                         }
                     }
                 },
