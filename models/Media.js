@@ -23,6 +23,8 @@ if (!_ && (typeof require !== 'undefined')) _ = require('underscore');
 var BackboneIO = root.BackboneIO;
 if ((typeof require !== 'undefined')) Backbone = require('backbone');
 
+if ((typeof require !== 'undefined')) require('backbone-relational');
+
 var leadingZero = function (num) {
     return (num < 10) ? "0"+num : num;
 }
@@ -67,7 +69,7 @@ var Pageable = {
         query: {}
     },
     queryParams: {
-      query: function() { return this.state.query; },
+        query: function() { return this.state.query; },
     },
 };
 
@@ -87,28 +89,28 @@ Media.Transform = Backbone.RelationalModel.extend({
             type: Backbone.HasOne
         }
     },
-    {
-        type: Backbone.HasOne,
-        key: 'playlist',
-        relatedModel:'Media.Playlist',
-        includeInJSON: '_id',
-        reverseRelation: {
-            key: 'transform',
-            includeInJSON: '_id',
-            type: Backbone.HasOne
-        }
-    },
-    {
-        type: Backbone.HasOne,
-        key: 'occurrence',
-        relatedModel:'Media.Occurrence',
-        includeInJSON: '_id',
-        reverseRelation: {
-            key: 'transform',
-            includeInJSON: '_id',
-            type: Backbone.HasOne
-        }
-    }],
+                {
+                    type: Backbone.HasOne,
+                    key: 'playlist',
+                    relatedModel:'Media.Playlist',
+                    includeInJSON: '_id',
+                    reverseRelation: {
+                        key: 'transform',
+                        includeInJSON: '_id',
+                        type: Backbone.HasOne
+                    }
+                },
+                {
+                    type: Backbone.HasOne,
+                    key: 'occurrence',
+                    relatedModel:'Media.Occurrence',
+                    includeInJSON: '_id',
+                    reverseRelation: {
+                        key: 'transform',
+                        includeInJSON: '_id',
+                        type: Backbone.HasOne
+                    }
+                }],
     defaults: {
         trim: {
             timein:  0,
@@ -226,10 +228,10 @@ Media.PieceCollection = Backbone.Collection.extend(PieceCollection);
 Media.PieceCollectionPageable = Backbone.PageableCollection.extend(_.extend(PieceCollection, Pageable));
 
 Media.Playlist = Backbone.RelationalModel.extend({
-  urlRoot: 'list',
-  backend: 'listbackend', // Makes HasOne relation from Media.Occurrence work.
-  idAttribute: '_id',
-  relations: [{
+    urlRoot: 'list',
+    backend: 'listbackend', // Makes HasOne relation from Media.Occurrence work.
+    idAttribute: '_id',
+    relations: [{
         type: Backbone.HasMany,
         key: 'pieces',
         relatedModel: 'Media.Piece',
