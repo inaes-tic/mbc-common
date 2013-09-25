@@ -1,5 +1,6 @@
 var winston = require('winston'),
     moment  = require('moment'),
+    _ = require('underscore'),
     level   = process.env.LOG_LEVEL || 'debug';
 
 // Logging levels
@@ -63,44 +64,21 @@ var logger = {
         return logger.getLogger(category);
     },
     getLogger: function(category) {
-        var tmp = {
-            error: function(message, metadata) {
+        var log = function(level) {
+            var ret = function(message, metadata) {
                 if (metadata) {
-                    winston.loggers.get(category).error(message, metadata);
-                    general.error("[" + category + "] " + message, metadata);
+                    winston.loggers.get(category)[level](message, metadata);
+                    general[level]("[" + category + "] " + message, metadata);
                 } else {
-                    winston.loggers.get(category).error(message);
-                    general.error("[" + category + "] " + message);
+                    winston.loggers.get(category)[level](message);
+                    general[level]("[" + category + "] " + message);
                 }
-            },
-            warn: function(message, metadata) {
-                if (metadata) {
-                    winston.loggers.get(category).warn(message, metadata);
-                    general.warn("[" + category + "] " + message, metadata);
-                } else {
-                    winston.loggers.get(category).warn(message);
-                    general.warn("[" + category + "] " + message);
-                }
-            },
-            info: function(message, metadata) {
-                if (metadata) {
-                    winston.loggers.get(category).info(message, metadata);
-                    general.info("[" + category + "] " + message, metadata);
-                } else {
-                    winston.loggers.get(category).info(message);
-                    general.info("[" + category + "] " + message);
-                }
-            },
-            debug: function(message, metadata) {
-                if (metadata) {
-                    winston.loggers.get(category).debug(message, metadata);
-                    general.debug("[" + category + "] " + message, metadata);
-                } else {
-                    winston.loggers.get(category).debug(message);
-                    general.debug("[" + category + "] " + message);
-                }
-            }
+            };
+            return ret;
         };
+
+        var keys = _.keys(customLevels.levels);
+        var tmp = _.object(keys, _.map(keys, function(key) { return log(key); }));
         return tmp;
     }
 };
