@@ -73,14 +73,17 @@ var logger = {
     },
     getLogger: function(category) {
         var log = function(level) {
-            var ret = function(message, metadata) {
-                if (metadata) {
-                    winston.loggers.get(category)[level](message, metadata);
-                    general[level]("[" + category + "] " + message, metadata);
-                } else {
-                    winston.loggers.get(category)[level](message);
-                    general[level]("[" + category + "] " + message);
-                }
+            var _wlogger = winston.loggers.get(category);
+            var _label = "[" + category + "] ";
+            var _getArguments = function() {
+                var args = Array.prototype.slice.call(arguments);
+                return args;
+            };
+            var ret = function() {
+                var args = _getArguments.apply(this, arguments);
+                _wlogger[level].apply(_wlogger, args);
+                args[0] = _label + args[0];
+                general[level].apply(general, args);
             };
             return ret;
         };
