@@ -6,16 +6,24 @@ var winston = require('winston'),
 // Logging levels
 var customLevels = {
     levels: {
-      debug: 0,
-      info:  1,
+      none:  0,
+      error: 1,
       warn:  2,
-      error: 3
+      fixme: 3,
+      info:  4,
+      debug: 5,
+      log:   6,
+      trace: 7,
     },
     colors: {
-      debug: 'cyan',
-      info:  'green',
-      warn:  'yellow',
-      error: 'red'
+      none:  'black',
+      error: 'red',
+      warn:  'green',
+      fixme: 'yellow',
+      info:  'blue',
+      debug: 'magenta',
+      log:   'cyan',
+      trace: 'white',
     }
 };
 
