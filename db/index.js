@@ -6,6 +6,7 @@ exports = module.exports = function(config) {
     var mediadb = config || conf.Common.MediaDB;
     var collections = conf.Common.Collections;
     var search = conf.Search;
+    var events = ['close', 'timeout', 'error'];
     var getParameterObj = { getParameter:1, textSearchEnabled:1 };
     var db = require('mongoskin').db(mediadb.dbHost + ':' + mediadb.dbPort + '/' + '?auto_reconnect', {
         database: mediadb.dbName,
@@ -33,6 +34,13 @@ exports = module.exports = function(config) {
         } else {
             logger.info("Mongo Fulltext Search is not supported");
         }
+    });
+
+    //listen for events
+    events.forEach(function (event) {
+        db.on(event, function () {
+            logger.info(event, arguments)
+        });
     });
 
     return db;
