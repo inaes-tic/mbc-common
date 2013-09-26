@@ -16,6 +16,7 @@ exports = module.exports = function(config) {
 
     db.admin.command(getParameterObj, function(err, result) {
         if(err) { logger.error(err); return; }
+        logger.info("Connected to", mediadb);
         if(result.documents[0].textSearchEnabled) {
             for(col in collections) {
                 var aFulltext = search[col].fulltext;
@@ -28,6 +29,7 @@ exports = module.exports = function(config) {
                     });
                 }
             };
+            logger.info("Mongo Fulltext Search Enabled");
         } else {
             logger.info("Mongo Fulltext Search is not supported");
         }
