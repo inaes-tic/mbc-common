@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var logger = require('../logger')().addLogger('mongodb_connection');
 
 exports = module.exports = function(config) {
     var conf = require('config');
@@ -14,7 +15,7 @@ exports = module.exports = function(config) {
     });
 
     db.admin.command(getParameterObj, function(err, result) {
-        if(err) { console.log(err); return; }
+        if(err) { logger.error(err); return; }
         if(result.documents[0].textSearchEnabled) {
             for(col in collections) {
                 var aFulltext = search[col].fulltext;
@@ -23,12 +24,12 @@ exports = module.exports = function(config) {
 
                     //For all text fields { "$**": "text" }, { name: "TextIndex" }
                     db.ensureIndex(collections[col], indexes, { background: true }, function(err, idx) {
-                        if(err) console.log('err: ', err, ' on ', idx );
+                        if(err) logger.error('err: ', err, ' on ', idx );
                     });
                 }
             };
         } else {
-            console.log("Mongo Fulltext Search is not supported");
+            logger.info("Mongo Fulltext Search is not supported");
         }
     });
 
