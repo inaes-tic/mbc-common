@@ -3,27 +3,23 @@ var winston = require('winston'),
     _ = require('underscore'),
     level   = process.env.LOG_LEVEL || 'debug';
 
-// Logging levels
-var customLevels = {
+//Default winston log levels
+var defaultLevels = {
     levels: {
-      none:  0,
-      error: 1,
-      warn:  2,
-      fixme: 3,
-      info:  4,
-      debug: 5,
-      log:   6,
-      trace: 7,
+        silly:   0,
+        debug:   1,
+        verbose: 2,
+        info:    3,
+        warn:    4,
+        error:   5
     },
     colors: {
-      none:  'black',
-      error: 'red',
-      warn:  'green',
-      fixme: 'yellow',
-      info:  'blue',
-      debug: 'magenta',
-      log:   'cyan',
-      trace: 'white',
+        silly:   'black',
+        debug:   'blue',
+        verbose: 'cyan',
+        info:    'green',
+        warn:    'yellow',
+        error:   'red'
     }
 };
 
@@ -66,8 +62,7 @@ var logger = {
                 })
             ],
         });
-        winston.setLevels(customLevels.levels);
-        winston.addColors(customLevels.colors);
+        winston.addColors(defaultLevels.colors);
         winston.loggers.get(category).exitOnError = false;
         return logger.getLogger(category);
     },
@@ -88,7 +83,7 @@ var logger = {
             return ret;
         };
 
-        var keys = _.keys(customLevels.levels);
+        var keys = _.keys(defaultLevels.levels);
         var tmp = _.object(keys, _.map(keys, function(key) { return log(key); }));
         return tmp;
     }
