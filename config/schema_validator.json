@@ -6,7 +6,7 @@
         "Caspa" : {
             "type" : "object",
             "title" : "General UI Caspa config",
-            "description" : "fine tune all configuration",
+            "description" : "bits and picies of the HTML5 UI",
             "properties" : {
                 "Branding" : {
                     "type" : "object",
@@ -79,8 +79,8 @@
                 },
                 "Others" : {
                     "type" : "object",
-                    "title" : "Other",
-                    "description" : "Any other configuration",
+                    "title" : "Locale",
+                    "description" : "Localization and TimeZone",
                     "properties" : {
                         "timezone" : {
                             "type": "string",
@@ -94,8 +94,8 @@
         },
         "Mosto" : {
             "type" : "object",
-            "title" : "General UI Mosto config",
-            "description" : "fine tune all configuration",
+            "title" : "General Mosto config",
+            "description" : "configure the playlist juggler",
             "properties" : {
                 "Branding" : {
                     "type" : "object",
@@ -243,8 +243,8 @@
         },
         "Common" : {
             "type" : "object",
-            "title" : "General UI Common config",
-            "description" : "fine tune all configuration",
+            "title" : "General Common config",
+            "description" : "settings shared by many MBC sub-projects",
             "properties" : {
                 "Branding" : {
                     "type" : "object",
