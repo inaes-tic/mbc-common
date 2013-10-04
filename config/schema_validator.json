@@ -85,7 +85,7 @@
                         "timezone" : {
                             "type": "string",
                             "title": "Timezone",
-                            "description" : ""
+                            "description" : "The Timezone of this playout instalation"
                         }
                     }
 
