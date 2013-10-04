@@ -83,9 +83,12 @@
                     "description" : "Look and Feel of the Playout View",
                     "properties" : {
                         "horizontal" : {
-                            "type" : "string", // XXX(xaiki): should be toggle
+                            "type" : "string",
                             "title": "Horizontal Playout View",
-                            "description" : "Should the Playout View use the horizontal Layout",
+                            "description" : "Should the Playout View use the horizontal Layout"
+                        }
+                    }
+                },
                 "Others" : {
                     "type" : "object",
                     "title" : "Locale",

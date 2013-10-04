@@ -18,6 +18,9 @@ module.exports = {
             scrape : path.join(cwd, 'videos'),
             logs :  path.join(cwd, 'logs'),
         },
+        Playout: {
+            horizontal: '0',
+        },
         Others: {
             timezone: 'UTC',
         },
