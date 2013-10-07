@@ -47,7 +47,7 @@ var toMilliseconds = function (time) {
 
     var t = time.match(/(\d{2}):(\d{2}):(\d{2})\.(\d*)/);
     t.shift();
-    d = moment.duration ({
+    var d = moment.duration ({
         hours:        t[0],
         minutes:      t[1],
         seconds:      t[2],
@@ -58,7 +58,7 @@ var toMilliseconds = function (time) {
 };
 
 var prettyTime =  function (m) {
-    d = moment.duration(m);
+    var d = moment.duration(m);
     var p = leadingZero(d.hours())   + ':'
         + leadingZero(d.minutes()) + ':'
         + leadingZero(d.seconds()) + '.'
