@@ -24,6 +24,7 @@ var Backbone = root.Backbone || false;
 var BackboneIO = root.BackboneIO;
 if ((typeof require !== 'undefined')){
     Backbone = require('backbone');
+    Backbone.Memento = function() {};
 }
 
 // Require moment
