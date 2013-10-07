@@ -20,8 +20,17 @@ if (typeof exports !== 'undefined') {
 var _ = root._;
 if (!_ && (typeof require !== 'undefined')) _ = require('underscore');
 
+var Backbone = root.Backbone || false;
 var BackboneIO = root.BackboneIO;
-if ((typeof require !== 'undefined')) Backbone = require('backbone');
+if ((typeof require !== 'undefined')){
+    Backbone = require('backbone');
+}
+
+// Require moment
+var moment = root.moment || false;
+if(typeof require !== 'undefined') {
+    moment = require('moment');
+}
 
 if ((typeof require !== 'undefined')) require('backbone-relational');
 
