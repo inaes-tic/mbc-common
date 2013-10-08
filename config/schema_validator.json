@@ -6,7 +6,7 @@
         "Caspa" : {
             "type" : "object",
             "title" : "General UI Caspa config",
-            "description" : "bits and picies of the HTML5 UI",
+            "description" : "bits and pieces of the HTML5 UI",
             "properties" : {
                 "Branding" : {
                     "type" : "object",
