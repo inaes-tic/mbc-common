@@ -16,6 +16,10 @@ module.exports = {
             uploads: path.join(cwd, 'public', 'uploads', 'incoming'),
             screenshots: path.join(cwd, 'public','sc'),
             scrape : path.join(cwd, 'videos'),
+            logs :  path.join(cwd, 'logs'),
+        },
+        Playout: {
+            horizontal: '0',
         },
         Others: {
             timezone: 'UTC',
