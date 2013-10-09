@@ -1,7 +1,7 @@
 {
     "name": "mbc-common",
     "description": "@mbc-mosto and @mbc-playout's common components",
-    "version": "0.0.1-1",
+    "version": "0.0.1-2",
     "author": "Tomas Neme <lacrymology@gmail.com>",
     "contributors": [ ],
     "main": "index",
