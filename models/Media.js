@@ -20,8 +20,18 @@ if (typeof exports !== 'undefined') {
 var _ = root._;
 if (!_ && (typeof require !== 'undefined')) _ = require('underscore');
 
+var Backbone = root.Backbone || false;
 var BackboneIO = root.BackboneIO;
-if ((typeof require !== 'undefined')) Backbone = require('backbone');
+if ((typeof require !== 'undefined')){
+    Backbone = require('backbone');
+    Backbone.Memento = function() {};
+}
+
+// Require moment
+var moment = root.moment || false;
+if(typeof require !== 'undefined') {
+    moment = require('moment');
+}
 
 if ((typeof require !== 'undefined')) require('backbone-relational');
 
@@ -37,7 +47,7 @@ var toMilliseconds = function (time) {
 
     var t = time.match(/(\d{2}):(\d{2}):(\d{2})\.(\d*)/);
     t.shift();
-    d = moment.duration ({
+    var d = moment.duration ({
         hours:        t[0],
         minutes:      t[1],
         seconds:      t[2],
@@ -48,7 +58,7 @@ var toMilliseconds = function (time) {
 };
 
 var prettyTime =  function (m) {
-    d = moment.duration(m);
+    var d = moment.duration(m);
     var p = leadingZero(d.hours())   + ':'
         + leadingZero(d.minutes()) + ':'
         + leadingZero(d.seconds()) + '.'
@@ -243,13 +253,17 @@ Media.Playlist = Backbone.RelationalModel.extend({
         var pieces = this.get('pieces');
 
         pieces.bind('relational:change relational:add relational:reset relational:remove', function(){
-            self.update_duration(pieces);
+            self.update_duration(self);
         }, this);
 
         console.log ('creating new Media.Playlist');
         Backbone.RelationalModel.prototype.initialize.call (this);
     },
-    update_duration: _.debounce(function (pieces) {
+    update_duration: _.debounce(function (self) {
+        self.update_duration_nowait(self.get('pieces'));
+    }, 100),
+    update_duration_nowait: function(pieces) {
+        pieces = pieces || this.get('pieces');
         var durations = pieces.pluck('durationraw');
         var total_duration = arrayDuration(durations);
         var all_ok = _.every(durations);
@@ -258,7 +272,7 @@ Media.Playlist = Backbone.RelationalModel.extend({
             return;
         }
         this.set("duration", total_duration);
-    }, 100),
+    },
     pretty_duration: function () {
         return prettyTime (this.get('duration'));
     },
@@ -433,5 +447,8 @@ Media.Piece.setup();
 Media.Playlist.setup();
 Media.Occurrence.setup();
 
-if(server) module.exports = Media;
+if(server) {
+    module.exports = Media;
+    Backbone.Relational.store.addModelScope({ "Media": Media });
+}
 else root.Media = Media;
