@@ -447,5 +447,8 @@ Media.Piece.setup();
 Media.Playlist.setup();
 Media.Occurrence.setup();
 
-if(server) module.exports = Media;
+if(server) {
+    module.exports = Media;
+    Backbone.Relational.store.addModelScope({ "Media": Media });
+}
 else root.Media = Media;
