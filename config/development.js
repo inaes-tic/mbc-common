@@ -98,6 +98,7 @@ module.exports = {
             Transforms: 'transforms',
             Status: 'status',
             Mostomessages: 'mostomessages',
+            Sketchs: 'sketchs',
         }
     },
     Search: {
@@ -154,5 +155,11 @@ module.exports = {
             criteria: {},
             max_facets: 100
         },
+        Sketchs: {
+            fulltext: [],
+            facets: [],
+            criteria: {},
+            max_facets: 100
+        }
     }
 }

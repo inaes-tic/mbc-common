@@ -433,6 +433,11 @@
                             "type": "string",
                             "title": "Mostomessages",
                             "description" : "Collection name for list of mostomessages"
+                        },
+                        "Sketchs" : {
+                            "type": "string",
+                            "title": "Sketchs",
+                            "description" : "Collection name for list of sketchs"
                         }
                     }
                 }
@@ -608,6 +613,33 @@
                 "Mostomessages" : {
                     "type" : "object",
                     "title": "Mostomessages",
+                    "description" : "Mongo Collection",
+                    "properties" : {
+                        "fulltext" : {
+                            "type": "array",
+                            "title": "Fulltext",
+                            "description": "Fields array to make a full text search"
+                        },
+                        "facets" : {
+                            "type": "array",
+                            "title": "Facets",
+                            "description": "Facets array to make faceted search"
+                        },
+                        "criteria" : {
+                            "type": "object",
+                            "title": "Criteria",
+                            "description": "Custom criteria for queries in mongo style"
+                        },
+                        "max_facets" : {
+                            "type": "integer",
+                            "title": "Max Facets",
+                            "description": "Maximun limit for faceted queries"
+                        }
+                    }
+                },
+                "Sketchs" : {
+                    "type" : "object",
+                    "title": "Sketchs",
                     "description" : "Mongo Collection",
                     "properties" : {
                         "fulltext" : {
