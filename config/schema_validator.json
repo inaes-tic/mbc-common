@@ -252,6 +252,72 @@
                 }
             }
         },
+        "Webvfx" : {
+            "type" : "object",
+            "title" : "General UI Webvfx config",
+            "description" : "bits and pieces of the HTML5 UI",
+            "properties" : {
+                "Branding" : {
+                    "type" : "object",
+                    "title" : "Branding",
+                    "description" : "Application Info",
+                    "properties" : {
+                        "name" : {
+                            "type": "string",
+                            "title": "Name",
+                            "description" : "An application name"
+                        },
+                        "description" : {
+                            "type": "string",
+                            "title": "Description",
+                            "description" : "Description for Application"
+                        }
+                    }
+                },
+                "Dirs" : {
+                    "type" : "object",
+                    "title" : "Directories",
+                    "description" : "All directories configurables in app",
+                    "properties" : {
+                        "pub" : {
+                            "type": "string",
+                            "title": "Pub",
+                            "description" : "Public directory"
+                        },
+                         "views" : {
+                            "type": "string",
+                            "title": "Views",
+                            "description" : ""
+                        },
+                         "styles" : {
+                            "type": "string",
+                            "title": "Styles",
+                            "description" : "Css - Styling Stuff"
+                        },
+                         "models" : {
+                            "type": "string",
+                            "title": "Models",
+                            "description" : "Models "
+                        },
+                         "vendor" : {
+                            "type": "string",
+                            "title": "Vendor",
+                            "description" : "Third party libraries"
+                        },
+                         "uploads" : {
+                            "type": "string",
+                            "title": "Uploads",
+                            "description" : "File upload directory"
+                        },
+                        "logs" : {
+                            "type": "string",
+                            "title": "Logs",
+                            "description" : "Logging directory"
+                        }
+                    }
+                }
+            }
+        },
         "Common" : {
             "type" : "object",
             "title" : "General Common config",

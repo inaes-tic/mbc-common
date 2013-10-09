@@ -58,6 +58,21 @@ module.exports = {
             old:    path.join(cwd ,'playlists','old'),
         },
     },
+    Webvfx: {
+        Branding: {
+            name: 'MBC Webvfx Editor',
+            description: 'HTML5 Editor for Webvfx (Video effects engine)',
+        },
+        Dirs: {
+            pub : path.join(cwd, 'public'),
+            views : path.join(cwd, 'views'),
+            styles : path.join(cwd, 'styles'),
+            models : path.join(cwd, 'models'),
+            vendor : path.join(cwd, 'vendor'),
+            uploads: path.join(cwd, 'public', 'images'),
+            logs :  path.join(cwd, 'logs'),
+        },
+    },
     Common: {
         Branding: {
             name: 'MBC Common',
