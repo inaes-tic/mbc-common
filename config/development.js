@@ -69,7 +69,7 @@ module.exports = {
             styles : path.join(cwd, 'styles'),
             models : path.join(cwd, 'models'),
             vendor : path.join(cwd, 'vendor'),
-            uploads: path.join(cwd, 'public', 'images'),
+            uploads: path.join(cwd, 'public', 'uploads'),
             logs :  path.join(cwd, 'logs'),
         },
     },
