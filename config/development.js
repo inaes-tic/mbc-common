@@ -87,7 +87,7 @@ module.exports = {
     },
     Search: {
         Medias: {
-            fulltext: [ 'name', 'title' ],
+            fulltext: [ 'name', 'title', 'stat.name' ],
             facets:  [
                 'durationsec',
                 'video.resolution.w',

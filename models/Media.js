@@ -100,28 +100,28 @@ Media.Transform = Backbone.RelationalModel.extend({
             type: Backbone.HasOne
         }
     },
-                {
-                    type: Backbone.HasOne,
-                    key: 'playlist',
-                    relatedModel:'Media.Playlist',
-                    includeInJSON: '_id',
-                    reverseRelation: {
-                        key: 'transform',
-                        includeInJSON: '_id',
-                        type: Backbone.HasOne
-                    }
-                },
-                {
-                    type: Backbone.HasOne,
-                    key: 'occurrence',
-                    relatedModel:'Media.Occurrence',
-                    includeInJSON: '_id',
-                    reverseRelation: {
-                        key: 'transform',
-                        includeInJSON: '_id',
-                        type: Backbone.HasOne
-                    }
-                }],
+    {
+        type: Backbone.HasOne,
+        key: 'playlist',
+        relatedModel:'Media.Playlist',
+        includeInJSON: '_id',
+        reverseRelation: {
+            key: 'transform',
+            includeInJSON: '_id',
+            type: Backbone.HasOne
+        }
+    },
+    {
+        type: Backbone.HasOne,
+        key: 'occurrence',
+        relatedModel:'Media.Occurrence',
+        includeInJSON: '_id',
+        reverseRelation: {
+            key: 'transform',
+            includeInJSON: '_id',
+            type: Backbone.HasOne
+        }
+    }],
     defaults: {
         trim: {
             timein:  0,
