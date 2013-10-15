@@ -91,5 +91,32 @@ App.ProgressStatus = Backbone.Model.extend({
     },
 });
 
+App.MostoMessage = Backbone.Model.extend({
+    urlRoot: 'message',
+    backend: 'messagesBackend',
+    initialize: function() {
+        if(!server) {
+            this.bindBackend();
+        }
+        return Backbone.Model.prototype.initialize.call(this);
+    },
+    codes: { // message code and their descriptions
+        // 1xx are info codes
+        // 2xx are warning codes
+        201: ["BLANK PLAYING", "Blank clip playing"],
+        202: ["OUT OF SYNC", "Melted was out of sync"],
+        // 4xx are "client error" codes. A problem in db content, for example
+        // 5xx are "server error" codes. Mosto couldn't find the requested file,
+        //  connection problem with melted, etc
+        501: ["MELTED CONNECTION ERROR", "Cannot connect to melted"],
+        502: ["FILE NOT FOUND", "Requested media file cannot be found"],
+    },
+    defaults: {
+        code: -1,
+        description: "INVALID",
+        message: "INVALID",
+    },
+});
+
 if(server) module.exports = App;
 else root.App = App;
