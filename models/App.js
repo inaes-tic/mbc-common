@@ -100,6 +100,13 @@ App.MostoMessage = Backbone.Model.extend({
         if(!server) {
             this.bindBackend();
         }
+        if(!code == -1) {
+            var data = this.codes[code];
+            if(!this.get('description'))
+                this.set('description', data[0]);
+            if(!this.get('message'))
+                this.set('message', data[1]);
+        }
         return Backbone.Model.prototype.initialize.call(this);
     },
     codes: { // message code and their descriptions
