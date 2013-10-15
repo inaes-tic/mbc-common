@@ -99,6 +99,9 @@ App.MostoMessage = Backbone.Model.extend({
     initialize: function() {
         if(!server) {
             this.bindBackend();
+        } else {
+            if(!this.get('time'))
+                this.set('time', moment().valueOf());
         }
         if(!code == -1) {
             var data = this.codes[code];
