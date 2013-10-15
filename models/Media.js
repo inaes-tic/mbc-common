@@ -5,15 +5,16 @@ var root = this;
 // The top-level namespace. All public Backbone classes and modules will
 // be attached to this. Exported for both CommonJS and the browser.
 var Media, server = false;
+var PageableCollection = false;
 if (typeof exports !== 'undefined') {
     Media = exports;
     server = true;
     var uuid = require('node-uuid');
-    var PageableCollection = require("backbone-pageable");
+    PageableCollection = require("backbone-pageable");
 } else {
     Media = root.Media = {};
     var uuid = root.uuid;
-    var PageableCollection = root.Backbone.PageableCollection;
+    PageableCollection = root.Backbone.PageableCollection;
 }
 
 // Require Underscore, Backbone & BackboneIO, if we're on the server, and it's not already present.
@@ -149,7 +150,7 @@ var TransformCollection = {
 };
 
 Media.TransformCollection = Backbone.Collection.extend(TransformCollection);
-Media.TransformCollectionPageable = Backbone.PageableCollection.extend(_.extend(TransformCollection, Pageable));
+Media.TransformCollectionPageable = PageableCollection.extend(_.extend(TransformCollection, Pageable));
 
 Media.Model = Backbone.RelationalModel.extend({
     urlRoot: 'media',
@@ -207,7 +208,7 @@ var Collection = {
 };
 
 Media.Collection = Backbone.Collection.extend(Collection);
-Media.CollectionPageable = Backbone.PageableCollection.extend(_.extend(Collection, Pageable));
+Media.CollectionPageable = PageableCollection.extend(_.extend(Collection, Pageable));
 
 Media.Piece = Media.Model.extend({
     urlRoot: 'piece',
@@ -235,7 +236,7 @@ var PieceCollection = {
 };
 
 Media.PieceCollection = Backbone.Collection.extend(PieceCollection);
-Media.PieceCollectionPageable = Backbone.PageableCollection.extend(_.extend(PieceCollection, Pageable));
+Media.PieceCollectionPageable = PageableCollection.extend(_.extend(PieceCollection, Pageable));
 
 Media.Playlist = Backbone.RelationalModel.extend({
     urlRoot: 'list',
@@ -302,7 +303,7 @@ var Universe = {
 };
 
 Media.Universe = Backbone.Collection.extend(Universe);
-Media.UniversePageable = Backbone.PageableCollection.extend(_.extend(Universe, Pageable));
+Media.UniversePageable = PageableCollection.extend(_.extend(Universe, Pageable));
 
 Media.Occurrence = Backbone.RelationalModel.extend({
     urlRoot: 'occur',
@@ -439,7 +440,7 @@ var Schedule = {
 };
 
 Media.Schedule = Backbone.Collection.extend(Schedule);
-Media.SchedulePageable = Backbone.PageableCollection.extend(_.extend(Schedule, Pageable));
+Media.SchedulePageable = PageableCollection.extend(_.extend(Schedule, Pageable));
 
 Media.Transform.setup();
 Media.Model.setup();
