@@ -72,6 +72,10 @@ module.exports = {
             uploads: path.join(cwd, 'public', 'uploads'),
             logs :  path.join(cwd, 'logs'),
         },
+        Server: {
+            host: 'localhost',
+            port: 3100,
+        }
     },
     Common: {
         Branding: {

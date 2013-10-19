@@ -315,6 +315,23 @@
                             "description" : "Logging directory"
                         }
                     }
+                },
+                "Server" : {
+                    "type" : "object",
+                    "title" : "Webvfx Server",
+                    "description" : "",
+                    "properties" : {
+                        "host" : {
+                            "type": "string",
+                            "title": "Host",
+                            "description" : ""
+                        },
+                        "port" : {
+                            "type": "integer",
+                            "title": "Port",
+                            "description" : ""
+                        }
+                    }
                 }
             }
         },

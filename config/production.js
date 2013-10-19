@@ -72,6 +72,10 @@ module.exports = {
             uploads: path.join(cwd, 'public', 'images'),
             logs :  path.join(cwd, 'logs'),
         },
+        Server: {
+            host: process.env.WEBVFX_HOST,
+            port: process.env.WEBVFX_PORT,
+        },
     },
     Common: {
         Branding: {
