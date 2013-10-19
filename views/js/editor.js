@@ -2,10 +2,6 @@ window.WebvfxBaseView = Backbone.View.extend({
     tagName: 'div',
     className: 'webvfx-obj',
 
-    colors: [
-        'black', 'red', 'blue', 'green', 'pink', 'orange'
-    ],
-
     effects: [
         "flash", "bounce", "shake", "tada", "swing", "wobble",
         "wiggle", "pulse", "flip", "flipInX", "flipOutX", "flipInY",
@@ -36,7 +32,6 @@ window.WebvfxBaseView = Backbone.View.extend({
         $(this.el).html(template.objects({
             id: this.model.id,
             model: this.model,
-            colors: this.colors,
             effects: this.effects,
         }));
 
