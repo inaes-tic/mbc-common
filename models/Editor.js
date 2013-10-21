@@ -14,6 +14,7 @@ window.WebvfxEditor = Backbone.Model.extend({
             height: 0
         },
         realTimeEdition: false,
+        server: '',
     },
 
     initialize: function() {
@@ -39,6 +40,7 @@ window.WebvfxEditor = Backbone.Model.extend({
             height: Math.round(460 * args.scale)
         });
 
+        this.set('server', args.server);
     }
 });
 
@@ -657,7 +659,7 @@ window.webvfxClient = {
             formdata.append(key, data[key]);
         }
         $.ajax({
-            url: url,
+            url: webvfxEditor.get('server') + url,
             type: 'POST',
             data: formdata,
             processData: false,

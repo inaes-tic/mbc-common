@@ -250,10 +250,12 @@ window.EditorView = Backbone.View.extend({
             el: $("#webvfx-collection", self.$el)
         });
 
+        var config = appCollection.models[0].get('Webvfx').Editor;
         window.webvfxEditor = new WebvfxEditor({
-            width: self.getParameterByName('width', 720),
-            height: self.getParameterByName('height', 570),
-            scale: self.getParameterByName('scale', 1),
+            width: self.getParameterByName('width', config.width),
+            height: self.getParameterByName('height', config.height),
+            scale: self.getParameterByName('scale', config.scale),
+            server: config.server,
         });
 
         $(document).ready(function() {
