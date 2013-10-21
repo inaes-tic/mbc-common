@@ -72,9 +72,11 @@ module.exports = {
             uploads: path.join(cwd, 'public', 'uploads'),
             logs :  path.join(cwd, 'logs'),
         },
-        Server: {
-            host: 'localhost',
-            port: 3100,
+        Editor: {
+            server: 'http://localhost:3100/',
+            width:  720,
+            height: 570,
+            scale:  1,
         }
     },
     Common: {

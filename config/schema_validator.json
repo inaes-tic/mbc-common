@@ -316,20 +316,30 @@
                         }
                     }
                 },
-                "Server" : {
+                "Editor" : {
                     "type" : "object",
-                    "title" : "Webvfx Server",
-                    "description" : "",
+                    "title" : "Editor",
+                    "description" : "Default Editor config",
                     "properties" : {
-                        "host" : {
+                        "server" : {
                             "type": "string",
-                            "title": "Host",
-                            "description" : ""
+                            "title": "Server",
+                            "description" : "Webvfx server to send objects"
                         },
-                        "port" : {
+                        "width" : {
                             "type": "integer",
-                            "title": "Port",
-                            "description" : ""
+                            "title": "Width",
+                            "description" : "Canvas width"
+                        },
+                        "height" : {
+                            "type": "integer",
+                            "title": "Height",
+                            "description" : "Canvas height"
+                        },
+                        "scale" : {
+                            "type": "integer",
+                            "title": "Scale",
+                            "description" : "Canvas Scale"
                         }
                     }
                 }
