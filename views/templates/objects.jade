@@ -5,7 +5,30 @@
 - var right = model.getRealValue(model.getRight())
 - var bottom = model.getRealValue(model.getBottom())
 - var type = model.getType()
-- var colors = [ i18n.gettext('black'), i18n.gettext('red'), i18n.gettext('blue'), i18n.gettext('green'), i18n.gettext('pink'), i18n.gettext('orange') ]
+- var colors = [
+-               i18n.gettext('black'),
+-               i18n.gettext('red'),
+-               i18n.gettext('blue'),
+-               i18n.gettext('green'),
+-               i18n.gettext('pink'),
+-               i18n.gettext('orange')
+-     ]
+- var effects = [
+-        "flash", "bounce", "shake", "tada", "swing", "wobble",
+-        "wiggle", "pulse", "flip", "flipInX", "flipOutX", "flipInY",
+-        "flipOutY", "fadeIn", "fadeInUp", "fadeInDown", "fadeInLeft",
+-        "fadeInRight", "fadeInUpBig", "fadeInDownBig", "fadeInLeftBig",
+-        "fadeInRightBig", "fadeOut", "fadeOutUp", "fadeOutDown",
+-        "fadeOutLeft", "fadeOutRight", "fadeOutUpBig", "fadeOutDownBig",
+-        "fadeOutLeftBig", "fadeOutRightBig", "bounceIn", "bounceInDown",
+-        "bounceInUp", "bounceInLeft", "bounceInRight", "bounceOut",
+-        "bounceOutDown", "bounceOutUp", "bounceOutLeft", "bounceOutRight",
+-        "rotateIn", "rotateInDownLeft", "rotateInDownRight",
+-        "rotateInUpLeft", "rotateInUpRight", "rotateOut", "rotateOutDownLeft",
+-        "rotateOutDownRight", "rotateOutUpLeft", "rotateOutUpRight",
+-        "lightSpeedIn", "lightSpeedOut", "hinge", "rollIn", "rollOut"
+-    ]
+
 
 mixin positions
     tr

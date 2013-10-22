@@ -2,22 +2,6 @@ window.WebvfxBaseView = Backbone.View.extend({
     tagName: 'div',
     className: 'webvfx-obj',
 
-    effects: [
-        "flash", "bounce", "shake", "tada", "swing", "wobble",
-        "wiggle", "pulse", "flip", "flipInX", "flipOutX", "flipInY",
-        "flipOutY", "fadeIn", "fadeInUp", "fadeInDown", "fadeInLeft",
-        "fadeInRight", "fadeInUpBig", "fadeInDownBig", "fadeInLeftBig",
-        "fadeInRightBig", "fadeOut", "fadeOutUp", "fadeOutDown",
-        "fadeOutLeft", "fadeOutRight", "fadeOutUpBig", "fadeOutDownBig",
-        "fadeOutLeftBig", "fadeOutRightBig", "bounceIn", "bounceInDown",
-        "bounceInUp", "bounceInLeft", "bounceInRight", "bounceOut",
-        "bounceOutDown", "bounceOutUp", "bounceOutLeft", "bounceOutRight",
-        "rotateIn", "rotateInDownLeft", "rotateInDownRight",
-        "rotateInUpLeft", "rotateInUpRight", "rotateOut", "rotateOutDownLeft",
-        "rotateOutDownRight", "rotateOutUpLeft", "rotateOutUpRight",
-        "lightSpeedIn", "lightSpeedOut", "hinge", "rollIn", "rollOut"
-    ],
-
     events: {
         drop: 'drop'
     },
@@ -32,7 +16,6 @@ window.WebvfxBaseView = Backbone.View.extend({
         $(this.el).html(template.objects({
             id: this.model.id,
             model: this.model,
-            effects: this.effects,
         }));
 
         if (this.elements.indexOf(this.model.id) < 0) {
