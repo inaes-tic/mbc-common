@@ -207,15 +207,23 @@ window.EditorView = Backbone.View.extend({
         "dragleave #container"  : "dragLeave",
         "drop #container"       : "drop",
         "change #files"         : "filesChange",
+        "change #resolutions"   : "changeResolution",
+        "change #scales"        : "changeScale",
     },
 
     initialize: function() {
+        var config = appCollection.models[0].get('Webvfx').Editor;
+        this.width = config.width;
+        this.height = config.height;
+        this.scale = config.scale;
+        this.server = config.server;
+
         this.render();
     },
 
     render: function() {
         var self = this;
-        $(this.el).html(template.editor());
+        $(this.el).html(template.editor({width: this.width, height: this.height, scale: this.scale}));
 
         var webvfxCollection = new WebvfxCollection();
         this.webvfxCollection = webvfxCollection;
@@ -235,10 +243,10 @@ window.EditorView = Backbone.View.extend({
 
         var config = appCollection.models[0].get('Webvfx').Editor;
         window.webvfxEditor = new WebvfxEditor({
-            width: self.getParameterByName('width', config.width),
-            height: self.getParameterByName('height', config.height),
-            scale: self.getParameterByName('scale', config.scale),
-            server: config.server,
+            width: self.width,
+            height: self.height,
+            scale: self.scale,
+            server: self.server,
         });
 
         $(document).ready(function() {
@@ -247,8 +255,8 @@ window.EditorView = Backbone.View.extend({
             self.updateVideoStream();
             self.updateStatusBar();
         });
-
     },
+
 
     saveSketch: function () {
         var self = this;
@@ -611,16 +619,20 @@ window.EditorView = Backbone.View.extend({
     updateStatusBar: function() {
         var getStatusBarInfo = function() {
             var pos = webvfxEditor.get('stage').getMousePosition();
+            var scale = webvfxEditor.get('scale');
+            var wscale = parseInt(webvfxEditor.get('width') / scale);
+            var hscale = parseInt(webvfxEditor.get('height') / scale);
+
             if (pos === undefined) {
                 var mouseX = 0;
                 var mouseY = 0;
             } else {
-                var mouseX = parseInt(pos.x / webvfxEditor.get('scale'));
-                var mouseY = parseInt(pos.y / webvfxEditor.get('scale'));
+                var mouseX = parseInt(pos.x / scale);
+                var mouseY = parseInt(pos.y / scale);
             }
             return [
-                'size: ' + webvfxEditor.get('width') + 'x' + webvfxEditor.get('height') + 'px',
-                'scale: ' + webvfxEditor.get('scale'),
+                'size: ' + wscale + 'x' + hscale + 'px',
+                'scale: ' + scale,
                 'pointer at (' + mouseX + 'px,' + mouseY + 'px)'
             ].join(', ');
         }
@@ -631,11 +643,33 @@ window.EditorView = Backbone.View.extend({
             $('#status-bar').html(getStatusBarInfo());
         });
     },
-    getParameterByName : function(name, defaultValue) {
-        var name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-        var results = regex.exec(location.search);
-        return results == null ? defaultValue : decodeURIComponent(results[1].replace(/\+/g, " "));
+    changeResolution: function () {
+        var self = this;
+        var description = i18n.gettext("Are you sure?");
+        this.confirm(
+            description,
+            function () {
+                var res = $("#resolutions").val();
+                aRes = res.split('x');
+                if(aRes.length == 2) {
+                    self.width = parseInt(aRes[0]);
+                    self.height = parseInt(aRes[1]);
+                    self.render();
+                }
+            }
+        );
+    },
+    changeScale: function() {
+        var self = this;
+        var description = i18n.gettext("Are you sure?");
+        this.confirm(
+            description,
+            function () {
+                var s = $("#scales").val();
+                self.scale = parseFloat(s);
+                self.render();
+            }
+        );
     },
     alert: function(description) {
         var title = i18n.gettext('Alert');
