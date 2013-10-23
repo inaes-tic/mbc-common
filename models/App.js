@@ -103,20 +103,27 @@ App.MostoMessage = Backbone.Model.extend({
             if(!this.get('time'))
                 this.set('time', moment().valueOf());
         }
-        if(!code == -1) {
+        var code = this.get('code');
+        if(code === undefined) {
+            code = -1;
+            this.set('code', code);
+        }
+        if(!(code == -1)) {
             var data = this.codes[code];
-            if(!this.get('description'))
+            var attrs = this.toJSON();
+            if(!attrs.description || attrs.description == 'INVALID')
                 this.set('description', data[0]);
-            if(!this.get('message'))
+            if(!attrs.message || attrs.message == 'INVALID')
                 this.set('message', data[1]);
         }
-        return Backbone.Model.prototype.initialize.call(this);
+        return Backbone.Model.prototype.initialize.apply(this, arguments);
     },
     codes: { // message code and their descriptions
         // 1xx are info codes
         // 2xx are warning codes
         201: ["BLANK PLAYING", "Blank clip playing"],
         202: ["OUT OF SYNC", "Melted was out of sync"],
+        203: ["STARTED PLAYING", "Melted was stopped and was started"],
         // 4xx are "client error" codes. A problem in db content, for example
         // 5xx are "server error" codes. Mosto couldn't find the requested file,
         //  connection problem with melted, etc
