@@ -20,8 +20,11 @@ window.WebvfxEditor = Backbone.Model.extend({
     initialize: function() {
         args = arguments[0];
 
-        this.set('width', args.width * args.scale);
-        this.set('height', args.height * args.scale);
+        var realWidth =  args.width * args.scale;
+        var realHeight = args.height * args.scale;
+
+        this.set('width', realWidth);
+        this.set('height', realHeight);
         this.set('scale', args.scale);
 
         this.set('stage', new Kinetic.Stage({
@@ -31,13 +34,16 @@ window.WebvfxEditor = Backbone.Model.extend({
         }));
         this.get('stage').add(new Kinetic.Layer());
 
+        var actionPercentage = 0.9;
         this.set('actionSafe', {
-            width: Math.round(648 * args.scale),
-            height: Math.round(518 * args.scale),
+            width:  Math.round(realWidth  * actionPercentage),
+            height: Math.round(realHeight * actionPercentage),
         });
+
+        var tilePercentage = 0.8;
         this.set('titleSafe', {
-            width: Math.round(576 * args.scale),
-            height: Math.round(460 * args.scale)
+            width:  Math.round(realWidth  * tilePercentage),
+            height: Math.round(realHeight * tilePercentage),
         });
 
         this.set('server', args.server);
