@@ -247,6 +247,7 @@ window.EditorView = Backbone.View.extend({
             self.updateVideoStream();
             self.updateStatusBar();
         });
+
     },
 
     saveSketch: function () {
@@ -267,7 +268,8 @@ window.EditorView = Backbone.View.extend({
                         self.sketchs.create({ name: new_key, data: objects }, {success: function() {
                             console.log('Success creating sketch: '+ new_key);
                         }});
-                        $('#sketchs').append($('<option>').html(new_key).prop('selected', true));
+                        var opt_key = '<option value="' + new_key + '">';
+                        $('#sketchs').append($(opt_key).html(new_key).prop('selected', true));
                     } else {
                         var description = i18n.gettext('You must enter a new sketch name to save it');
                         self.alert(description);
@@ -363,7 +365,8 @@ window.EditorView = Backbone.View.extend({
     getSketchs: function () {
         var keys = this.sketchs.pluck('name');
         _.each(keys, function(k) {
-            $('#sketchs').append($('<option>').html(k));
+            var opt = '<option value="' + k + '">';
+            $('#sketchs').append($(opt).html(k));
         });
     },
     safeArea: function() {
