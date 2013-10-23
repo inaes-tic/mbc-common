@@ -693,7 +693,15 @@ var ModalPrompt = Backbone.Modal.extend({
     submitEl: '.submit',
     cancelEl: '.cancel',
     events: {
-        "click .submit": function(e) { this.options.submitCallback($('#text').val()); },
-        "click .cancel": function() { this.options.cancelCallback(); },
+        "click .submit"              : "save",
+        "keypress input[id=textkey]" : "saveOnEnter",
+        "click .cancel"              : function() { this.options.cancelCallback(); },
+    },
+    save: function () {
+        this.options.submitCallback($('#textkey').val());
+    },
+    saveOnEnter: function (e) {
+        if (e.keyCode != 13) return;
+        this.save();
     }
 });
