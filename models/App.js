@@ -4,14 +4,13 @@ var root = this;
 
 // The top-level namespace. All public Backbone classes and modules will
 // be attached to this. Exported for both CommonJS and the browser.
-var App, server, moment = false;
+var App, server = false;
 if (typeof exports !== 'undefined') {
     App = exports;
     server = true;
     moment = require('moment');
 } else {
     App = root.App = {};
-    moment = root.moment;
 }
 
 // Require Underscore, Backbone & BackboneIO, if we're on the server, and it's not already present.
