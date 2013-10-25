@@ -75,7 +75,7 @@ module.exports = {
         Editor: {
             server: 'http://localhost:3100/',
             width:  720,
-            height: 570,
+            height: 576,
             scale:  1,
         }
     },
