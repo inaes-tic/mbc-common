@@ -675,6 +675,7 @@ window.EditorView = Backbone.View.extend({
         var title = i18n.gettext('Alert');
         var description = description || i18n.gettext('Wait there was a problem');
         $('#modal').html(new ModalAlert({ title: title, description: description }).render().el);
+        window.scrollTo(0,0);
     },
     confirm: function(description, yesCallback, noCallback) {
         var yesCallback = yesCallback || function() {return; };
@@ -682,6 +683,7 @@ window.EditorView = Backbone.View.extend({
         var title = i18n.gettext('Confirm');
         var description = description || i18n.gettext('Wait there was a problem');
         $('#modal').html(new ModalConfirm({ title: title, description: description, yesCallback: yesCallback, noCallback: noCallback }).render().el);
+        window.scrollTo(0,0);
     },
     prompt: function (description, submitCallback, cancelCallback) {
         var submitCallback = submitCallback || function() {};
@@ -689,6 +691,7 @@ window.EditorView = Backbone.View.extend({
         var title = i18n.gettext('Prompt');
         var description = description || i18n.gettext('Wait there was a problem');
         $('#modal').html(new ModalPrompt({ title: title, description: description, submitCallback: submitCallback, cancelCallback: cancelCallback }).render().el);
+        window.scrollTo(0,0);
     }
 });
 
