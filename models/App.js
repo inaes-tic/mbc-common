@@ -136,5 +136,20 @@ App.MostoMessage = Backbone.Model.extend({
     },
 });
 
+App.MessagesCollection = Backbone.Collection.extend({
+    url: 'message',
+    model: App.MostoMessage,
+    backend: 'messagebackend',
+    comparator: function(message) { return -message.get('time') },
+    initialize: function () {
+        if(!server) {
+            this.bindBackend();
+            this.bind('backend', function(method, model) {
+                console.log('got from backend:', method, model);
+            });
+        }
+    },
+});
+
 if(server) module.exports = App;
 else root.App = App;
