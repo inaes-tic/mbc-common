@@ -691,7 +691,14 @@ window.EditorView = Backbone.View.extend({
         var description = description || i18n.gettext('Wait there was a problem');
         $('#modal').html(new ModalPrompt({ title: title, description: description, submitCallback: submitCallback, cancelCallback: cancelCallback }).render().el);
         window.scrollTo(0,0);
-    }
+    },
+    canNavigateAway: function (options) {
+        this.viewCleanup();
+        options['ok']();
+    },
+    viewCleanup: function() {
+        this.undelegateEvents();
+    },
 });
 
 var ModalAlert = Backbone.Modal.extend({
