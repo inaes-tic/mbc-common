@@ -241,7 +241,6 @@ window.EditorView = Backbone.View.extend({
             el: $("#webvfx-collection", self.$el)
         });
 
-        var config = appCollection.models[0].get('Webvfx').Editor;
         window.webvfxEditor = new WebvfxEditor({
             width: self.width,
             height: self.height,
