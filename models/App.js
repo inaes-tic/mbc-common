@@ -95,6 +95,7 @@ App.ProgressStatus = Backbone.Model.extend({
 App.MostoMessage = Backbone.Model.extend({
     urlRoot: 'message',
     backend: 'messagesBackend',
+    idAttribute: '_id',
     initialize: function() {
         if(!server) {
             this.bindBackend();
@@ -114,6 +115,8 @@ App.MostoMessage = Backbone.Model.extend({
                 this.set('description', data[0]);
             if(!attrs.message || attrs.message == 'INVALID')
                 this.set('message', data[1]);
+            if(data[2])
+                this.set('status', 'failing');
         }
         return Backbone.Model.prototype.initialize.apply(this, arguments);
     },
@@ -126,13 +129,14 @@ App.MostoMessage = Backbone.Model.extend({
         // 4xx are "client error" codes. A problem in db content, for example
         // 5xx are "server error" codes. Mosto couldn't find the requested file,
         //  connection problem with melted, etc
-        501: ["MELTED CONNECTION ERROR", "Cannot connect to melted"],
+        501: ["MELTED CONNECTION ERROR", "Cannot connect to melted", true],
         502: ["FILE NOT FOUND", "Requested media file cannot be found"],
     },
     defaults: {
         code: -1,
         description: "INVALID",
         message: "INVALID",
+        status: "one-shot",
     },
 });
 
