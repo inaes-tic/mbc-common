@@ -77,6 +77,7 @@ module.exports = {
             width:  720,
             height: 570,
             scale:  1,
+            stream_url: process.env.WEBVFX_STREAM_URL
         },
     },
     Common: {

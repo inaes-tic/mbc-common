@@ -340,6 +340,11 @@
                             "type": "integer",
                             "title": "Scale",
                             "description" : "Canvas Scale"
+                        },
+                        "stream_url" : {
+                            "type": "string",
+                            "title": "Stream Url",
+                            "description" : "Stream url for displaying in editor background"
                         }
                     }
                 }

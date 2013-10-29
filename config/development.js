@@ -77,6 +77,7 @@ module.exports = {
             width:  720,
             height: 576,
             scale:  1,
+            stream_url: 'http://localhost:8000/consume/mbc?password=malbec',
         }
     },
     Common: {
