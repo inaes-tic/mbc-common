@@ -155,5 +155,17 @@ App.MessagesCollection = Backbone.Collection.extend({
     },
 });
 
+App.FilteredMessagesCollection = App.MessagesCollection.extend({
+    initialize: function(models, options) {
+        this.parent = options.parent;
+        this.filter_func = options.filter || function() { return true };
+
+        this.parent.on('add', this.refilter.bind(this));
+    },
+    refilter: function(model) {
+        this.set(this.parent.filter(this.filter_func.bind(this)));
+    },
+});
+
 if(server) module.exports = App;
 else root.App = App;
