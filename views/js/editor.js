@@ -213,17 +213,13 @@ window.EditorView = Backbone.View.extend({
 
     initialize: function() {
         var config = appCollection.models[0].get('Webvfx').Editor;
-        this.width = config.width;
-        this.height = config.height;
-        this.scale = config.scale;
-        this.server = config.server;
-
+        this.options = { width: config.width, height: config.height, scale: config.scale, server: config.server };
         this.render();
     },
 
     render: function() {
         var self = this;
-        $(this.el).html(template.editor({width: this.width, height: this.height, scale: this.scale}));
+        $(this.el).html(template.editor(this.options));
 
         var webvfxCollection = new WebvfxCollection();
         this.webvfxCollection = webvfxCollection;
@@ -241,12 +237,7 @@ window.EditorView = Backbone.View.extend({
             el: $("#webvfx-collection", self.$el)
         });
 
-        window.webvfxEditor = new WebvfxEditor({
-            width: self.width,
-            height: self.height,
-            scale: self.scale,
-            server: self.server,
-        });
+        window.webvfxEditor = new WebvfxEditor(this.options);
 
         $(document).ready(function() {
             self.makeSortable();
@@ -651,8 +642,8 @@ window.EditorView = Backbone.View.extend({
                 var res = $("#resolutions").val();
                 aRes = res.split('x');
                 if(aRes.length == 2) {
-                    self.width = parseInt(aRes[0]);
-                    self.height = parseInt(aRes[1]);
+                    self.options.width = parseInt(aRes[0]);
+                    self.options.height = parseInt(aRes[1]);
                     self.render();
                 }
             }
@@ -665,7 +656,7 @@ window.EditorView = Backbone.View.extend({
             description,
             function () {
                 var s = $("#scales").val();
-                self.scale = parseFloat(s);
+                self.options.scale = parseFloat(s);
                 self.render();
             }
         );
