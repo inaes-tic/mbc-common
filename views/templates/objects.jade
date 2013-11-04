@@ -79,7 +79,6 @@ h3(id="title-#{id}")= type + '  ' + id
 div(id="webvfx-data-#{id}", style="display:none")
     if type == "Text"
         fieldset
-            legend.editor= i18n.gettext("Text")
             table
                 tr
                     th
@@ -110,7 +109,6 @@ div(id="webvfx-data-#{id}", style="display:none")
                 mixin positions
     else
         fieldset
-            legend.editor= i18n.gettext("Image")
             table
                 tr
                     td(colspan="2", style="text-align:center;padding:5px;")

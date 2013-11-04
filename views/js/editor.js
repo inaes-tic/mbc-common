@@ -192,6 +192,7 @@ window.EditorView = Backbone.View.extend({
     el: $('#content'),
 
     events: {
+        "click .colapse"        : "colapse",
         "click #save-sketch"    : "saveSketch",
         "click #load-sketch"    : "loadSketch",
         "click #del-sketch"     : "delSketch",
@@ -247,6 +248,9 @@ window.EditorView = Backbone.View.extend({
         });
     },
 
+     colapse:function(ev) {
+        $(ev.target).parent().children('.content').toggle();
+     },
 
     saveSketch: function () {
         var self = this;
@@ -591,13 +595,7 @@ window.EditorView = Backbone.View.extend({
             height: webvfxEditor.get('height') + 'px'
         });
 
-        $('#main-controls').css({
-            top: (webvfxEditor.get('height') + top) + 'px',
-            left: left + 'px',
-            width: webvfxEditor.get('width') + 'px'
-        });
-
-        $('#webvfx-collection').css({
+        $('#webvfx-collection-container').css({
             top: top + 'px',
             left: (webvfxEditor.get('width') + (left * 2)) + 'px'}
         );
