@@ -314,7 +314,7 @@ window.EditorView = Backbone.View.extend({
         _.each(this.sketchs.findWhere({name: key}).get('data'), function(s) {
             if (s.type == 'Image') {
                 s.image = new Image();
-                s.image.src = '/uploads/' + s.name;
+                s.image.src = self.options.server + 'uploads/' + s.name;
                 s.image.name = s.name;
                 self.webvfxCollection.add(new WebvfxImage(s));
             }
@@ -526,10 +526,11 @@ window.EditorView = Backbone.View.extend({
         }
     },
     uploadImage : function(file) {
+        var self = this;
         var formdata = new FormData();
         formdata.append('uploadedFile', file);
         $.ajax({
-            url: 'uploadImage',
+            url: self.options.server + 'uploadImage',
             type: 'POST',
             data: formdata,
             processData: false,
