@@ -578,19 +578,13 @@ window.EditorView = Backbone.View.extend({
         //$("#webvfx-collection").disableSelection();
     },
     updateCss: function () {
-        var top = 20;
-        var left = 20;
 
         $('#container').css({
-            top: top + 'px',
-            left: left + 'px',
             width: webvfxEditor.get('width') + 'px',
             height: webvfxEditor.get('height') + 'px'
         });
 
         $('#player-container').css({
-            top: top + 'px',
-            left: left + 'px',
             width: webvfxEditor.get('width') + 'px',
             height: webvfxEditor.get('height') + 'px'
         });

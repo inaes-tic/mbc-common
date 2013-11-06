@@ -56,53 +56,54 @@ block content
 #webvfx-editor
     #modal
     #editor
-        #webvfx-collection-container.round-panel.v-panel
-            #add.tab
-                .content
-                    fieldset.well.well-small
-                        h3.editor= i18n.gettext("Add images")
-                        input(type="file", id="files", value="files", multiple=true)
-                        h3.editor= i18n.gettext("Add text")
-                        input(type="text", id="text", style="width:147px;float:left")
-                        button#clear-all(style="width:100%")= i18n.gettext("clear all")
-            h2= i18n.gettext("object collection")
-            #webvfx-collection.v-container
         #video-container
             #player-container
                 video#player(src="live.webm", autoplay=true, loop=true , style="display:none")
             #container.container-background
         #status-bar
-        #main-controls.round-panel.v-panel
-            h2= i18n.gettext("control panel")
-            #controls.v-container
-                button#update(style="width:100%")= i18n.gettext("update video")
-                fieldset.well.well-small.storage
-                    h3.editor= i18n.gettext("Storage")
-                    select#sketchs
-                        option(value='[select]')= i18n.gettext("[select]")
-                    button#new-sketch= i18n.gettext("new")
-                    button#load-sketch= i18n.gettext("load")
-                    button#save-sketch= i18n.gettext("save")
-                    button#del-sketch= i18n.gettext("del")
-                #options.tab
-                    h2.colapse= i18n.gettext("Options")
+        #right-panels
+            #webvfx-collection-container.round-panel.v-panel
+                #add.tab
                     .content
-                        fieldset.well.well-small.options
-                            input#real-time-edition(type="checkbox")
-                            label(for="real-time-edition")= i18n.gettext("real time edition")
-                            input#safe-area(type="checkbox")
-                            label(for="safe-area")= i18n.gettext("show safe area")
-                            input#video-preview(type="checkbox")
-                            label(for="video-preview")= i18n.gettext("video preview")
-                fieldset.well.well-small.resolution
-                    label(for="resolution")= i18n.gettext("Resolution: ")
-                    select#resolutions
-                        for o in resolutions
-                            each val, key in o
-                                - var r = key + ' (' + val + ')'
-                                option(selected=val == resolution, value=val) #{r}
-                    br
-                    label(for="scale")= i18n.gettext("Scale: ")
-                    select#scales
-                        for s in scales
-                            option(selected=s == scale) #{s}
+                        fieldset.well.well-small
+                            h3.editor= i18n.gettext("Add images")
+                            input(type="file", id="files", value="files", multiple=true)
+                            h3.editor= i18n.gettext("Add text")
+                            input(type="text", id="text", style="width:147px;float:left")
+                            button#clear-all(style="width:100%")= i18n.gettext("clear all")
+                h2= i18n.gettext("object collection")
+                #webvfx-collection.v-container
+            #main-controls.round-panel.v-panel
+                h2= i18n.gettext("control panel")
+                #controls.v-container
+                    button#update(style="width:100%")= i18n.gettext("update video")
+                    fieldset.well.well-small.storage
+                        h3.editor= i18n.gettext("Storage")
+                        select#sketchs
+                            option(value='[select]')= i18n.gettext("[select]")
+                        button#new-sketch= i18n.gettext("new")
+                        button#load-sketch= i18n.gettext("load")
+                        button#save-sketch= i18n.gettext("save")
+                        button#del-sketch= i18n.gettext("del")
+                    #options.tab
+                        h2.colapse= i18n.gettext("Options")
+                        .content
+                            fieldset.well.well-small.options
+                                input#real-time-edition(type="checkbox")
+                                label(for="real-time-edition")= i18n.gettext("real time edition")
+                                input#safe-area(type="checkbox")
+                                label(for="safe-area")= i18n.gettext("show safe area")
+                                input#video-preview(type="checkbox")
+                                label(for="video-preview")= i18n.gettext("video preview")
+                    fieldset.well.well-small.resolution
+                        label(for="resolution")= i18n.gettext("Resolution: ")
+                        select#resolutions
+                            for o in resolutions
+                                each val, key in o
+                                    - var r = key + ' (' + val + ')'
+                                    option(selected=val == resolution, value=val) #{r}
+                        br
+                        label(for="scale")= i18n.gettext("Scale: ")
+                        select#scales
+                            for s in scales
+                                option(selected=s == scale) #{s}
