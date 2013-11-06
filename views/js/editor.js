@@ -210,13 +210,11 @@ window.EditorView = Backbone.View.extend({
         "change #files"         : "filesChange",
         "change #resolutions"   : "changeResolution",
     },
-
     initialize: function() {
         var config = appCollection.models[0].get('Webvfx').Editor;
         this.options = { width: config.width, height: config.height, scale: config.scale, server: config.server };
         this.render();
     },
-
     render: function() {
         var self = this;
         $(this.el).html(template.editor(this.options));
@@ -246,11 +244,9 @@ window.EditorView = Backbone.View.extend({
             self.updateStatusBar();
         });
     },
-
-     colapse:function(ev) {
+    colapse:function(ev) {
         $(ev.target).parent().children('.content').toggle();
-     },
-
+    },
     autoScale: function () {
         var w_scale = $("#video-container").width() / this.options.width;
         var h_scale = $("#video-container").height() / this.options.height;
