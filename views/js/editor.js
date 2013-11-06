@@ -209,7 +209,6 @@ window.EditorView = Backbone.View.extend({
         "drop #container"       : "drop",
         "change #files"         : "filesChange",
         "change #resolutions"   : "changeResolution",
-        "change #scales"        : "changeScale",
     },
 
     initialize: function() {
@@ -238,9 +237,9 @@ window.EditorView = Backbone.View.extend({
             el: $("#webvfx-collection", self.$el)
         });
 
-        window.webvfxEditor = new WebvfxEditor(this.options);
-
         $(document).ready(function() {
+            self.options.scale = self.autoScale();
+            window.webvfxEditor = new WebvfxEditor(self.options);
             self.makeSortable();
             self.updateCss();
             self.updateVideoStream();
@@ -252,6 +251,11 @@ window.EditorView = Backbone.View.extend({
         $(ev.target).parent().children('.content').toggle();
      },
 
+    autoScale: function () {
+        var w_scale = $("#video-container").width() / this.options.width;
+        var h_scale = $("#video-container").height() / this.options.height;
+        return ((w_scale > h_scale)? h_scale : w_scale).toFixed(2);
+    },
     saveSketch: function () {
         var self = this;
 
@@ -635,18 +639,6 @@ window.EditorView = Backbone.View.extend({
                     self.options.height = parseInt(aRes[1]);
                     self.render();
                 }
-            }
-        );
-    },
-    changeScale: function() {
-        var self = this;
-        var description = i18n.gettext("Are you sure?");
-        this.confirm(
-            description,
-            function () {
-                var s = $("#scales").val();
-                self.options.scale = parseFloat(s);
-                self.render();
             }
         );
     },
