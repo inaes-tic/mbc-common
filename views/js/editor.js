@@ -213,7 +213,8 @@ window.EditorView = Backbone.View.extend({
     initialize: function() {
         var config = appCollection.models[0].get('Webvfx').Editor;
         this.options = { width: config.width, height: config.height, scale: config.scale, server: config.server };
-        $(window).on('resize', _.bind(this.render, this) );
+        var debounce_resize = _.debounce( _.bind(this.render, this), 300);
+        $(window).on('resize', debounce_resize);
         this.render();
     },
     render: function() {
