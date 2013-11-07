@@ -126,8 +126,8 @@ window.WebvfxBase = Backbone.Model.extend({
             var x = Math.round((webvfxEditor.get('stage').getWidth() / 2) - (size.width / 2));
             var y = Math.round((webvfxEditor.get('stage').getHeight() / 2) - (size.height / 2));
         } else {
-            var x = args.x;
-            var y = args.y;
+            var x = args.x * webvfxEditor.get('scale');
+            var y = args.y * webvfxEditor.get('scale');
         }
         if (this.getType() == 'Image') {
             this.kObj.children[0].setPosition(0, 0);
@@ -197,8 +197,8 @@ window.WebvfxImage = WebvfxBase.extend({
     createImage: function() {
         var kImage = new Kinetic.Image(this.toJSON());
         kImage.setSize(
-            kImage.getWidth() * webvfxEditor.get('scale'),
-            kImage.getHeight() * webvfxEditor.get('scale')
+            kImage.getWidth(),
+            kImage.getHeight()
         );
         var imageWidth = kImage.getWidth();
         var imageHeight = kImage.getHeight();
@@ -393,10 +393,10 @@ window.WebvfxImage = WebvfxBase.extend({
         return {
             type: this.getType(),
             name: this.kObj.children[0].attrs.name,
-            x: this.getLeft(),
-            y: this.getTop(),
-            width: this.getWidth(),
-            height: this.getHeight(),
+            x: this.getRealValue(this.getLeft()),
+            y: this.getRealValue(this.getTop()),
+            width: this.getRealValue(this.getWidth()),
+            height: this.getRealValue(this.getHeight()),
         }
     },
 
@@ -531,12 +531,12 @@ window.WebvfxText = WebvfxBase.extend({
     getDataToStore: function() {
         return {
             type: this.getType(),
-            x: this.getLeft(),
-            y: this.getTop(),
+            x: this.getRealValue(this.getLeft()),
+            y: this.getRealValue(this.getTop()),
             text: this.kObj.getText(),
-            width: this.getWidth(),
-            height: this.getHeight(),
-            fontSize: this.kObj.getFontSize(),
+            width: this.getRealValue(this.getWidth()),
+            height: this.getRealValue(this.getHeight()),
+            fontSize: this.getRealValue(this.kObj.getFontSize()),
             fontFamily: this.kObj.getFontFamily(),
             fill: this.kObj.getFill(),
         }
