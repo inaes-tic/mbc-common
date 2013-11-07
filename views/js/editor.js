@@ -192,6 +192,7 @@ window.EditorView = Backbone.View.extend({
     el: $('#content'),
 
     events: {
+        "click .colapse"        : "colapse",
         "click #save-sketch"    : "saveSketch",
         "click #load-sketch"    : "loadSketch",
         "click #del-sketch"     : "delSketch",
@@ -208,15 +209,12 @@ window.EditorView = Backbone.View.extend({
         "drop #container"       : "drop",
         "change #files"         : "filesChange",
         "change #resolutions"   : "changeResolution",
-        "change #scales"        : "changeScale",
     },
-
     initialize: function() {
         var config = appCollection.models[0].get('Webvfx').Editor;
         this.options = { width: config.width, height: config.height, scale: config.scale, server: config.server };
         this.render();
     },
-
     render: function() {
         var self = this;
         $(this.el).html(template.editor(this.options));
@@ -237,17 +235,23 @@ window.EditorView = Backbone.View.extend({
             el: $("#webvfx-collection", self.$el)
         });
 
-        window.webvfxEditor = new WebvfxEditor(this.options);
-
         $(document).ready(function() {
+            self.options.scale = self.autoScale();
+            window.webvfxEditor = new WebvfxEditor(self.options);
             self.makeSortable();
             self.updateCss();
             self.updateVideoStream();
             self.updateStatusBar();
         });
     },
-
-
+    colapse:function(ev) {
+        $(ev.target).parent().children('.content').toggle();
+    },
+    autoScale: function () {
+        var w_scale = $("#video-container").width() / this.options.width;
+        var h_scale = $("#video-container").height() / this.options.height;
+        return ((w_scale > h_scale)? h_scale : w_scale).toFixed(2);
+    },
     saveSketch: function () {
         var self = this;
 
@@ -574,33 +578,17 @@ window.EditorView = Backbone.View.extend({
         //$("#webvfx-collection").disableSelection();
     },
     updateCss: function () {
-        var top = 20;
-        var left = 20;
 
         $('#container').css({
-            top: top + 'px',
-            left: left + 'px',
             width: webvfxEditor.get('width') + 'px',
             height: webvfxEditor.get('height') + 'px'
         });
 
         $('#player-container').css({
-            top: top + 'px',
-            left: left + 'px',
             width: webvfxEditor.get('width') + 'px',
             height: webvfxEditor.get('height') + 'px'
         });
 
-        $('#main-controls').css({
-            top: (webvfxEditor.get('height') + top) + 'px',
-            left: left + 'px',
-            width: webvfxEditor.get('width') + 'px'
-        });
-
-        $('#webvfx-collection').css({
-            top: top + 'px',
-            left: (webvfxEditor.get('width') + (left * 2)) + 'px'}
-        );
     },
     updateVideoStream: function() {
         window.video = $('#player').get(0);
@@ -647,18 +635,6 @@ window.EditorView = Backbone.View.extend({
                     self.options.height = parseInt(aRes[1]);
                     self.render();
                 }
-            }
-        );
-    },
-    changeScale: function() {
-        var self = this;
-        var description = i18n.gettext("Are you sure?");
-        this.confirm(
-            description,
-            function () {
-                var s = $("#scales").val();
-                self.options.scale = parseFloat(s);
-                self.render();
             }
         );
     },
