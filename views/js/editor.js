@@ -368,8 +368,12 @@ window.EditorView = Backbone.View.extend({
     getSketchs: function () {
         var keys = this.sketchs.pluck('name');
         _.each(keys, function(k) {
-            var opt = '<option value="' + k + '">';
-            $('#sketchs').append($(opt).html(k));
+            var selector = "#sketchs option[value='" + k + "']";
+            var exist_key = $(selector).length;
+            if (!exist_key) {
+                var opt = '<option value="' + k + '">';
+                $('#sketchs').append($(opt).html(k));
+            }
         });
     },
     safeArea: function() {
