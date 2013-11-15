@@ -442,6 +442,38 @@ var Schedule = {
 Media.Schedule = Backbone.Collection.extend(Schedule);
 Media.SchedulePageable = PageableCollection.extend(_.extend(Schedule, Pageable));
 
+Media.Tag =  Backbone.RelationalModel.extend({
+    urlRoot: 'tag',
+    backend: 'tagbackend',
+    idAttribute: '_id',
+    initialize: function () {
+        console.log ('creating new Media.Tag');
+    },
+    defaults: {
+        name: '',
+        color: '#009800',
+    }
+});
+
+var TagCollection = {
+    url: 'tag',
+    model: Media.Tag,
+    backend: 'tagbackend',
+    initialize: function () {
+        if (!server) {
+            this.bindBackend();
+            this.bind('backend', function(method, model) {
+                console.log ('got from backend:', method, model);
+            });
+        }
+        console.log ('creating new Media.TagCollection');
+        Backbone.Collection.prototype.initialize.call (this);
+    },
+};
+
+Media.TagCollection = Backbone.Collection.extend(TagCollection);
+Media.TagCollectionPageable = PageableCollection.extend(_.extend(TagCollection, Pageable));
+
 Media.Transform.setup();
 Media.Model.setup();
 Media.Piece.setup();
