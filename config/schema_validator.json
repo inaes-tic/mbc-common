@@ -657,7 +657,7 @@
                         }
                     }
                 },
-                 "Status" : {
+                "Status" : {
                     "type" : "object",
                     "title" : "Status",
                     "description" : "Data config for Status",
@@ -685,6 +685,38 @@
                         "collection_pagebale" : {
                             "type": "string",
                             "title": "Status Collection Pageable",
+                            "description" : "Collection Pageable name"
+                        }
+                    }
+                },
+                "Tags" : {
+                    "type" : "object",
+                    "title" : "Status",
+                    "description" : "Data config for Tags",
+                    "properties" : {
+                        "collection_db" : {
+                            "type": "string",
+                            "title": "Collection DB",
+                            "description" : "Database collection name"
+                        },
+                        "backend" : {
+                            "type": "string",
+                            "title": "Backbone.io backend",
+                            "description" : "Server backend name"
+                        },
+                        "model" : {
+                            "type": "string",
+                            "title": "Tag Model",
+                            "description" : "Model name"
+                        },
+                        "collection" : {
+                            "type": "string",
+                            "title": "Tag Collection",
+                            "description" : "Collection name"
+                        },
+                        "collection_pagebale" : {
+                            "type": "string",
+                            "title": "Tag Collection Pageable",
                             "description" : "Collection Pageable name"
                         }
                     }
@@ -888,6 +920,33 @@
                 "Sketchs" : {
                     "type" : "object",
                     "title": "Sketchs",
+                    "description" : "Mongo Collection",
+                    "properties" : {
+                        "fulltext" : {
+                            "type": "array",
+                            "title": "Fulltext",
+                            "description": "Fields array to make a full text search"
+                        },
+                        "facets" : {
+                            "type": "array",
+                            "title": "Facets",
+                            "description": "Facets array to make faceted search"
+                        },
+                        "criteria" : {
+                            "type": "object",
+                            "title": "Criteria",
+                            "description": "Custom criteria for queries in mongo style"
+                        },
+                        "max_facets" : {
+                            "type": "integer",
+                            "title": "Max Facets",
+                            "description": "Maximun limit for faceted queries"
+                        }
+                    }
+                },
+                "Tags" : {
+                    "type" : "object",
+                    "title": "Tags",
                     "description" : "Mongo Collection",
                     "properties" : {
                         "fulltext" : {

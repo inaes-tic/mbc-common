@@ -154,6 +154,13 @@ module.exports = {
             model: 'App.Status',
             collection: '',
             collection_pagebale: '',
+        },
+        Tags: {
+            collection_db: 'tags',
+            backend: 'tagbackend',
+            model: 'Media.Tag',
+            collection: 'Media.TagCollection',
+            collection_pagebale: 'Media.TagCollectionPageable',
         }
     },
     Search: {
@@ -213,6 +220,14 @@ module.exports = {
         Sketchs: {
             fulltext: [],
             facets: [],
+            criteria: {},
+            max_facets: 100
+        },
+        Tags: {
+            fulltext: [ 'name' ],
+            facets: [
+                'name',
+            ],
             criteria: {},
             max_facets: 100
         }
