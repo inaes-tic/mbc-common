@@ -107,6 +107,7 @@ module.exports = {
             Status: 'status',
             Mostomessages: 'mostomessages',
             Sketchs: 'sketchs',
+            Tags: 'tags',
         },
         Widgets: {
             Files: [
@@ -173,6 +174,14 @@ module.exports = {
         Sketchs: {
             fulltext: [],
             facets: [],
+            criteria: {},
+            max_facets: 100
+        },
+        Tags: {
+            fulltext: [ 'name' ],
+            facets: [
+                'name',
+            ],
             criteria: {},
             max_facets: 100
         }
