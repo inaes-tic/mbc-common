@@ -100,8 +100,8 @@ App.MostoMessage = Backbone.Model.extend({
         if(!server) {
             this.bindBackend();
         } else {
-            if(!this.get('time'))
-                this.set('time', moment().valueOf());
+            if(!this.get('start'))
+                this.set('start', moment().valueOf());
         }
         var code = this.get('code');
         if(code === undefined) {
@@ -115,12 +115,21 @@ App.MostoMessage = Backbone.Model.extend({
                 this.set('description', data[0]);
             if(!attrs.message || attrs.message == 'INVALID')
                 this.set('message', data[1]);
-            if(data[2])
+            if(data[2]) {
+                // "sticky" errors have a "failing" status
                 this.set('status', 'failing');
+            }
+            else {
+                // but one-shot errors end immediatly
+                if(!this.get('end'))
+                    this.set('end', this.get('start'));
+            }
         }
         return Backbone.Model.prototype.initialize.apply(this, arguments);
     },
     codes: { // message code and their descriptions
+        // FORMAT: [description, default message[, is sticky (boolean)]]
+
         // 1xx are info codes
         // 2xx are warning codes
         201: ["BLANK PLAYING", "Blank clip playing"],
@@ -130,13 +139,14 @@ App.MostoMessage = Backbone.Model.extend({
         // 5xx are "server error" codes. Mosto couldn't find the requested file,
         //  connection problem with melted, etc
         501: ["MELTED CONNECTION ERROR", "Cannot connect to melted", true],
-        502: ["FILE NOT FOUND", "Requested media file cannot be found"],
+        502: ["FILE NOT FOUND", "Requested media file cannot be found", true],
     },
     defaults: {
         code: -1,
         description: "INVALID",
         message: "INVALID",
         status: "one-shot",
+        reference: "",
     },
 });
 
@@ -144,7 +154,7 @@ App.MessagesCollection = Backbone.Collection.extend({
     url: 'message',
     model: App.MostoMessage,
     backend: 'messagebackend',
-    comparator: function(message) { return -message.get('time') },
+    comparator: function(message) { return -message.get('start') },
     initialize: function () {
         if(!server) {
             this.bindBackend();
