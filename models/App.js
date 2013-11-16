@@ -138,6 +138,7 @@ App.MostoMessage = Backbone.Model.extend({
         // 4xx are "client error" codes. A problem in db content, for example
         // 5xx are "server error" codes. Mosto couldn't find the requested file,
         //  connection problem with melted, etc
+        500: ["MOSTO DEAD", "Mosto is silent", true],
         501: ["MELTED CONNECTION ERROR", "Cannot connect to melted", true],
         502: ["FILE NOT FOUND", "Requested media file cannot be found", true],
     },
