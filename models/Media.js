@@ -88,6 +88,7 @@ var Media = {};
 
 Media.Transform = Backbone.RelationalModel.extend({
     urlRoot: 'transform',
+    backend: 'transformbackend',
     idAttribute: '_id',
     relations: [{
         type: Backbone.HasOne,
@@ -106,6 +107,7 @@ Media.Transform = Backbone.RelationalModel.extend({
         relatedModel:'Media.Playlist',
         includeInJSON: '_id',
         reverseRelation: {
+            collectionType: 'Media.TransformCollection',
             key: 'transform',
             includeInJSON: '_id',
             type: Backbone.HasOne
@@ -121,6 +123,13 @@ Media.Transform = Backbone.RelationalModel.extend({
             includeInJSON: '_id',
             type: Backbone.HasOne
         }
+    },
+    {
+        type: Backbone.HasMany,
+        key: 'tags',
+        relatedModel: 'Media.Tag',
+        collectionType: 'Media.TagCollection',
+        includeInJSON: '_id',
     }],
     defaults: {
         trim: {
@@ -446,6 +455,13 @@ Media.Tag =  Backbone.RelationalModel.extend({
     urlRoot: 'tag',
     backend: 'tagbackend',
     idAttribute: '_id',
+    relations: [{
+        type: Backbone.HasMany,
+        key: 'transforms',
+        relatedModel: 'Media.Transform',
+        collectionType: 'Media.TransformCollection',
+        includeInJSON: '_id',
+    }],
     initialize: function () {
         console.log ('creating new Media.Tag');
     },
@@ -479,6 +495,7 @@ Media.Model.setup();
 Media.Piece.setup();
 Media.Playlist.setup();
 Media.Occurrence.setup();
+Media.Tag.setup();
 
 if(server) {
     module.exports = Media;
