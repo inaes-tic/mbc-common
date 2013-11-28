@@ -89,4 +89,8 @@ var logger = {
     }
 };
 
+process.on('uncaughtException', function (err) {
+    console.error(err.stack);
+});
+
 exports = module.exports = function() { return logger };
