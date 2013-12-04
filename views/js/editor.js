@@ -247,8 +247,15 @@ window.EditorView = Backbone.View.extend({
         var sketchs = new Sketch.Collection();
         this.sketchs = sketchs;
 
+        var schedules = new Sketch.ScheduleCollection();
+        this.schedules = schedules;
+
         this.sketchs.fetch({ success: function() {
                 self.getSketchs();
+                self.schedules.fetch( { success: function() {
+                        self.getSchedules();
+                    }
+                });
             }
         });
 
@@ -394,6 +401,19 @@ window.EditorView = Backbone.View.extend({
             if (!exist_key) {
                 var opt = '<option value="' + k + '">';
                 $('#sketchs').append($(opt).html(k));
+            }
+        });
+    },
+    getSchedules: function () {
+        var self = this;
+        this.schedules.forEach(function(sched) {
+            var sketch = self.sketchs.findWhere({_id: sched.get('sketch_id')});
+            var k = moment(sched.get('date')).format("DD/MM/YYYY HH:mm:ss") + " | " + sched.get('length') / 1000 + " sec | " + sketch.get('name');
+            var selector = "#schedules option[value='" + k + "']";
+            var exist_key = $(selector).length;
+            if (!exist_key) {
+                var opt = '<option value="' + k + '">';
+                $('#schedules').append($(opt).html(k));
             }
         });
     },
