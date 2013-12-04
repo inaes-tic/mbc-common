@@ -480,6 +480,7 @@ window.WebvfxImage = WebvfxBase.extend({
             top: this.getTop(),
             width: this.getWidth(),
             height: this.getHeight(),
+            id: this.id        
         }
     },
 
@@ -713,6 +714,7 @@ window.WebvfxWidget = WebvfxBase.extend({
             bottom: this.getBottom(),
             color: this.getColor(),
             'font-size': this.getFontSize(),
+            id: this.id        
         }
     },
 
