@@ -106,6 +106,9 @@ module.exports = {
             Status: 'status',
             Mostomessages: 'mostomessages',
             Sketchs: 'sketchs',
+            SketchSchedules: 'sketchschedules'
+        }
+        }
         },
         Widgets: {
             Files: [
