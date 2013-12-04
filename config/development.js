@@ -108,7 +108,11 @@ module.exports = {
             Sketchs: 'sketchs',
         },
         Widgets: {
-            Files: [ 'WebvfxSimpleWidget', ],
+            Files: [
+                'WebvfxSimpleWidget', 
+                'fonts/ShareRegular',
+                'fonts/ShareBold',
+            ],
         },
     },
     Search: {
