@@ -106,7 +106,10 @@ module.exports = {
             Status: 'status',
             Mostomessages: 'mostomessages',
             Sketchs: 'sketchs',
-        }
+        },
+        Widgets: {
+            Files: [ 'WebvfxSimpleWidget', ],
+        },
     },
     Search: {
         Medias: {
