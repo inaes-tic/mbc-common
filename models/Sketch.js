@@ -10,9 +10,12 @@ if (typeof exports !== 'undefined') {
     Sketch = root.Sketch = {};
 }
 
-// Require Underscore, Backbone & BackboneIO, if we're on the server, and it's not already present.
+// Require Underscore, Moment, Backbone & BackboneIO, if we're on the server, and it's not already present.
 var _ = root._;
 if (!_ && (typeof require !== 'undefined')) _ = require('underscore');
+
+var moment = root.moment;
+if (!moment && (typeof require !== 'undefined')) moment = require('moment');
 
 var Backbone = root.Backbone || false;
 var BackboneIO = root.BackboneIO;
