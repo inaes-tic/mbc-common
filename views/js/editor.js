@@ -213,6 +213,7 @@ window.EditorView = Backbone.View.extend({
         "click #load-sketch"    : "loadSketch",
         "click #del-sketch"     : "delSketch",
         "click #new-sketch"     : "newSketch",
+        "click #schedule-sketch"  : "scheduleSketch",
         "click #safe-area"      : "safeArea",
         "click #video-preview"  : "videoPreview",
         "click #real-time-edition" : "realTimeEdition",
@@ -392,6 +393,43 @@ window.EditorView = Backbone.View.extend({
     newSketch: function() {
         this.clearAll();
         var key = $('#sketchs').val('[select]');
+    },
+    scheduleSketch: function () {
+        var key = $('#sketchs').val();
+        if (key == '[select]') {
+            var description = i18n.gettext('You must select a sketch to schedule');
+            this.alert(description);
+            return;
+        }
+
+        var self = this;
+
+        var time = i18n.gettext('Date and Time:');
+        var duration = i18n.gettext('Duration (seconds):');
+        this.schedulePrompt(
+            time,
+            duration,
+            function (date, length) {
+                console.log("Selected YES");
+                if(date) {
+                    console.log("Scheduling for date: ", date);
+                    var model = self.sketchs.findWhere({ name: key });
+                    self.schedules.create({ sketch_id: model.id, date: date, length: length }, {success: function() {
+                        console.log('Success scheduling sketch: '+ model.get('name'));
+                    }});
+                    var k = date + " | " + length + " sec | " + key;
+                    var opt_key = '<option value="' + k + '">';
+                    $('#schedules').append($(opt_key).html(k).prop('selected', true));
+                } else {
+                    var description = i18n.gettext('You must enter date and time to schedule it');
+                    self.alert(description);
+                }
+            },
+            function() {
+                return;
+            }
+        );
+
     },
     getSketchs: function () {
         var keys = this.sketchs.pluck('name');
