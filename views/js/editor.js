@@ -214,6 +214,7 @@ window.EditorView = Backbone.View.extend({
         "click #del-sketch"     : "delSketch",
         "click #new-sketch"     : "newSketch",
         "click #schedule-sketch"  : "scheduleSketch",
+        "click #del-schedule"     : "delSchedule",
         "click #safe-area"      : "safeArea",
         "click #video-preview"  : "videoPreview",
         "click #real-time-edition" : "realTimeEdition",
@@ -430,6 +431,38 @@ window.EditorView = Backbone.View.extend({
             }
         );
 
+    },
+    delSchedule: function () {
+        var key = $('#schedules').val();
+        var date = key.substring(0, 20)
+        if (key == '[select]') {
+            var description = i18n.gettext('You must select a schedule to delete');
+            this.alert(description);
+            return;
+        }
+
+        var self = this;
+        var description = i18n.translate('Do you want to delete the schedule "%s" ?').fetch(date);
+        this.confirm(
+            description,
+            function () {
+                var model = self.schedules.findWhere({ date: moment(date, 'DD/MM/YYYY HH:mm:ss').valueOf() });
+                if (model) {
+                    model.destroy();
+                    $('#schedules option').filter(
+                        function() {
+                            return $(this).html() == key;
+                        }
+                    ).remove();
+                    console.log('schedule "' + key + '" deleted');
+                } else {
+                    console.log('tried to delete: "' + key + '" but not found in schedules');
+                }
+            },
+            function () {
+                console.log('Not deleting schedule "' + key + '"');
+            }
+        );
     },
     getSketchs: function () {
         var keys = this.sketchs.pluck('name');
