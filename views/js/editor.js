@@ -59,34 +59,46 @@ window.WebvfxBaseView = Backbone.View.extend({
             document.body.style.cursor = 'default';
         });
 
-        this.$('width', id).live('keyup', function() {
-            model.setWidth($(this).val());
-            self.$('right', id).val(model.getRight());
+        this.$('width', id).live('keyup', function(e) {
+            if (e.keyCode == 13) {
+                model.setWidth($(this).val());
+                self.$('right', id).val(model.getRight());
+            }
         });
 
-        this.$('height', id).live('keyup', function() {
-            model.setHeight($(this).val());
-            self.$('bottom', id).val(model.getBottom());
+        this.$('height', id).live('keyup', function(e) {
+            if (e.keyCode == 13) {
+                model.setHeight($(this).val());
+                self.$('bottom', id).val(model.getBottom());
+            }
         });
 
-        this.$('top', id).live('keyup', function() {
-            model.setTop($(this).val());
-            self.$('bottom', id).val(model.getBottom());
+        this.$('top', id).live('keyup', function(e) {
+            if (e.keyCode == 13) {
+                model.setTop($(this).val());
+                self.$('bottom', id).val(model.getBottom());
+            }
         });
 
-        this.$('left', id).live('keyup', function() {
-            model.setLeft($(this).val());
-            self.$('right', id).val(model.getRight());
+        this.$('left', id).live('keyup', function(e) {
+            if (e.keyCode == 13) {
+                model.setLeft($(this).val());
+                self.$('right', id).val(model.getRight());
+            }
         });
 
-        this.$('right', id).live('keyup', function() {
-            model.setRight($(this).val());
-            self.$('left', id).val(model.getLeft());
+        this.$('right', id).live('keyup', function(e) {
+            if (e.keyCode == 13) {
+                model.setRight($(this).val());
+                self.$('left', id).val(model.getLeft());
+            }
         });
 
-        this.$('bottom', id).live('keyup', function() {
-            model.setBottom($(this).val());
-            self.$('top', id).val(model.getTop());
+        this.$('bottom', id).live('keyup', function(e) {
+            if (e.keyCode == 13) {
+                model.setBottom($(this).val());
+                self.$('top', id).val(model.getTop());
+            }
         });
 
         this.$('remove', id).live('click', function() {
@@ -106,24 +118,34 @@ window.WebvfxWidgetView = WebvfxBaseView.extend({
         var id = model.id;
         var self = this;
 
-        this.$('text', id).live('keyup', function() {
-            model.reload({text: $(this).val()});
+        this.$('text', id).live('keyup', function(e) {
+            if (e.keyCode == 13 || e.keyCode == 32) {
+                model.reload({text: $(this).val()});
+            }
         });
 
         this.$('animation', id).live('change', function() {
             model.reload({animation: $(this).val()});
         });
 
-        this.$('interval', id).live('keyup', function() {
-            model.reload({interval: $(this).val()});
+        this.$('interval', id).live('keyup', function(e) {
+            if (e.keyCode == 13) {
+                model.reload({interval: $(this).val()});
+            }
         });
 
-        this.$('font-size', id).live('keyup', function() {
-            model.reload({style: { 'font-size': $(this).val() + 'px' }});
+        this.$('font-size', id).live('keyup', function(e) {
+            if (e.keyCode == 13) {
+                model.reload({style: { 'font-size': $(this).val() + 'px' }});
+            }
         });
 
-        this.$('color', id).live('keyup', function() {
+        this.$('color', id).live('change', function(e) {
             model.reload({style: { 'color': $(this).val() }});
+        });
+
+        this.$('border-color', id).live('change', function(e) {
+            model.reload({style: { 'border-color': $(this).val() }});
         });
 
         this.$('style', id).live('change', function() {
@@ -793,15 +815,23 @@ var Tools = {
         return style;
     },
 
-    getRealSize: function(style, text) {
-        var el = $('<div />')
-                    .html(text)
-                    .attr('style', style)
-                    .get(0);
-
-        $('body').append(el);
-        size = {width: el.offsetWidth, height: el.offsetHeight};
-        $(el).remove();
-        return size;
+    getIntValues: function(style, keys) {
+        var values = {};
+        keys.forEach(function(key) {
+            if (key in style) {
+                values[key] = parseInt(style[key].replace('px', ''));
+            }
+        });
+        return values;
     },
+
+    getLineHeight: function(style) {
+        var values = this.getIntValues(style, ['height', 'border-width']);
+        if ('border-width' in values) {
+            return values.height - (values['border-width'] * 2);
+        } else {
+            return values.height;
+        }
+    },
+
 };

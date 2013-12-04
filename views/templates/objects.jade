@@ -1,12 +1,23 @@
 - var type = model.getType()
 - var colors = [
--               i18n.gettext('black'),
--               i18n.gettext('red'),
--               i18n.gettext('blue'),
--               i18n.gettext('green'),
--               i18n.gettext('pink'),
--               i18n.gettext('orange')
--     ]
+-   'aqua',
+-   'black',
+-   'blue',
+-   'fuchsia',
+-   'gray',
+-   'green',
+-   'lime',
+-   'maroon',
+-   'navy',
+-   'olive',
+-   'orange',
+-   'purple',
+-   'red',
+-   'silver',
+-   'teal',
+-   'white',
+-   'yellow',
+- ]
 - var effects = [
 -        "flash", "bounce", "shake", "tada", "swing", "wobble",
 -        "wiggle", "pulse", "flip", "flipInX", "flipOutX", "flipInY",
@@ -97,11 +108,6 @@ div(id="webvfx-data-#{id}", style="display:none")
                             | px
                     tr
                         th
-                            label(for="color-#{id}")= i18n.gettext("color")
-                        td
-                            input(type="text", id="color-#{id}", value="#{model.getColor()}")
-                    tr
-                        th
                             label(for="animation-#{id}")= i18n.gettext("animation")
                         td
                             select(id="animation-#{id}", style="width:120px")
@@ -121,6 +127,22 @@ div(id="webvfx-data-#{id}", style="display:none")
                             option(value='')= i18n.gettext("[select]")
                             each style, name in WebvfxSimpleWidgetStyles
                                 option= i18n.gettext(name)
+                tr
+                    th
+                        label(for="color-#{id}")= i18n.gettext("color")
+                    td
+                        select(id="color-#{id}", style="width:120px")
+                            option(value='')= i18n.gettext("[select]")
+                            for color in colors
+                                option #{color}
+                tr
+                    th
+                        label(for="border-color-#{id}")= i18n.gettext("border-color")
+                    td
+                        select(id="border-color-#{id}", style="width:120px")
+                            option(value='')= i18n.gettext("[select]")
+                            for color in colors
+                                option #{color}
 
     fieldset
         legend.editor= i18n.gettext("Remove")

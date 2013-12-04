@@ -154,6 +154,34 @@ window.WebvfxBase = Backbone.Model.extend({
         }
     },
 
+    getInitialPosition: function(args) {
+        var x = ('left' in args)
+              ? ((typeof args.left == "string")
+                 ? parseInt(args.left.replace('px', ''))
+                 : args.left
+                )
+              : Math.ceil((webvfxEditor.get('width') - this.get('width')) / 2);
+
+        var y = ('top' in args)
+              ? ((typeof args.top == "string")
+                 ? parseInt(args.top.replace('px', ''))
+                 : args.top
+                )
+              : Math.ceil((webvfxEditor.get('height') - this.get('height')) / 2);
+
+        return {x: x, y: y};
+    },
+
+    setSize: function(width, height) {
+        this.set('width', width);
+        this.set('height', height);
+        var realWidth = width * webvfxEditor.get('scale');
+        var realHeight = height * webvfxEditor.get('scale');
+        this.getImage().setSize(realWidth, realHeight);
+        this.kObj.setSize(realWidth, realHeight);
+        this.setPosition(this.get('left'), this.get('top'));
+    },
+
     setPosition: function(x, y) {
         this.set('left', x);
         this.set('top', y);
@@ -197,30 +225,6 @@ window.WebvfxBase = Backbone.Model.extend({
             webvfxEditor.get('height') - bottom - this.get('height')
         );
         this.draw();
-    },
-
-    setInitialPosition: function(args) {
-        if ('top' in args) {
-            this.set('top', args.top);
-        } else {
-            this.set('top', Math.ceil(
-                (webvfxEditor.get('height') - this.get('height')) / 2
-            ));
-        }
-        this.set('bottom', webvfxEditor.get('height') - this.get('top') - this.get('height'));
-
-        if ('left' in args) {
-            this.set('left', args.left);
-        } else {
-            this.set('left', Math.ceil(
-                (webvfxEditor.get('width') - this.get('width')) / 2
-            ));
-        }
-        this.set('right', webvfxEditor.get('width') - this.get('left') - this.get('width'));
-
-        var top = Math.ceil(this.get('top') * webvfxEditor.get('scale'));
-        var left = Math.ceil(this.get('left') * webvfxEditor.get('scale'));
-        this.kObj.setPosition(left, top);
     },
 
     updatePosition: function() {
@@ -278,7 +282,6 @@ window.WebvfxBase = Backbone.Model.extend({
                     style: {
                         width: self.get('width') + 'px',
                         height: self.get('height') + 'px',
-                        'line-height': self.get('height') + 'px',
                         'font-size': fontSize + 'px',
                     }
                 });
@@ -400,7 +403,8 @@ window.WebvfxImage = WebvfxBase.extend({
 
         this.kObj = this.createImage();
         this.kObj.webvfxObj = this;
-        this.setInitialPosition(args);
+        var pos = this.getInitialPosition(args);
+        this.setPosition(pos.x, pos.y);
         this.createEvents(this.kObj);
         this.layer.add(this.kObj);
         this.layer.draw();
@@ -584,23 +588,24 @@ window.WebvfxWidget = WebvfxBase.extend({
             }
 
             var text = self.getText();
-            var style = Tools.toCssStyleString(self.options.style, ['top', 'left']);
             if (self.options.animation == 'marquee') {
-                var size = Tools.getRealSize(style, '');
                 text = 
                    "<div xmlns='http://www.w3.org/1999/xhtml' " +
                      "style='position:absolute;white-space:nowrap;left:" +
                      self.count + "px'>" + text  +
                    "</div>";
-            } else {
-                var size = Tools.getRealSize(style, text);
             }
 
-            if ('font-family' in self.options.style) {
-                font = WebvfxSimpleWidgetFonts.getFont(self.options.style['font-family']);
-            } else {
-                font = '';
-            }
+            var size = Tools.getIntValues(self.options.style, ['width', 'height']);
+
+            // Auto vertical-align
+            self.options.style['line-height'] = Tools.getLineHeight(self.options.style) + 'px';
+
+            var style = Tools.toCssStyleString(self.options.style, ['top', 'left']);
+
+            var font = ('font-family' in self.options.style)
+                     ? WebvfxSimpleWidgetFonts.getFont(self.options.style['font-family'])
+                     : "";
 
             var svg = 
                 "<svg xmlns='http://www.w3.org/2000/svg' " +
@@ -620,30 +625,12 @@ window.WebvfxWidget = WebvfxBase.extend({
             var k = self.options.k;
 
             img.onload = function() {
-                k.set('width', size.width);
-                k.set('height', size.height);
-                var realWidth = k.get('width') * webvfxEditor.get('scale');
-                var realHeight = k.get('height') * webvfxEditor.get('scale');
                 k.getImage().setImage(img);
-                k.getImage().setWidth(realWidth);
-                k.getImage().setHeight(realHeight);
-                k.kObj.setWidth(realWidth);
-                k.kObj.setHeight(realHeight);
+                k.setSize(size.width, size.height);
 
                 if (!k.initialized) {
-                    k.kObj.get('.topRight')[0].setX(realWidth);
-                    k.kObj.get('.bottomLeft')[0].setY(realHeight);
-                    k.kObj.get('.bottomRight')[0].setX(realWidth);
-                    k.kObj.get('.bottomRight')[0].setY(realHeight);
-
-                    var args = {};
-                    if ('top' in self.options.style) {
-                        args.top = self.options.style.top.replace('px', '');
-                    }
-                    if ('left' in self.options.style) {
-                        args.left = self.options.style.left.replace('px', '');
-                    }
-                    k.setInitialPosition(args);
+                    var pos = k.getInitialPosition(self.options.style);
+                    k.setPosition(pos.x, pos.y);
                     k.initialized = true;
                 }
                 k.layer.draw();
@@ -655,7 +642,6 @@ window.WebvfxWidget = WebvfxBase.extend({
                     }
                     k.created = true;
                 }
-
                 DOMURL.revokeObjectURL(url);
             };
             img.src = url;
@@ -753,18 +739,11 @@ window.WebvfxWidget = WebvfxBase.extend({
     },
 
     setWidth: function(width) {
-        this.set('width', width);
-        this.set('right', webvfxEditor.get('width') - width - this.get('left'));
         this.reload({style: {width: width + 'px'}});
     },
 
     setHeight: function(height) {
-        this.set('height', height);
-        this.set('bottom', webvfxEditor.get('height') - height - this.get('top'));
-        this.reload({style: {
-            height: height + 'px',
-            'line-height': height + 'px',
-        }});
+        this.reload({style: {height: height + 'px'}});
     },
 
     send: function() {

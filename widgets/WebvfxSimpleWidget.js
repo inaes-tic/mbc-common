@@ -21,6 +21,7 @@ var WebvfxSimpleWidget = function(options) {
                 display: 'block',
                 position: 'absolute',
                 overflow: 'hidden',
+                'box-sizing': 'border-box', // yeah!
             },
 
             success: function(self) {
@@ -239,8 +240,6 @@ var WebvfxSimpleWidgetStyles = {
         'font-size': '20px',
         'text-align': 'center',
         background: '-webkit-linear-gradient(top, rgba(19,19,19,1) 0%, rgba(28,28,28,1) 9%, rgba(43,43,43,1) 24%, rgba(17,17,17,1) 40%, rgba(0,0,0,1) 49%, rgba(44,44,44,1) 50%, rgba(71,71,71,1) 61%, rgba(102,102,102,1) 75%, rgba(89,89,89,1) 88%, rgba(76,76,76,1) 100%)',
-        border: 'none',
-        'border-radius': '0px',
     },
 
     gray: {
@@ -249,8 +248,6 @@ var WebvfxSimpleWidgetStyles = {
         'font-size': '18px',
         'text-align': 'center',
         background: '-webkit-linear-gradient(top, rgba(180,180,180,1) 0%,rgba(83,83,83,1) 46%,rgba(75,75,75,1) 50%,rgba(81,81,81,1) 53%,rgba(129,129,129,1) 76%,rgba(114,114,114,1) 87%,rgba(93,93,93,1) 100%)',
-        border: 'none',
-        'border-radius': '0px',
     },
 
     heaven: {
@@ -259,8 +256,6 @@ var WebvfxSimpleWidgetStyles = {
         'font-size': '32px',
         'text-align': 'center',
         background: '-webkit-linear-gradient(top, rgba(109,179,242,1) 0%,rgba(84,163,238,1) 19%,rgba(54,144,240,1) 35%,rgba(30,105,222,1) 58%,rgba(84,163,238,1) 100%)',
-        border: 'none',
-        'border-radius': '0px',
     },
 
     fire: {
@@ -269,10 +264,46 @@ var WebvfxSimpleWidgetStyles = {
         'font-size': '32px',
         'text-align': 'center',
         background: '-webkit-linear-gradient(top, rgba(255,214,94,1) 0%,rgba(254,191,4,1) 100%)',
-        border: 'none',
-        'border-radius': '0px',
     },
 
+    'border-1': {
+        'border-width': '1px',
+        'border-style': 'solid',
+    },
+
+    'border-2': {
+        'border-width': '2px',
+        'border-style': 'solid',
+    },
+
+    'border-3': {
+        'border-width': '3px',
+        'border-style': 'solid',
+    },
+
+    'border-5': {
+        'border-width': '5px',
+        'border-style': 'solid',
+    },
+
+    'border-10': {
+        'border-width': '10px',
+        'border-style': 'solid',
+    },
+
+    'no-border': { 'border-width': '0px' },
+
+    'border-radius-5': { 'border-radius': '5px' },
+
+    'border-radius-10': { 'border-radius': '10px' },
+
+    'border-radius-15': { 'border-radius': '15px' },
+
+    'border-radius-25': { 'border-radius': '25px' },
+
+    'border-radius-50': { 'border-radius': '50px' },
+
+    'no-border-radius': { 'border-radius': '0px' },
 };
 
 var WebvfxSimpleWidgetFonts = {
