@@ -49,6 +49,39 @@ Sketch.Collection = Backbone.Collection.extend({
     },
 });
 
+Sketch.ScheduleModel = Backbone.Model.extend({
+    urlRoot: 'sketchschedule',
+    idAttribute: '_id',
+    defaults: {
+    },
+    initialize: function(attributes, options) {
+        attributes = attributes || {};
+        if (typeof attributes.date === 'string') {
+            attributes.date = moment(attributes.date, 'DD/MM/YYYY HH:mm:ss').valueOf();
+            if (attributes.length)
+                attributes.length = attributes.length * 1000;
+        }
+        this.set(attributes);
+    }
+});
+
+Sketch.ScheduleCollection = Backbone.Collection.extend({
+    model: Sketch.ScheduleModel,
+    url: "sketchschedule",
+    comparator: "date",
+    backend: "sketchschedulebackend",
+    initialize: function () {
+        if (!server) {
+            this.bindBackend();
+            this.bind('backend', function(method, model) {
+                console.log ('got from backend:', method, model);
+            });
+        }
+        console.log ('creating new SketchScheduleCollection');
+        Backbone.Collection.prototype.initialize.call (this);
+    },
+});
+
 if(server) {
     module.exports = Sketch;
 } else {
