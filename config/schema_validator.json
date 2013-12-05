@@ -252,6 +252,104 @@
                 }
             }
         },
+        "Webvfx" : {
+            "type" : "object",
+            "title" : "General UI Webvfx config",
+            "description" : "bits and pieces of the HTML5 UI",
+            "properties" : {
+                "Branding" : {
+                    "type" : "object",
+                    "title" : "Branding",
+                    "description" : "Application Info",
+                    "properties" : {
+                        "name" : {
+                            "type": "string",
+                            "title": "Name",
+                            "description" : "An application name"
+                        },
+                        "description" : {
+                            "type": "string",
+                            "title": "Description",
+                            "description" : "Description for Application"
+                        }
+                    }
+                },
+                "Dirs" : {
+                    "type" : "object",
+                    "title" : "Directories",
+                    "description" : "All directories configurables in app",
+                    "properties" : {
+                        "pub" : {
+                            "type": "string",
+                            "title": "Pub",
+                            "description" : "Public directory"
+                        },
+                         "views" : {
+                            "type": "string",
+                            "title": "Views",
+                            "description" : ""
+                        },
+                         "styles" : {
+                            "type": "string",
+                            "title": "Styles",
+                            "description" : "Css - Styling Stuff"
+                        },
+                         "models" : {
+                            "type": "string",
+                            "title": "Models",
+                            "description" : "Models "
+                        },
+                         "vendor" : {
+                            "type": "string",
+                            "title": "Vendor",
+                            "description" : "Third party libraries"
+                        },
+                         "uploads" : {
+                            "type": "string",
+                            "title": "Uploads",
+                            "description" : "File upload directory"
+                        },
+                        "logs" : {
+                            "type": "string",
+                            "title": "Logs",
+                            "description" : "Logging directory"
+                        }
+                    }
+                },
+                "Editor" : {
+                    "type" : "object",
+                    "title" : "Editor",
+                    "description" : "Default Editor config",
+                    "properties" : {
+                        "server" : {
+                            "type": "string",
+                            "title": "Server",
+                            "description" : "Webvfx server to send objects"
+                        },
+                        "width" : {
+                            "type": "integer",
+                            "title": "Width",
+                            "description" : "Canvas width"
+                        },
+                        "height" : {
+                            "type": "integer",
+                            "title": "Height",
+                            "description" : "Canvas height"
+                        },
+                        "scale" : {
+                            "type": "integer",
+                            "title": "Scale",
+                            "description" : "Canvas Scale"
+                        },
+                        "stream_url" : {
+                            "type": "string",
+                            "title": "Stream Url",
+                            "description" : "Stream url for displaying in editor background"
+                        }
+                    }
+                }
+            }
+        },
         "Common" : {
             "type" : "object",
             "title" : "General Common config",
@@ -367,6 +465,11 @@
                             "type": "string",
                             "title": "Mostomessages",
                             "description" : "Collection name for list of mostomessages"
+                        },
+                        "Sketchs" : {
+                            "type": "string",
+                            "title": "Sketchs",
+                            "description" : "Collection name for list of sketchs"
                         }
                     }
                 }
@@ -542,6 +645,33 @@
                 "Mostomessages" : {
                     "type" : "object",
                     "title": "Mostomessages",
+                    "description" : "Mongo Collection",
+                    "properties" : {
+                        "fulltext" : {
+                            "type": "array",
+                            "title": "Fulltext",
+                            "description": "Fields array to make a full text search"
+                        },
+                        "facets" : {
+                            "type": "array",
+                            "title": "Facets",
+                            "description": "Facets array to make faceted search"
+                        },
+                        "criteria" : {
+                            "type": "object",
+                            "title": "Criteria",
+                            "description": "Custom criteria for queries in mongo style"
+                        },
+                        "max_facets" : {
+                            "type": "integer",
+                            "title": "Max Facets",
+                            "description": "Maximun limit for faceted queries"
+                        }
+                    }
+                },
+                "Sketchs" : {
+                    "type" : "object",
+                    "title": "Sketchs",
                     "description" : "Mongo Collection",
                     "properties" : {
                         "fulltext" : {

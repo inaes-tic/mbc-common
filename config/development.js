@@ -58,6 +58,28 @@ module.exports = {
             old:    path.join(cwd ,'playlists','old'),
         },
     },
+    Webvfx: {
+        Branding: {
+            name: 'MBC Webvfx Editor',
+            description: 'HTML5 Editor for Webvfx (Video effects engine)',
+        },
+        Dirs: {
+            pub : path.join(cwd, 'public'),
+            views : path.join(cwd, 'views'),
+            styles : path.join(cwd, 'styles'),
+            models : path.join(cwd, 'models'),
+            vendor : path.join(cwd, 'vendor'),
+            uploads: path.join(cwd, 'public', 'uploads'),
+            logs :  path.join(cwd, 'logs'),
+        },
+        Editor: {
+            server: 'http://localhost:3100/',
+            width:  720,
+            height: 576,
+            scale:  1,
+            stream_url: 'http://localhost:8000/consume/mbc?password=malbec',
+        }
+    },
     Common: {
         Branding: {
             name: 'MBC Common',
@@ -83,6 +105,7 @@ module.exports = {
             Transforms: 'transforms',
             Status: 'status',
             Mostomessages: 'mostomessages',
+            Sketchs: 'sketchs',
         }
     },
     Search: {
@@ -139,5 +162,11 @@ module.exports = {
             criteria: {},
             max_facets: 100
         },
+        Sketchs: {
+            fulltext: [],
+            facets: [],
+            criteria: {},
+            max_facets: 100
+        }
     }
 }
