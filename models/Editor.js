@@ -70,6 +70,7 @@ window.WebvfxBase = Backbone.Model.extend({
 
     initialize: function() {
         this.id = this.cid;
+        this.set("removed", false);
         this.zindex = 0,
         this.locked = false,
         this.created = false,
@@ -388,9 +389,11 @@ window.WebvfxBase = Backbone.Model.extend({
         }
         if (webvfxEditor.get('realTimeEdition')) {
             this.remove();
+            webvfxEditor.objects.remove(this.id);
+        } else {
+            this.set("removed", true);
         }
-        this.kObj.destroy();
-        webvfxEditor.objects.remove(this.id);
+        this.kObj.destroy();       
         this.layer.draw();
     },
 
@@ -508,19 +511,21 @@ window.WebvfxImage = WebvfxBase.extend({
 
     send: function() {
         this.remove();
-        var kImage = this.getImage();
-        webvfxClient.addImage({
-            images: kImage.attrs.name,
-            name: kImage.attrs.name,
-            id: this.id,
-            zindex: this.zindex,
-            width: this.getWidth() + 'px',
-            height: this.getHeight() + 'px',
-            top: this.getTop() + 'px',
-            left: this.getLeft() + 'px',
-            bottom: this.getBottom() + 'px',
-            right: this.getRight() + 'px',
-        });
+        if (!this.get("removed")) {
+            var kImage = this.getImage();
+            webvfxClient.addImage({
+                images: kImage.attrs.name,
+                name: kImage.attrs.name,
+                id: this.id,
+                zindex: this.zindex,
+                width: this.getWidth() + 'px',
+                height: this.getHeight() + 'px',
+                top: this.getTop() + 'px',
+                left: this.getLeft() + 'px',
+                bottom: this.getBottom() + 'px',
+                right: this.getRight() + 'px',
+            });
+        }
     },
 
 });
@@ -755,23 +760,25 @@ window.WebvfxWidget = WebvfxBase.extend({
     send: function() {
         this.remove();
         var self = this;
-        webvfxClient.addWidget({
-            id: this.id,
-            zindex: this.zindex,
-            options: {
+        if (!this.get("removed")) {
+            webvfxClient.addWidget({
                 id: this.id,
-                type: this.options.type,
-                text: this.options.text,
-                interval: this.options.interval,
-                animation: this.options.animation,
-                style: $.extend({}, this.options.style, {
-                    width: self.getWidth() + 'px',
-                    height: self.getHeight() + 'px',
-                    top: self.getTop() + 'px',
-                    left: self.getLeft() + 'px',
-                }),
-            },
-        });
+                zindex: this.zindex,
+                options: {
+                    id: this.id,
+                    type: this.options.type,
+                    text: this.options.text,
+                    interval: this.options.interval,
+                    animation: this.options.animation,
+                    style: $.extend({}, this.options.style, {
+                        width: self.getWidth() + 'px',
+                        height: self.getHeight() + 'px',
+                        top: self.getTop() + 'px',
+                        left: self.getLeft() + 'px',
+                    }),
+                },
+            });
+        }
     },
 
 });

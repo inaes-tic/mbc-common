@@ -167,7 +167,7 @@ window.WebvfxCollectionView = Backbone.View.extend({
     },
 
     initialize: function(collection) {
-        this.collection.bind('add remove', this.render, this);
+        this.collection.bind('add remove change:removed', this.render, this);
         this.render();
     },
 
@@ -186,7 +186,8 @@ window.WebvfxCollectionView = Backbone.View.extend({
     render: function() {
         this.$el.empty();
         if (this.collection.length) {
-            this.collection.each(function(webvfxObj) {
+            var toShow = this.collection.where({removed: false});
+            _.each(toShow, function(webvfxObj) {
                 var webvfxView = webvfxObj.getView();
                 this.$el.prepend(webvfxView.el);
             }, this);
