@@ -385,6 +385,10 @@ window.WebvfxBase = Backbone.Model.extend({
 
     destroy: function() {
         console.log('destroy', this.id);
+        if (this.widget) {
+            this.widget.remove();
+            this.widget = null;
+        }
         if (webvfxEditor.get('realTimeEdition')) {
             this.remove();
         }
@@ -578,6 +582,9 @@ window.WebvfxWidget = WebvfxBase.extend({
             id: self.cid + '-' + self.count++,
         }, options);
 
+        // Auto vertical-align
+        this.options.style['line-height'] = Tools.getLineHeight(this.options.style) + 'px';
+
         this.options.success = function(self) {
             if (self.options.k.locked) {
                 return;
@@ -597,12 +604,7 @@ window.WebvfxWidget = WebvfxBase.extend({
             }
 
             var size = Tools.getIntValues(self.options.style, ['width', 'height']);
-
-            // Auto vertical-align
-            self.options.style['line-height'] = Tools.getLineHeight(self.options.style) + 'px';
-
             var style = Tools.toCssStyleString(self.options.style, ['top', 'left']);
-
             var font = ('font-family' in self.options.style)
                      ? WebvfxSimpleWidgetFonts.getFont(self.options.style['font-family'])
                      : "";
@@ -656,16 +658,6 @@ window.WebvfxWidget = WebvfxBase.extend({
             this.widget = null;
         }
         this.create(options);
-    },
-
-    destroy: function() {
-        if (webvfxEditor.get('realTimeEdition')) {
-            this.remove();
-        }
-        this.widget.remove();
-        this.kObj.destroy();
-        webvfxEditor.objects.remove(this.id);
-        this.layer.draw();
     },
 
     getName: function() {

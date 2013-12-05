@@ -36,7 +36,6 @@ window.WebvfxBaseView = Backbone.View.extend({
     },
 
     addCommonEvents: function(model) {
-
         var id = model.id;
         var self = this;
 
@@ -104,7 +103,6 @@ window.WebvfxBaseView = Backbone.View.extend({
         this.$('remove', id).live('click', function() {
             model.destroy();
         });
-
     },
 });
 
@@ -119,9 +117,7 @@ window.WebvfxWidgetView = WebvfxBaseView.extend({
         var self = this;
 
         this.$('text', id).live('keyup', function(e) {
-            if (e.keyCode == 13 || e.keyCode == 32) {
-                model.reload({text: $(this).val()});
-            }
+            model.reload({text: $(this).val()});
         });
 
         this.$('animation', id).live('change', function() {
