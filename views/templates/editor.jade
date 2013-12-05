@@ -80,7 +80,8 @@ block content
             #main-controls.round-panel.v-panel
                 h2= i18n.gettext("control panel")
                 #controls.v-container
-                    button#update(style="width:100%")= i18n.gettext("update video")
+                    button#update-video(style="width:100%;margin-bottom:10px")= i18n.gettext("update video")
+                    button#clear-video(style="width:100%;margin-bottom:10px")= i18n.gettext("clear video")
                     fieldset.well.well-small.storage
                         h3.editor= i18n.gettext("Storage")
                         select#sketchs

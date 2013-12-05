@@ -793,6 +793,12 @@ window.webvfxClient = {
         });
     },
 
+    removeAll: function() {
+        this.send('removeAll', {all: true}, function(res) {
+            console.log('remove all objects');
+        });
+    },
+
     addImage: function(data) {
         this.send('addImage', data, function(res) {
             console.log('image', data.name, 'added');

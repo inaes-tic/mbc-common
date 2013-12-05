@@ -212,7 +212,8 @@ window.EditorView = Backbone.View.extend({
         "click #safe-area"      : "safeArea",
         "click #video-preview"  : "videoPreview",
         "click #real-time-edition" : "realTimeEdition",
-        "click #update"         : "updateVideo",
+        "click #update-video"   : "updateVideo",
+        "click #clear-video"    : "clearVideo",
         "click #clear-all"      : "clearAll",
         "dragover #container"   : "dragOver",
         "dragleave #container"  : "dragLeave",
@@ -495,6 +496,10 @@ window.EditorView = Backbone.View.extend({
     updateVideo:  function () {
         console.log('manual update');
         this.webvfxCollection.sendAll();
+    },
+    clearVideo:  function () {
+        console.log('manual clear');
+        webvfxClient.removeAll();
     },
     clearAll: function() {
         if (this.webvfxCollection.models.length) {
