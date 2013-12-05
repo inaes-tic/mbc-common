@@ -511,21 +511,21 @@ window.WebvfxImage = WebvfxBase.extend({
 
     send: function() {
         this.remove();
-        if (!this.get("removed")) {
-            var kImage = this.getImage();
-            webvfxClient.addImage({
-                images: kImage.attrs.name,
-                name: kImage.attrs.name,
-                id: this.id,
-                zindex: this.zindex,
-                width: this.getWidth() + 'px',
-                height: this.getHeight() + 'px',
-                top: this.getTop() + 'px',
-                left: this.getLeft() + 'px',
-                bottom: this.getBottom() + 'px',
-                right: this.getRight() + 'px',
-            });
-        }
+        if (this.get("removed")) 
+            return;
+        var kImage = this.getImage();
+        webvfxClient.addImage({
+            images: kImage.attrs.name,
+            name: kImage.attrs.name,
+            id: this.id,
+            zindex: this.zindex,
+            width: this.getWidth() + 'px',
+            height: this.getHeight() + 'px',
+            top: this.getTop() + 'px',
+            left: this.getLeft() + 'px',
+            bottom: this.getBottom() + 'px',
+            right: this.getRight() + 'px',
+        });
     },
 
 });
@@ -760,25 +760,25 @@ window.WebvfxWidget = WebvfxBase.extend({
     send: function() {
         this.remove();
         var self = this;
-        if (!this.get("removed")) {
-            webvfxClient.addWidget({
+        if (this.get("removed")) 
+            return;
+        webvfxClient.addWidget({
+            id: this.id,
+            zindex: this.zindex,
+            options: {
                 id: this.id,
-                zindex: this.zindex,
-                options: {
-                    id: this.id,
-                    type: this.options.type,
-                    text: this.options.text,
-                    interval: this.options.interval,
-                    animation: this.options.animation,
-                    style: $.extend({}, this.options.style, {
-                        width: self.getWidth() + 'px',
-                        height: self.getHeight() + 'px',
-                        top: self.getTop() + 'px',
-                        left: self.getLeft() + 'px',
-                    }),
-                },
-            });
-        }
+                type: this.options.type,
+                text: this.options.text,
+                interval: this.options.interval,
+                animation: this.options.animation,
+                style: $.extend({}, this.options.style, {
+                    width: self.getWidth() + 'px',
+                    height: self.getHeight() + 'px',
+                    top: self.getTop() + 'px',
+                    left: self.getLeft() + 'px',
+                }),
+            },
+        });
     },
 
 });
