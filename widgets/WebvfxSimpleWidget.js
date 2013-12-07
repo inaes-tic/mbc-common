@@ -114,6 +114,14 @@ var WebvfxSimpleWidget = function(options) {
 
     };
 
+    this.hide = function() {
+
+        if (this.widget.is(':visible')) {
+            this.widget.hide();
+        }
+
+    },
+
     this.cycle = function() {
 
         if ($('#' + this.options.id).length) {

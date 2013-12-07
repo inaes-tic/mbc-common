@@ -59,48 +59,49 @@ window.WebvfxEditor = Backbone.Model.extend({
 window.WebvfxBase = Backbone.Model.extend({
 
     defaults: {
+        name: '',
         width: 0,
         height: 0,
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
-        name: '',
-        locked: false,
-        created: false,
     },
 
     initialize: function() {
         this.id = this.cid;
+        this.zindex = 0,
+        this.locked = false,
+        this.created = false,
         this.layer = webvfxEditor.get('stage').children[0];
     },
 
-    createEvents: function(kObj) {
+    createEvents: function() {
         var self = this;
 
-        kObj.on('mouseover', function() {
+        this.kObj.on('mouseover', function() {
             document.body.style.cursor = 'pointer';
         });
 
-        kObj.on('dragmove', function() {
+        this.kObj.on('dragmove', function() {
             self.updatePosition();
-            self.showInfo(kObj);
+            self.showInfo();
         });
 
-        kObj.on('dragend', function() {
+        this.kObj.on('dragend', function() {
             if (self.created && webvfxEditor.get('realTimeEdition')) {
                 webvfxEditor.objects.sendAll();
             }
         });
 
-        kObj.on('mouseout', function() {
+        this.kObj.on('mouseout', function() {
             document.body.style.cursor = 'default';
             $('#info').html('');
         });
 
-        kObj.on('mousedown', function() {
+        this.kObj.on('mousedown', function() {
             $('.webvfx-obj div').hide();
-            $('#webvfx-data-' + kObj.webvfxObj.id).show();
+            $('#webvfx-data-' + self.id).show();
         });
     },
 
@@ -111,10 +112,10 @@ window.WebvfxBase = Backbone.Model.extend({
         }
     },
 
-    showInfo: function(kObj) {
-        var info = kObj.webvfxObj.getInfo();
+    showInfo: function() {
+        var info = this.getInfo();
         for (key in info) {
-            $('#' + key + '-' + kObj.webvfxObj.id).val(info[key]);
+            $('#' + key + '-' + this.id).val(info[key]);
         }
     },
 
@@ -279,11 +280,7 @@ window.WebvfxBase = Backbone.Model.extend({
             if (self.getType() != 'image') {
                 var fontSize = Math.ceil(self.get('height') * self.getFontSize() / self._startHeight);
                 self.reload({
-                    style: {
-                        width: self.get('width') + 'px',
-                        height: self.get('height') + 'px',
-                        'font-size': fontSize + 'px',
-                    }
+                    style: { 'font-size': fontSize + 'px', }
                 });
             }
         });
@@ -404,12 +401,10 @@ window.WebvfxImage = WebvfxBase.extend({
     initialize: function() {
         WebvfxImage.__super__.initialize.apply(this, arguments);
         var args = arguments[0];
-
         this.kObj = this.createImage();
-        this.kObj.webvfxObj = this;
         var pos = this.getInitialPosition(args);
         this.setPosition(pos.x, pos.y);
-        this.createEvents(this.kObj);
+        this.createEvents();
         this.layer.add(this.kObj);
         this.layer.draw();
         this.created = true;
@@ -517,12 +512,13 @@ window.WebvfxImage = WebvfxBase.extend({
             images: kImage.attrs.name,
             name: kImage.attrs.name,
             id: this.id,
-            top: this.getTop() + 'px',
-            left: this.getLeft() + 'px',
-            right: this.getRight() + 'px',
-            bottom: this.getBottom() + 'px',
+            zindex: this.zindex,
             width: this.getWidth() + 'px',
             height: this.getHeight() + 'px',
+            top: this.getTop() + 'px',
+            left: this.getLeft() + 'px',
+            bottom: this.getBottom() + 'px',
+            right: this.getRight() + 'px',
         });
     },
 
@@ -532,13 +528,25 @@ window.WebvfxWidget = WebvfxBase.extend({
 
     initialize: function() {
         WebvfxWidget.__super__.initialize.apply(this, arguments);
-        this.options = arguments[0];
+        this.setOptions(arguments[0]);
         this.count = 0;
         this.initialized = false;
         this.kObj = this.createWidget();
-        this.kObj.webvfxObj = this;
-        this.createEvents(this.kObj);
+        this.createEvents();
         this.layer.add(this.kObj);
+    },
+
+    setOptions: function(args) {
+        var self = this;
+        var values = Tools.getIntValues(args.style, ['width', 'height', 'top', 'left']); 
+        for (key in values) {
+            self.set(key, values[key]);
+            delete args.style[key];
+        }
+        var pos = this.getInitialPosition(values);
+        this.set('left', pos.x);
+        this.set('top', pos.y);
+        this.options = args;
     },
 
     createWidget: function() {
@@ -574,44 +582,70 @@ window.WebvfxWidget = WebvfxBase.extend({
     },
 
     create: function(options) {
-        var self = this;
         this.created = false;
 
+        var self = this;
+        var DOMURL = window.URL || window.webkitURL || window;
+
         this.options = $.extend(true, this.options, {
-            k: self,
             id: self.cid + '-' + self.count++,
+            style: {
+                width: self.get('width') + 'px',
+                height: self.get('height') + 'px',
+                top: self.get('top') + 'px',
+                left: self.get('left') + 'px',
+                'line-height': self.get('height') + 'px',
+            }
         }, options);
 
-        // Auto vertical-align
-        this.options.style['line-height'] = Tools.getLineHeight(this.options.style) + 'px';
+        var image = new Image();
+        image.onload = function() {
+            self.getImage().setImage(this);
 
-        this.options.success = function(self) {
-            if (self.options.k.locked) {
+            var size = Tools.getIntValues(self.options.style, ['width', 'height']);
+            self.setSize(size.width, size.height);
+
+            if (!self.initialized) {
+                self.setPosition(self.get('left'), self.get('top'));
+                self.initialized = true;
+            }
+            self.layer.draw();
+
+            if (!self.created) {
+                self.showInfo();
+                if (webvfxEditor.get('realTimeEdition')) {
+                    self.send();
+                }
+                self.created = true;
+            }
+            DOMURL.revokeObjectURL(this.url);
+        };
+
+        this.options.success = function(widget) {
+            if (self.locked) {
                 return;
             }
 
-            if (self.widget.is(':visible')) {
-                self.widget.hide();
-            }
+            widget.hide();
 
-            var text = self.getText();
-            if (self.options.animation == 'marquee') {
+            var text = widget.getText();
+            if (widget.options.animation == 'marquee') {
                 text = 
                    "<div xmlns='http://www.w3.org/1999/xhtml' " +
                      "style='position:absolute;white-space:nowrap;left:" +
-                     self.count + "px'>" + text  +
+                     widget.count + "px'>" + text  +
                    "</div>";
             }
 
-            var size = Tools.getIntValues(self.options.style, ['width', 'height']);
-            var style = Tools.toCssStyleString(self.options.style, ['top', 'left']);
-            var font = ('font-family' in self.options.style)
-                     ? WebvfxSimpleWidgetFonts.getFont(self.options.style['font-family'])
+            var style = Tools.toCssStyleString(widget.options.style, ['top', 'left', 'right', 'bottom']);
+
+            var font = ('font-family' in widget.options.style)
+                     ? WebvfxSimpleWidgetFonts.getFont(widget.options.style['font-family'])
                      : "";
 
             var svg = 
                 "<svg xmlns='http://www.w3.org/2000/svg' " +
-                "width='" + size.width + "px' height='" + size.height + "px'>" +
+                "width='" + widget.options.style.width + "' height='" + widget.options.style.height + "'>" +
                  "<foreignObject width='100%' height='100%'>" +
                    font +
                    "<div xmlns='http://www.w3.org/1999/xhtml' style='" + style + "'>" +
@@ -620,33 +654,8 @@ window.WebvfxWidget = WebvfxBase.extend({
                  "</foreignObject>" +
                 "</svg>";
 
-            var DOMURL = window.URL || window.webkitURL || window;
             var data = new Blob([svg], {type: "image/svg+xml;charset=utf-8"})
-            var url = webkitURL.createObjectURL(data);
-            var img = new Image();
-            var k = self.options.k;
-
-            img.onload = function() {
-                k.getImage().setImage(img);
-                k.setSize(size.width, size.height);
-
-                if (!k.initialized) {
-                    var pos = k.getInitialPosition(self.options.style);
-                    k.setPosition(pos.x, pos.y);
-                    k.initialized = true;
-                }
-                k.layer.draw();
-
-                if (!k.created) {
-                    k.showInfo(k.kObj);
-                    if (webvfxEditor.get('realTimeEdition')) {
-                        k.send();
-                    }
-                    k.created = true;
-                }
-                DOMURL.revokeObjectURL(url);
-            };
-            img.src = url;
+            image.src = webkitURL.createObjectURL(data);
         };
 
         this.widget = new WebvfxSimpleWidget(this.options);
@@ -708,16 +717,17 @@ window.WebvfxWidget = WebvfxBase.extend({
     },
 
     getDataToStore: function() {
+        var self = this;
         return {
-            type: this.getType(),
+            type: this.options.type,
             text: this.options.text,
             interval: this.options.interval,
             animation: this.options.animation,
             style: $.extend({}, this.options.style, {
-                top: this.getTop() + 'px',
-                left: this.getLeft() + 'px',
-                width: this.getWidth() + 'px',
-                height: this.getHeight() + 'px',
+                width: self.getWidth() + 'px',
+                height: self.getHeight() + 'px',
+                top: self.getTop() + 'px',
+                left: self.getLeft() + 'px',
             }),
         }
     },
@@ -740,19 +750,23 @@ window.WebvfxWidget = WebvfxBase.extend({
 
     send: function() {
         this.remove();
+        var self = this;
         webvfxClient.addWidget({
             id: this.id,
+            zindex: this.zindex,
             options: {
                 id: this.id,
                 type: this.options.type,
                 text: this.options.text,
                 interval: this.options.interval,
                 animation: this.options.animation,
-                style: $.extend({}, {
-                    top: this.getTop(),
-                    left: this.getLeft(),
-                }, this.options.style),
-            }
+                style: $.extend({}, this.options.style, {
+                    width: self.getWidth() + 'px',
+                    height: self.getHeight() + 'px',
+                    top: self.getTop() + 'px',
+                    left: self.getLeft() + 'px',
+                }),
+            },
         });
     },
 
@@ -765,6 +779,10 @@ window.WebvfxCollection = Backbone.Collection.extend({
     },
 
     onModelAdded: function(model) {
+        model.zindex = this.models.length;
+        if (model.getType() == 'image' && webvfxEditor.get('realTimeEdition')) {
+            model.send();
+        }
     },
 
     sendAll: function() {

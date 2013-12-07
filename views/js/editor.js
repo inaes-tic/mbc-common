@@ -174,6 +174,10 @@ window.WebvfxCollectionView = Backbone.View.extend({
     updateSort: function(event, model, index) {
         this.collection.remove(model);
         this.collection.add(model, {at: index});
+        var count = 1;
+        this.collection.each(function(model) {
+            model.zindex = count++;
+        });
         if (webvfxEditor.get('realTimeEdition')) {
             this.collection.sendAll();
         }
@@ -701,7 +705,7 @@ window.EditorView = Backbone.View.extend({
                 this.webvfxCollection.add(new WebvfxWidget({
                     type: type,
                     text: "%T%Tunit %H%Hunit",
-                    interval: 60000,
+                    interval: 2000,
                     style: $.extend({}, {
                         width: '100px',
                         height: '30px',
