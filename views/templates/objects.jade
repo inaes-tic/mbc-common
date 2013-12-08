@@ -96,21 +96,45 @@ div(id="webvfx-data-#{id}", style="display:none")
                         th
                             label(for="text-#{id}")= i18n.gettext("text")
                         td
-                            textarea(id="text-#{id}", style="width:100px;height:60px")
+                            textarea(id="text-#{id}", style="width:90px;height:60px;font-size:12px")
                                 | #{model.getText()}
                 mixin positions
+                tr
+                    th
+                        label(for="style-#{id}")= i18n.gettext("style")
+                    td
+                        select(id="style-#{id}", style="width:90px")
+                            option(value='')= i18n.gettext("[select]")
+                            each style, name in WebvfxSimpleWidgetStyles
+                                option= i18n.gettext(name)
+                tr
+                    th
+                        label(for="border-color-#{id}")= i18n.gettext("border color")
+                    td
+                        select(id="border-color-#{id}", style="width:90px")
+                            option(value='')= i18n.gettext("[select]")
+                            for color in colors
+                                option #{color}
                 if type != "box"
                     tr
                         th
-                            label(for="font-size-#{id}")= i18n.gettext("font-size")
+                            label(for="font-size-#{id}")= i18n.gettext("font size")
                         td
                             input(type="text", id="font-size-#{id}", value="#{model.getFontSize()}")
                             | px
                     tr
                         th
+                            label(for="color-#{id}")= i18n.gettext("font color")
+                        td
+                            select(id="color-#{id}", style="width:90px")
+                                option(value='')= i18n.gettext("[select]")
+                                for color in colors
+                                    option #{color}
+                    tr
+                        th
                             label(for="animation-#{id}")= i18n.gettext("animation")
                         td
-                            select(id="animation-#{id}", style="width:120px")
+                            select(id="animation-#{id}", style="width:90px")
                                 for animation in animations
                                     option(selected=model.options.animation == animation) #{animation}
                     tr
@@ -119,30 +143,6 @@ div(id="webvfx-data-#{id}", style="display:none")
                         td
                             input(type="text", id="interval-#{id}", value="#{model.getInterval()}")
                             | ms
-                tr
-                    th
-                        label(for="style-#{id}")= i18n.gettext("style")
-                    td
-                        select(id="style-#{id}", style="width:120px")
-                            option(value='')= i18n.gettext("[select]")
-                            each style, name in WebvfxSimpleWidgetStyles
-                                option= i18n.gettext(name)
-                tr
-                    th
-                        label(for="color-#{id}")= i18n.gettext("color")
-                    td
-                        select(id="color-#{id}", style="width:120px")
-                            option(value='')= i18n.gettext("[select]")
-                            for color in colors
-                                option #{color}
-                tr
-                    th
-                        label(for="border-color-#{id}")= i18n.gettext("border-color")
-                    td
-                        select(id="border-color-#{id}", style="width:120px")
-                            option(value='')= i18n.gettext("[select]")
-                            for color in colors
-                                option #{color}
 
     fieldset
         legend.editor= i18n.gettext("Remove")

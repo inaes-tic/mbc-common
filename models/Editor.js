@@ -598,29 +598,6 @@ window.WebvfxWidget = WebvfxBase.extend({
             }
         }, options);
 
-        var image = new Image();
-        image.onload = function() {
-            self.getImage().setImage(this);
-
-            var size = Tools.getIntValues(self.options.style, ['width', 'height']);
-            self.setSize(size.width, size.height);
-
-            if (!self.initialized) {
-                self.setPosition(self.get('left'), self.get('top'));
-                self.initialized = true;
-            }
-            self.layer.draw();
-
-            if (!self.created) {
-                self.showInfo();
-                if (webvfxEditor.get('realTimeEdition')) {
-                    self.send();
-                }
-                self.created = true;
-            }
-            DOMURL.revokeObjectURL(this.url);
-        };
-
         this.options.success = function(widget) {
             if (self.locked) {
                 return;
@@ -653,6 +630,29 @@ window.WebvfxWidget = WebvfxBase.extend({
                    "</div>" +
                  "</foreignObject>" +
                 "</svg>";
+
+            var image = new Image();
+            image.onload = function() {
+                self.getImage().setImage(this);
+
+                var size = Tools.getIntValues(self.options.style, ['width', 'height']);
+                self.setSize(size.width, size.height);
+
+                if (!self.initialized) {
+                    self.setPosition(self.get('left'), self.get('top'));
+                    self.initialized = true;
+                }
+                self.layer.draw();
+
+                if (!self.created) {
+                    self.showInfo();
+                    if (webvfxEditor.get('realTimeEdition')) {
+                        self.send();
+                    }
+                    self.created = true;
+                }
+                DOMURL.revokeObjectURL(this.url);
+            };
 
             var data = new Blob([svg], {type: "image/svg+xml;charset=utf-8"})
             image.src = webkitURL.createObjectURL(data);
@@ -741,11 +741,13 @@ window.WebvfxWidget = WebvfxBase.extend({
     },
 
     setWidth: function(width) {
-        this.reload({style: {width: width + 'px'}});
+        this.set('width', width);
+        this.reload();
     },
 
     setHeight: function(height) {
-        this.reload({style: {height: height + 'px'}});
+        this.set('height', height);
+        this.reload();
     },
 
     send: function() {
