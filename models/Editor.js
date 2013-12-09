@@ -869,6 +869,19 @@ window.webvfxClient = {
             contentType: false,
             success: callback
         });
-    }
+    },
 
+    get: function(url, callback) {
+        $.ajax({
+            url: webvfxEditor.get('server') + url,
+            type: 'GET',
+            contentType: false,
+            success: callback
+        });
+    },
+
+    fetch: function(callback) {
+        console.log("Fetching elements from server");
+        this.get('init', callback);
+    }
 };
