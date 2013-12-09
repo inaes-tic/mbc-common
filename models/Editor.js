@@ -69,12 +69,15 @@ window.WebvfxBase = Backbone.Model.extend({
     },
 
     initialize: function() {
-        this.id = this.cid;
+        console.log("Initializing object:", arguments[0]);
+        if (!arguments[0].id) 
+            this.id = uuid.v1();
         this.set("removed", false);
         this.zindex = 0,
         this.locked = false,
         this.created = false,
         this.layer = webvfxEditor.get('stage').children[0];
+        console.log("Object initialized:", this.id);
     },
 
     createEvents: function() {
