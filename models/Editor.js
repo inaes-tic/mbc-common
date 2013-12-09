@@ -380,6 +380,16 @@ window.WebvfxBase = Backbone.Model.extend({
         );
     },
 
+    send: function() {
+        console.log('send ' + this.id + ' called');
+        this.remove();
+        if (this.get("removed")) {
+            this.collection.remove(this.id);
+        } else {
+            this.sendObject();
+        }
+    },
+            
     remove: function() {
         webvfxClient.remove({elements: this.id});
     },
@@ -512,13 +522,11 @@ window.WebvfxImage = WebvfxBase.extend({
         this.draw();
     },
 
-    send: function() {
-        this.remove();
-        if (this.get("removed")) 
-            return;
+    sendObject: function() {
         var kImage = this.getImage();
+        console.log("Sending image:", kImage.attrs.image.src);
         webvfxClient.addImage({
-            images: kImage.attrs.name,
+            images: kImage.attrs.image.src,
             name: kImage.attrs.name,
             id: this.id,
             zindex: this.zindex,
@@ -760,11 +768,7 @@ window.WebvfxWidget = WebvfxBase.extend({
         this.reload();
     },
 
-    send: function() {
-        this.remove();
-        var self = this;
-        if (this.get("removed")) 
-            return;
+    sendObject: function() {
         webvfxClient.addWidget({
             id: this.id,
             zindex: this.zindex,
@@ -800,7 +804,12 @@ window.WebvfxCollection = Backbone.Collection.extend({
     },
 
     sendAll: function() {
+        var models = [];
         this.each(function(model) {
+            models.push(model);
+        });
+        models.forEach(function(model) {
+            console.log("Sending object:", model.id);
             model.send();
         });
     },
