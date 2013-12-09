@@ -431,53 +431,6 @@
                         }
                     }
                 },
-                "Collections" : {
-                    "type" : "object",
-                    "title" : "Collections",
-                    "description" : "Database names for Collections",
-                    "properties" : {
-                        "Medias" : {
-                            "type": "string",
-                            "title": "Medias",
-                            "description" : "Collection name for list of medias"
-                        },
-                        "Pieces" : {
-                            "type": "string",
-                            "title": "Pieces",
-                            "description" : "Collection name for list of pieces"
-                        },
-                        "Lists" : {
-                            "type": "string",
-                            "title": "Lists",
-                            "description" : "Collection name for list of lists"
-                        },
-                        "Scheds" : {
-                            "type": "string",
-                            "title": "Scheds",
-                            "description" : "Collection name for list of scheds"
-                        },
-                        "Transforms" : {
-                            "type": "string",
-                            "title": "Transforms",
-                            "description" : "Collection name for list of transforms"
-                        },
-                        "Status" : {
-                            "type": "string",
-                            "title": "Status",
-                            "description" : "Collection name for list of status"
-                        },
-                        "Mostomessages" : {
-                            "type": "string",
-                            "title": "Mostomessages",
-                            "description" : "Collection name for list of mostomessages"
-                        },
-                        "Sketchs" : {
-                            "type": "string",
-                            "title": "Sketchs",
-                            "description" : "Collection name for list of sketchs"
-                        }
-                    }
-                },
                 "Widgets" : {
                     "type" : "object",
                     "title" : "Widgets",
@@ -487,6 +440,269 @@
                             "type": "array",
                             "title": "Files",
                             "description" : "Collection name for list of widgets"
+                        }
+                    }
+                }
+            }
+        },
+        "Data": {
+            "type" : "object",
+            "title" : "General Data Configuration",
+            "description" : "settings shared models, collections and backends",
+            "properties" : {
+                "Medias" : {
+                    "type" : "object",
+                    "title" : "Medias",
+                    "description" : "Data config for Medias",
+                    "properties" : {
+                        "collection_db" : {
+                            "type": "string",
+                            "title": "Collection DB",
+                            "description" : "Database collection name"
+                        },
+                        "backend" : {
+                            "type": "string",
+                            "title": "Backbone.io backend",
+                            "description" : "Server backend name"
+                        },
+                        "model" : {
+                            "type": "string",
+                            "title": "Media Model",
+                            "description" : "Model name"
+                        },
+                        "collection" : {
+                            "type": "string",
+                            "title": "Media Collection",
+                            "description" : "Collection name"
+                        },
+                        "collection_pagebale" : {
+                            "type": "string",
+                            "title": "Media Collection Pageable",
+                            "description" : "Collection Pageable name"
+                        }
+                    }
+                },
+                "Pieces" : {
+                    "type" : "object",
+                    "title" : "Pieces",
+                    "description" : "Data config for Pieces",
+                    "properties" : {
+                        "collection_db" : {
+                            "type": "string",
+                            "title": "Collection DB",
+                            "description" : "Database collection name"
+                        },
+                        "backend" : {
+                            "type": "string",
+                            "title": "Backbone.io backend",
+                            "description" : "Server backend name"
+                        },
+                        "model" : {
+                            "type": "string",
+                            "title": "Piece Model",
+                            "description" : "Model name"
+                        },
+                        "collection" : {
+                            "type": "string",
+                            "title": "Piece Collection",
+                            "description" : "Collection name"
+                        },
+                        "collection_pagebale" : {
+                            "type": "string",
+                            "title": "Piece Collection Pageable",
+                            "description" : "Collection Pageable name"
+                        }
+                    }
+                },
+                "Lists" : {
+                    "type" : "object",
+                    "title" : "Lists",
+                    "description" : "Data config for Lists",
+                    "properties" : {
+                        "collection_db" : {
+                            "type": "string",
+                            "title": "Collection DB",
+                            "description" : "Database collection name"
+                        },
+                        "backend" : {
+                            "type": "string",
+                            "title": "Backbone.io backend",
+                            "description" : "Server backend name"
+                        },
+                        "model" : {
+                            "type": "string",
+                            "title": "List Model",
+                            "description" : "Model name"
+                        },
+                        "collection" : {
+                            "type": "string",
+                            "title": "List Collection",
+                            "description" : "Collection name"
+                        },
+                        "collection_pagebale" : {
+                            "type": "string",
+                            "title": "List Collection Pageable",
+                            "description" : "Collection Pageable name"
+                        }
+                    }
+                },
+                "Scheds" : {
+                    "type" : "object",
+                    "title" : "Scheds",
+                    "description" : "Data config for Scheds",
+                    "properties" : {
+                        "collection_db" : {
+                            "type": "string",
+                            "title": "Collection DB",
+                            "description" : "Database collection name"
+                        },
+                        "backend" : {
+                            "type": "string",
+                            "title": "Backbone.io backend",
+                            "description" : "Server backend name"
+                        },
+                        "model" : {
+                            "type": "string",
+                            "title": "Sched Model",
+                            "description" : "Model name"
+                        },
+                        "collection" : {
+                            "type": "string",
+                            "title": "Sched Collection",
+                            "description" : "Collection name"
+                        },
+                        "collection_pagebale" : {
+                            "type": "string",
+                            "title": "Sched Collection Pageable",
+                            "description" : "Collection Pageable name"
+                        }
+                    }
+                },
+                "Transforms" : {
+                    "type" : "object",
+                    "title" : "Transforms",
+                    "description" : "Data config for Transforms",
+                    "properties" : {
+                        "collection_db" : {
+                            "type": "string",
+                            "title": "Collection DB",
+                            "description" : "Database collection name"
+                        },
+                        "backend" : {
+                            "type": "string",
+                            "title": "Backbone.io backend",
+                            "description" : "Server backend name"
+                        },
+                        "model" : {
+                            "type": "string",
+                            "title": "Transform Model",
+                            "description" : "Model name"
+                        },
+                        "collection" : {
+                            "type": "string",
+                            "title": "Transform Collection",
+                            "description" : "Collection name"
+                        },
+                        "collection_pagebale" : {
+                            "type": "string",
+                            "title": "Transform Collection Pageable",
+                            "description" : "Collection Pageable name"
+                        }
+                    }
+                },
+                "Mostomessages" : {
+                    "type" : "object",
+                    "title" : "Mostomessages",
+                    "description" : "Data config for Mostomessages",
+                    "properties" : {
+                        "collection_db" : {
+                            "type": "string",
+                            "title": "Collection DB",
+                            "description" : "Database collection name"
+                        },
+                        "backend" : {
+                            "type": "string",
+                            "title": "Backbone.io backend",
+                            "description" : "Server backend name"
+                        },
+                        "model" : {
+                            "type": "string",
+                            "title": "Mostomessage Model",
+                            "description" : "Model name"
+                        },
+                        "collection" : {
+                            "type": "string",
+                            "title": "Mostomessage Collection",
+                            "description" : "Collection name"
+                        },
+                        "collection_pagebale" : {
+                            "type": "string",
+                            "title": "Mostomessage Collection Pageable",
+                            "description" : "Collection Pageable name"
+                        }
+                    }
+                },
+                "Sketchs" : {
+                    "type" : "object",
+                    "title" : "Sketchs",
+                    "description" : "Data config for Sketchs",
+                    "properties" : {
+                        "collection_db" : {
+                            "type": "string",
+                            "title": "Collection DB",
+                            "description" : "Database collection name"
+                        },
+                        "backend" : {
+                            "type": "string",
+                            "title": "Backbone.io backend",
+                            "description" : "Server backend name"
+                        },
+                        "model" : {
+                            "type": "string",
+                            "title": "Sketch Model",
+                            "description" : "Model name"
+                        },
+                        "collection" : {
+                            "type": "string",
+                            "title": "Sketch Collection",
+                            "description" : "Collection name"
+                        },
+                        "collection_pagebale" : {
+                            "type": "string",
+                            "title": "Sketch Collection Pageable",
+                            "description" : "Collection Pageable name"
+                        }
+                    }
+                },
+                 "Status" : {
+                    "type" : "object",
+                    "title" : "Status",
+                    "description" : "Data config for Status",
+                    "properties" : {
+                        "collection_db" : {
+                            "type": "string",
+                            "title": "Collection DB",
+                            "description" : "Database collection name"
+                        },
+                        "backend" : {
+                            "type": "string",
+                            "title": "Backbone.io backend",
+                            "description" : "Server backend name"
+                        },
+                        "model" : {
+                            "type": "string",
+                            "title": "Status Model",
+                            "description" : "Model name"
+                        },
+                        "collection" : {
+                            "type": "string",
+                            "title": "Status Collection",
+                            "description" : "Collection name"
+                        },
+                        "collection_pagebale" : {
+                            "type": "string",
+                            "title": "Status Collection Pageable",
+                            "description" : "Collection Pageable name"
                         }
                     }
                 }

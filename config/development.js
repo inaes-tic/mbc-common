@@ -98,23 +98,71 @@ module.exports = {
             port: 6379,
             password: "",
         },
-        Collections: {
-            Medias: 'medias',
-            Pieces: 'pieces',
-            Lists:  'lists',
-            Scheds: 'scheds',
-            Transforms: 'transforms',
-            Status: 'status',
-            Mostomessages: 'mostomessages',
-            Sketchs: 'sketchs',
-        },
         Widgets: {
             Files: [
                 'WebvfxSimpleWidget',
                 'fonts/ShareRegular',
                 'fonts/ShareBold',
             ],
+        }
+    },
+    Data: {
+        Medias: {
+            collection_db: 'medias',
+            backend: 'mediabackend',
+            model: 'Media.Model',
+            collection: 'Media.Collection',
+            collection_pagebale: 'Media.CollectionPageable'
         },
+        Pieces: {
+            collection_db: 'pieces',
+            backend: 'piecebackend',
+            model: 'Media.Piece',
+            collection: 'Media.PieceCollection',
+            collection_pagebale: 'Media.PieceCollectionPageable',
+        },
+        Lists: {
+            collection_db: 'lists',
+            backend: 'listbackend',
+            model: 'Media.Playlist',
+            collection: 'Media.Universe',
+            collection_pagebale: 'Media.UniversePageable',
+        },
+        Scheds: {
+            collection_db: 'scheds',
+            backend: 'schedbackend',
+            model: 'Media.Occurrence',
+            collection: 'Media.Schedule',
+            collection_pagebale: 'Media.SchedulePageable',
+        },
+        Transforms: {
+            collection_db: 'transforms',
+            backend: 'transformbackend',
+            model: 'Media.Transform',
+            collection: 'Media.TransformCollection',
+            collection_pagebale: 'Media.TransformCollection',
+        },
+        Mostomessages: {
+            collection_db: 'mostomessages',
+            backend: 'mostomessagesbackend',
+            model: 'Media.Model',
+            collection: 'Media.Collection',
+            collection_pagebale: 'Media.CollectionPageable',
+        },
+        Sketchs: {
+            collection_db: 'sketchs',
+            backend: 'sketchbackend',
+            model: 'Sketch.Model',
+            collection: 'Sketch.Collection',
+            collection_pagebale: '',
+        },
+        Status: {
+            collection_db: 'status',
+            backend: 'statusbackend',
+            model: 'App.Status',
+            collection: '',
+            collection_pagebale: '',
+        }
     },
     Search: {
         Medias: {
