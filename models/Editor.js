@@ -820,6 +820,7 @@ window.WebvfxCollection = Backbone.Collection.extend({
             models.push(model);
         });
         models.forEach(function(model) {
+            console.log("Destroying object:", model.id);
             model.destroy();
         });
     },
