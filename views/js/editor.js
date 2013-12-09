@@ -275,6 +275,41 @@ window.EditorView = Backbone.View.extend({
             self.updateCss();
             self.updateVideoStream();
             self.updateStatusBar();
+            
+            var getPixels = function(data) {
+                var pos = data.indexOf('px');
+                if (pos >= 0)
+                    return data.substring(0, pos);
+                else
+                    return data;
+            };
+            
+            webvfxClient.fetch(function(data) {
+                console.log('Initializing editor with data:', data);
+                _.each(data.elements, function(element) {
+                    console.log('Loading element:', element)
+                    var s = {};
+                    s.x = getPixels(element.left);
+                    s.y = getPixels(element.top);
+                    s.width = getPixels(element.width);
+                    s.height = getPixels(element.height);
+                    s.id = element.id;
+                    var obj = undefined;
+                    if (element.type === 'image') {
+                        s.image = new Image();
+                        s.image.src = element.src;
+                        s.image.name = element.src;
+                        obj = new WebvfxImage(s);
+                    } else if (element.type === 'banner') {
+                        s.text = element.text;
+                        s.fill = element.color;
+                        s.scroll = element.scroll;
+                        obj = new WebvfxText(s);
+                    }
+                    console.log("Object created:", obj);
+                    self.webvfxCollection.add(obj);
+                });
+            });
         });
     },
     colapse:function(ev) {
