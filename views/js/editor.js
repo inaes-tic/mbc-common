@@ -384,6 +384,7 @@ window.EditorView = Backbone.View.extend({
         this.webvfxCollection.destroyAll();
 
         _.each(this.sketchs.findWhere({name: key}).get('data'), function(s) {
+            delete s.id;
             if (s.type == 'image') {
                 s.image = new Image();
                 s.image.src = self.options.server + 'uploads/' + s.name;
