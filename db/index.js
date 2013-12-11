@@ -20,7 +20,11 @@ exports = module.exports = function(config) {
         logger.info("Connected to", mediadb);
         if(result.documents[0].textSearchEnabled) {
             for(col in collections) {
-                var aFulltext = search[col].fulltext;
+                var aFulltext = null;
+
+                if (search[col])
+                    aFulltext = search[col].fulltext;
+
                 if(aFulltext && aFulltext.length) {
                     var indexes = _.object(aFulltext, _.map(aFulltext, function(i) { return 'text'; }));
 
