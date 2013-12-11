@@ -453,6 +453,11 @@
                             "title": "Media Model",
                             "description" : "Model name"
                         },
+                        "default_field" : {
+                            "type": "string",
+                            "title": "Default Model field",
+                            "description" : "Default Model name"
+                        },
                         "collection" : {
                             "type": "string",
                             "title": "Media Collection",
@@ -484,6 +489,11 @@
                             "type": "string",
                             "title": "Piece Model",
                             "description" : "Model name"
+                        },
+                        "default_field" : {
+                            "type": "string",
+                            "title": "Default Model field",
+                            "description" : "Default Model name"
                         },
                         "collection" : {
                             "type": "string",
@@ -517,6 +527,11 @@
                             "title": "List Model",
                             "description" : "Model name"
                         },
+                        "default_field" : {
+                            "type": "string",
+                            "title": "Default Model field",
+                            "description" : "Default Model name"
+                        },
                         "collection" : {
                             "type": "string",
                             "title": "List Collection",
@@ -548,6 +563,11 @@
                             "type": "string",
                             "title": "Sched Model",
                             "description" : "Model name"
+                        },
+                        "default_field" : {
+                            "type": "string",
+                            "title": "Default Model field",
+                            "description" : "Default Model name"
                         },
                         "collection" : {
                             "type": "string",
@@ -581,6 +601,11 @@
                             "title": "Transform Model",
                             "description" : "Model name"
                         },
+                        "default_field" : {
+                            "type": "string",
+                            "title": "Default Model field",
+                            "description" : "Default Model name"
+                        },
                         "collection" : {
                             "type": "string",
                             "title": "Transform Collection",
@@ -612,6 +637,11 @@
                             "type": "string",
                             "title": "Mostomessage Model",
                             "description" : "Model name"
+                        },
+                        "default_field" : {
+                            "type": "string",
+                            "title": "Default Model field",
+                            "description" : "Default Model name"
                         },
                         "collection" : {
                             "type": "string",
@@ -645,6 +675,11 @@
                             "title": "Sketch Model",
                             "description" : "Model name"
                         },
+                        "default_field" : {
+                            "type": "string",
+                            "title": "Default Model field",
+                            "description" : "Default Model name"
+                        },
                         "collection" : {
                             "type": "string",
                             "title": "Sketch Collection",
@@ -677,6 +712,11 @@
                             "title": "Status Model",
                             "description" : "Model name"
                         },
+                        "default_field" : {
+                            "type": "string",
+                            "title": "Default Model field",
+                            "description" : "Default Model name"
+                        },
                         "collection" : {
                             "type": "string",
                             "title": "Status Collection",
@@ -708,6 +748,11 @@
                             "type": "string",
                             "title": "Tag Model",
                             "description" : "Model name"
+                        },
+                        "default_field" : {
+                            "type": "string",
+                            "title": "Default Model field",
+                            "description" : "Default Model name"
                         },
                         "collection" : {
                             "type": "string",
@@ -752,6 +797,16 @@
                              "type": "integer",
                             "title": "Max Facets",
                             "description": "Maximun limit for faceted queries"
+                        },
+                        "pivot" : {
+                            "type": "object",
+                            "title": "Pivot",
+                            "description": "Pivot table to make joins including (collection, key, new_key)"
+                        },
+                        "joins" : {
+                            "type": "array",
+                            "title": "Joins",
+                            "description": "Custom joins array including (collection, field, key, new_key)"
                         }
                     }
                 },
@@ -779,6 +834,16 @@
                              "type": "integer",
                             "title": "Max Facets",
                             "description": "Maximun limit for faceted queries"
+                        },
+                        "pivot" : {
+                            "type": "object",
+                            "title": "Pivot",
+                            "description": "Pivot table to make joins including (collection, key, new_key)"
+                        },
+                        "joins" : {
+                            "type": "array",
+                            "title": "Joins",
+                            "description": "Custom joins array including (collection, field, key, new_key)"
                         }
                     }
                 },
@@ -806,6 +871,16 @@
                             "type": "integer",
                             "title": "Max Facets",
                             "description": "Maximun limit for faceted queries"
+                        },
+                        "pivot" : {
+                            "type": "object",
+                            "title": "Pivot",
+                            "description": "Pivot table to make joins including (collection, key, new_key)"
+                        },
+                        "joins" : {
+                            "type": "array",
+                            "title": "Joins",
+                            "description": "Custom joins array including (collection, field, key, new_key)"
                         }
                     }
                 },
@@ -833,6 +908,16 @@
                             "type": "integer",
                             "title": "Max Facets",
                             "description": "Maximun limit for faceted queries"
+                        },
+                        "pivot" : {
+                            "type": "object",
+                            "title": "Pivot",
+                            "description": "Pivot table to make joins including (collection, key, new_key)"
+                        },
+                        "joins" : {
+                            "type": "array",
+                            "title": "Joins",
+                            "description": "Custom joins array including (collection, field, key, new_key)"
                         }
                     }
                 },
@@ -860,6 +945,16 @@
                             "type": "integer",
                             "title": "Max Facets",
                             "description": "Maximun limit for faceted queries"
+                        },
+                        "pivot" : {
+                            "type": "object",
+                            "title": "Pivot",
+                            "description": "Pivot table to make joins including (collection, key, new_key)"
+                        },
+                        "joins" : {
+                            "type": "array",
+                            "title": "Joins",
+                            "description": "Custom joins array including (collection, field, key, new_key)"
                         }
                     }
                 },
@@ -887,6 +982,16 @@
                             "type": "integer",
                             "title": "Max Facets",
                             "description": "Maximun limit for faceted queries"
+                        },
+                        "pivot" : {
+                            "type": "object",
+                            "title": "Pivot",
+                            "description": "Pivot table to make joins including (collection, key, new_key)"
+                        },
+                        "joins" : {
+                            "type": "array",
+                            "title": "Joins",
+                            "description": "Custom joins array including (collection, field, key, new_key)"
                         }
                     }
                 },
@@ -914,6 +1019,16 @@
                             "type": "integer",
                             "title": "Max Facets",
                             "description": "Maximun limit for faceted queries"
+                        },
+                        "pivot" : {
+                            "type": "object",
+                            "title": "Pivot",
+                            "description": "Pivot table to make joins including (collection, key, new_key)"
+                        },
+                        "joins" : {
+                            "type": "array",
+                            "title": "Joins",
+                            "description": "Custom joins array including (collection, field, key, new_key)"
                         }
                     }
                 },
@@ -941,6 +1056,16 @@
                             "type": "integer",
                             "title": "Max Facets",
                             "description": "Maximun limit for faceted queries"
+                        },
+                        "pivot" : {
+                            "type": "object",
+                            "title": "Pivot",
+                            "description": "Pivot table to make joins including (collection, key, new_key)"
+                        },
+                        "joins" : {
+                            "type": "array",
+                            "title": "Joins",
+                            "description": "Custom joins array including (collection, field, key, new_key)"
                         }
                     }
                 },
@@ -968,6 +1093,16 @@
                             "type": "integer",
                             "title": "Max Facets",
                             "description": "Maximun limit for faceted queries"
+                        },
+                        "pivot" : {
+                            "type": "object",
+                            "title": "Pivot",
+                            "description": "Pivot table to make joins including (collection, key, new_key)"
+                        },
+                        "joins" : {
+                            "type": "array",
+                            "title": "Joins",
+                            "description": "Custom joins array including (collection, field, key, new_key)"
                         }
                     }
                 }

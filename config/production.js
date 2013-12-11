@@ -78,7 +78,7 @@ module.exports = {
             height: 570,
             scale:  1,
             stream_url: process.env.WEBVFX_STREAM_URL
-        },
+        }
     },
     Common: {
         Branding: {
@@ -117,6 +117,7 @@ module.exports = {
             collection_db: 'lists',
             backend: 'listbackend',
             model: 'Media.Playlist',
+            default_field: 'name',
             collection: 'Media.Universe',
             collection_pagebale: 'Media.UniversePageable',
         },
@@ -124,6 +125,7 @@ module.exports = {
             collection_db: 'scheds',
             backend: 'schedbackend',
             model: 'Media.Occurrence',
+            default_field: 'title',
             collection: 'Media.Schedule',
             collection_pagebale: 'Media.SchedulePageable',
         },
@@ -145,6 +147,7 @@ module.exports = {
             collection_db: 'sketchs',
             backend: 'sketchbackend',
             model: 'Sketch.Model',
+            default_field: 'name',
             collection: 'Sketch.Collection',
             collection_pagebale: '',
         },
@@ -159,6 +162,7 @@ module.exports = {
             collection_db: 'tags',
             backend: 'tagbackend',
             model: 'Media.Tag',
+            default_field: 'name',
             collection: 'Media.TagCollection',
             collection_pagebale: 'Media.TagCollectionPageable',
         }
@@ -177,7 +181,9 @@ module.exports = {
                 'audio.codec'
             ],
             criteria: {},
-            max_facets: 100
+            max_facets: 100,
+            pivot: {},
+            joins: [],
         },
         Lists: {
             fulltext: [ 'name' ],
@@ -185,43 +191,68 @@ module.exports = {
                 'duration',
             ],
             criteria: { ids_in: '{ "_id": { "$in": [%value%] } }', },
-            max_facets: 100
+            max_facets: 100,
+            pivot: {
+                collection: 'Transforms',
+                new_key: 'tr',
+                key: 'transform'
+            },
+            joins: [
+                {
+                    collection: 'Tags',
+                    field: 'name',
+                    new_key: 'tg',
+                    key: 'tags'
+                }
+            ],
         },
         Scheds: {
             fulltext: [ 'title' ],
             facets: [],
             criteria: { in_window: '{ "end": { "$gt": %value% }, "start": { "$lt" : %value% } }' },
-            max_facets: 100
+            max_facets: 100,
+            pivot: {},
+            joins: [],
         },
         Pieces: {
             fulltext: [],
             facets: [],
             criteria: { ids_in: '{ "_id": { "$in": [%value%] } }', },
-            max_facets: 100
+            max_facets: 100,
+            pivot: {},
+            joins: [],
         },
         Transforms: {
             fulltext: [],
             facets: [],
             criteria: {},
-            max_facets: 100
+            max_facets: 100,
+            pivot: {},
+            joins: [],
         },
         Status: {
             fulltext: [],
             facets: [],
             criteria: {},
-            max_facets: 100
+            max_facets: 100,
+            pivot: {},
+            joins: [],
         },
         Mostomessages: {
             fulltext: [],
             facets: [],
             criteria: {},
-            max_facets: 100
+            max_facets: 100,
+            pivot: {},
+            joins: [],
         },
         Sketchs: {
             fulltext: [],
             facets: [],
             criteria: {},
-            max_facets: 100
+            max_facets: 100,
+            pivot: {},
+            joins: [],
         },
         Tags: {
             fulltext: [ 'name' ],
@@ -229,7 +260,9 @@ module.exports = {
                 'name',
             ],
             criteria: {},
-            max_facets: 100
+            max_facets: 100,
+            pivot: {},
+            joins: [],
         }
     }
 }
