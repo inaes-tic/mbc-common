@@ -382,8 +382,8 @@ window.WebvfxBase = Backbone.Model.extend({
 
     send: function() {
         console.log('send ' + this.id + ' called');
-        this.remove();
         if (this.get("removed")) {
+            this.remove();
             this.collection.remove(this.id);
         } else {
             this.sendObject();
