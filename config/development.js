@@ -106,7 +106,14 @@ module.exports = {
             Status: 'status',
             Mostomessages: 'mostomessages',
             Sketchs: 'sketchs',
-        }
+        },
+        Widgets: {
+            Files: [
+                'WebvfxSimpleWidget', 
+                'fonts/ShareRegular',
+                'fonts/ShareBold',
+            ],
+        },
     },
     Search: {
         Medias: {

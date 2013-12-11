@@ -36,16 +36,14 @@ window.WebvfxBaseView = Backbone.View.extend({
     },
 
     addCommonEvents: function(model) {
-
         var id = model.id;
         var self = this;
 
         this.$('title', id).live('click', function() {
             var selfId = self.$('webvfx-data', id).attr('id');
             $('.webvfx-obj div').each(function() {
-                console.log(selfId);
                 if ($(this).attr('id') != selfId) {
-                    console.log('hide ' + $(this).attr('id'));
+                    console.debug('hide ' + $(this).attr('id'));
                     $(this).hide();
                 }
             });
@@ -60,61 +58,52 @@ window.WebvfxBaseView = Backbone.View.extend({
             document.body.style.cursor = 'default';
         });
 
-        this.$('width', id).live('keyup', function() {
-            model.setWidth($(this).val());
-            self.$('right', id).val(model.getRealValue(model.getRight()));
+        this.$('width', id).live('keyup', function(e) {
+            if (e.keyCode == 13) {
+                model.setWidth($(this).val());
+                self.$('right', id).val(model.getRight());
+            }
         });
 
-        this.$('height', id).live('keyup', function() {
-            model.setHeight($(this).val());
-            self.$('bottom', id).val(model.getRealValue(model.getBottom()));
+        this.$('height', id).live('keyup', function(e) {
+            if (e.keyCode == 13) {
+                model.setHeight($(this).val());
+                self.$('bottom', id).val(model.getBottom());
+            }
         });
 
-        this.$('top', id).live('keyup', function() {
-            model.setTop($(this).val());
-            self.$('bottom', id).val(model.getRealValue(model.getBottom()));
+        this.$('top', id).live('keyup', function(e) {
+            if (e.keyCode == 13) {
+                model.setTop($(this).val());
+                self.$('bottom', id).val(model.getBottom());
+            }
         });
 
-        this.$('left', id).live('keyup', function() {
-            model.setLeft($(this).val());
-            self.$('right', id).val(model.getRealValue(model.getRight()));
+        this.$('left', id).live('keyup', function(e) {
+            if (e.keyCode == 13) {
+                model.setLeft($(this).val());
+                self.$('right', id).val(model.getRight());
+            }
         });
 
-        this.$('right', id).live('keyup', function() {
-            model.setRight($(this).val());
-            self.$('left', id).val(model.getRealValue(model.getLeft()));
+        this.$('right', id).live('keyup', function(e) {
+            if (e.keyCode == 13) {
+                model.setRight($(this).val());
+                self.$('left', id).val(model.getLeft());
+            }
         });
 
-        this.$('bottom', id).live('keyup', function() {
-            model.setBottom($(this).val());
-            self.$('top', id).val(model.getRealValue(model.getTop()));
-        });
-
-        this.$('add-effect', id).live('click', function() {
-            model.addEffect(
-                id,
-                self.$('effect', id).val(),
-                self.$('duration', id).val(),
-                self.$('iterations', id).val(),
-                self.$('delay', id).val()
-            );
-        });
-
-        this.$('move', id).live('click', function() {
-            model.move(
-                id,
-                self.$('x', id).val(),
-                self.$('y', id).val(),
-                self.$('move-duration', id).val()
-            );
+        this.$('bottom', id).live('keyup', function(e) {
+            if (e.keyCode == 13) {
+                model.setBottom($(this).val());
+                self.$('top', id).val(model.getTop());
+            }
         });
 
         this.$('remove', id).live('click', function() {
             model.destroy();
         });
-
     },
-
 });
 
 window.WebvfxImageView = WebvfxBaseView.extend({
@@ -122,24 +111,47 @@ window.WebvfxImageView = WebvfxBaseView.extend({
     },
 });
 
-window.WebvfxTextView = WebvfxBaseView.extend({
+window.WebvfxWidgetView = WebvfxBaseView.extend({
     addEvents: function(model) {
         var id = model.id;
         var self = this;
 
-        this.$('text', id).live('keyup', function() {
-            model.kObj.setText($(this).val());
-            model.layer.draw();
-            if (webfvfxEditor.get('realTimeEdition')) {
-                self.collection.sendAll();
+        this.$('text', id).live('keyup', function(e) {
+            model.reload({text: $(this).val()});
+        });
+
+        this.$('animation', id).live('change', function() {
+            model.reload({animation: $(this).val()});
+        });
+
+        this.$('interval', id).live('keyup', function(e) {
+            if (e.keyCode == 13) {
+                model.reload({interval: $(this).val()});
             }
         });
 
-        this.$('fill', id).live('change', function() {
-            model.kObj.setFill($(this).val());
-            model.layer.draw();
-            if (webfvfxEditor.get('realTimeEdition')) {
-                self.collection.sendAll();
+        this.$('font-size', id).live('keyup', function(e) {
+            if (e.keyCode == 13) {
+                model.reload({style: { 'font-size': $(this).val() + 'px' }});
+            }
+        });
+
+        this.$('color', id).live('change', function(e) {
+            model.reload({style: { 'color': $(this).val() }});
+        });
+
+        this.$('border-color', id).live('change', function(e) {
+            model.reload({style: { 'border-color': $(this).val() }});
+        });
+
+        this.$('style', id).live('change', function() {
+            var name = $(this).val();
+            if (name) {
+                var style = $.extend({}, WebvfxSimpleWidgetStyles[name]);
+                if ('font-size' in style) {
+                    delete style['font-size'];
+                }
+                model.reload({ style: style });
             }
         });
     },
@@ -162,7 +174,11 @@ window.WebvfxCollectionView = Backbone.View.extend({
     updateSort: function(event, model, index) {
         this.collection.remove(model);
         this.collection.add(model, {at: index});
-        if (webfvfxEditor.get('realTimeEdition')) {
+        var count = 1;
+        this.collection.each(function(model) {
+            model.zindex = count++;
+        });
+        if (webvfxEditor.get('realTimeEdition')) {
             this.collection.sendAll();
         }
     },
@@ -200,19 +216,24 @@ window.EditorView = Backbone.View.extend({
         "click #safe-area"      : "safeArea",
         "click #video-preview"  : "videoPreview",
         "click #real-time-edition" : "realTimeEdition",
-        "click #addText"        : "addText",
-        "keyup #text"           : "keyUp",
-        "click #update"         : "updateVideo",
+        "click #update-video"   : "updateVideo",
+        "click #clear-video"    : "clearVideo",
         "click #clear-all"      : "clearAll",
         "dragover #container"   : "dragOver",
         "dragleave #container"  : "dragLeave",
         "drop #container"       : "drop",
         "change #files"         : "filesChange",
         "change #resolutions"   : "changeResolution",
+        "change #objects"       : "addObject",
     },
     initialize: function() {
         var config = appCollection.models[0].get('Webvfx').Editor;
-        this.options = { width: config.width, height: config.height, scale: config.scale, server: config.server };
+        this.options = {
+            width: config.width,
+            height: config.height,
+            scale: config.scale,
+            server: config.server
+        };
         var debounce_resize = _.debounce( _.bind(this.render, this), 300);
         $(window).on('resize', debounce_resize);
         this.render();
@@ -221,8 +242,7 @@ window.EditorView = Backbone.View.extend({
         var self = this;
         $(this.el).html(template.editor(this.options));
 
-        var webvfxCollection = new WebvfxCollection();
-        this.webvfxCollection = webvfxCollection;
+        this.webvfxCollection = new WebvfxCollection();
 
         var sketchs = new Sketch.Collection();
         this.sketchs = sketchs;
@@ -240,6 +260,7 @@ window.EditorView = Backbone.View.extend({
         $(document).ready(function() {
             self.options.scale = self.autoScale();
             window.webvfxEditor = new WebvfxEditor(self.options);
+            window.webvfxEditor.objects = self.webvfxCollection;
             self.makeSortable();
             self.updateCss();
             self.updateVideoStream();
@@ -250,9 +271,9 @@ window.EditorView = Backbone.View.extend({
         $(ev.target).parent().children('.content').toggle();
     },
     autoScale: function () {
-        var w_scale = $("#video-container").width() / this.options.width;
-        var h_scale = $("#video-container").height() / this.options.height;
-        return ((w_scale > h_scale)? h_scale : w_scale).toFixed(2);
+        var widthScale = $("#video-container").width() / this.options.width;
+        var heightScale = $("#video-container").height() / this.options.height;
+        return ((widthScale > heightScale) ? heightScale : widthScale).toFixed(2);
     },
     saveSketch: function () {
         var self = this;
@@ -318,14 +339,13 @@ window.EditorView = Backbone.View.extend({
         this.webvfxCollection.destroyAll();
 
         _.each(this.sketchs.findWhere({name: key}).get('data'), function(s) {
-            if (s.type == 'Image') {
+            if (s.type == 'image') {
                 s.image = new Image();
                 s.image.src = self.options.server + 'uploads/' + s.name;
                 s.image.name = s.name;
                 self.webvfxCollection.add(new WebvfxImage(s));
-            }
-            if (s.type == 'Text') {
-                self.webvfxCollection.add(new WebvfxText(s));
+            } else {
+                self.webvfxCollection.add(new WebvfxWidget(s));
             }
         });
 
@@ -413,11 +433,11 @@ window.EditorView = Backbone.View.extend({
             '#888'
         );
 
-        invisibleArea.setX((webvfxEditor.get('width') - invisibleWidth) / 2);
-        invisibleArea.setY((webvfxEditor.get('height') - invisibleHeight) / 2);
+        invisibleArea.setX((webvfxEditor.getScaledWidth() - invisibleWidth) / 2);
+        invisibleArea.setY((webvfxEditor.getScaledHeight() - invisibleHeight) / 2);
 
-        actionSafeArea.setX((webvfxEditor.get('width') - webvfxEditor.get('actionSafe').width) / 2);
-        actionSafeArea.setY((webvfxEditor.get('height') - webvfxEditor.get('actionSafe').height) / 2);
+        actionSafeArea.setX((webvfxEditor.getScaledWidth() - webvfxEditor.get('actionSafe').width) / 2);
+        actionSafeArea.setY((webvfxEditor.getScaledHeight() - webvfxEditor.get('actionSafe').height) / 2);
 
         this.safeAreaLayer.add(actionSafeArea);
         this.safeAreaLayer.add(invisibleArea);
@@ -477,22 +497,13 @@ window.EditorView = Backbone.View.extend({
         webvfxEditor.set('realTimeEdition', $("#real-time-edition").is(':checked'));
         console.log('real time edition ' + (webvfxEditor.get('realTimeEdition') ? 'on' : 'off'));
     },
-    addText: function () {
-        var text = $('#text').val();
-        if (text != '') {
-            this.webvfxCollection.new = true;
-            this.webvfxCollection.add(new WebvfxText({text: text}));
-            $('#text').val('');
-        }
-    },
-    keyUp: function (ev) {
-        if (ev.keyCode == 13) {
-            this.addText();
-        }
-    },
     updateVideo:  function () {
         console.log('manual update');
         this.webvfxCollection.sendAll();
+    },
+    clearVideo:  function () {
+        console.log('manual clear');
+        webvfxClient.removeAll();
     },
     clearAll: function() {
         if (this.webvfxCollection.models.length) {
@@ -519,15 +530,7 @@ window.EditorView = Backbone.View.extend({
             var reader = new FileReader();
             reader.onload = function(e) {
                 console.log('loaded ' + file.name);
-                self.uploadImage(file);
-                image = new Image();
-                image.name = file.name;
-                image.type = file.type;
-                image.src = e.target.result;
-                self.webvfxCollection.new = true;
-                self.webvfxCollection.add(
-                    new WebvfxImage({image: image, name: file.name})
-                );
+                self.uploadImage(file, e);
             };
             reader.readAsDataURL(file);
         } else {
@@ -535,7 +538,7 @@ window.EditorView = Backbone.View.extend({
             this.alert(description);
         }
     },
-    uploadImage : function(file) {
+    uploadImage : function(file, e) {
         var self = this;
         var formdata = new FormData();
         formdata.append('uploadedFile', file);
@@ -547,6 +550,14 @@ window.EditorView = Backbone.View.extend({
             contentType: false,
             success: function(res) {
                 console.log('uploaded ' + file.name);
+                image = new Image();
+                image.name = file.name;
+                image.type = file.type;
+                image.src = e.target.result;
+                self.webvfxCollection.new = true;
+                self.webvfxCollection.add(
+                    new WebvfxImage({image: image, name: file.name})
+                );
             }
         });
     },
@@ -584,17 +595,15 @@ window.EditorView = Backbone.View.extend({
         //$("#webvfx-collection").disableSelection();
     },
     updateCss: function () {
-
         $('#container').css({
-            width: webvfxEditor.get('width') + 'px',
-            height: webvfxEditor.get('height') + 'px'
+            width: webvfxEditor.getScaledWidth() + 'px',
+            height: webvfxEditor.getScaledHeight() + 'px'
         });
 
         $('#player-container').css({
-            width: webvfxEditor.get('width') + 'px',
-            height: webvfxEditor.get('height') + 'px'
+            width: webvfxEditor.getScaledWidth() + 'px',
+            height: webvfxEditor.getScaledHeight() + 'px'
         });
-
     },
     updateVideoStream: function() {
         window.video = $('#player').get(0);
@@ -604,20 +613,17 @@ window.EditorView = Backbone.View.extend({
     updateStatusBar: function() {
         var getStatusBarInfo = function() {
             var pos = webvfxEditor.get('stage').getMousePosition();
-            var scale = webvfxEditor.get('scale');
-            var wscale = parseInt(webvfxEditor.get('width') / scale);
-            var hscale = parseInt(webvfxEditor.get('height') / scale);
 
             if (pos === undefined) {
                 var mouseX = 0;
                 var mouseY = 0;
             } else {
-                var mouseX = parseInt(pos.x / scale);
-                var mouseY = parseInt(pos.y / scale);
+                var mouseX = Math.round(pos.x / webvfxEditor.get('scale'));
+                var mouseY = Math.round(pos.y / webvfxEditor.get('scale'));
             }
             return [
-                'size: ' + wscale + 'x' + hscale + 'px',
-                'scale: ' + scale,
+                'size: ' + webvfxEditor.get('width') + 'x' + webvfxEditor.get('height') + 'px',
+                'scale: ' + webvfxEditor.get('scale'),
                 'pointer at (' + mouseX + 'px,' + mouseY + 'px)'
             ].join(', ');
         }
@@ -643,6 +649,73 @@ window.EditorView = Backbone.View.extend({
                 }
             }
         );
+    },
+    addObject: function() {
+        var type = $('#objects').val();
+
+        switch (type) {
+            case 'image':
+                $('#files').click();
+                break;
+
+            case 'text':
+                this.webvfxCollection.new = true;
+                this.webvfxCollection.add(new WebvfxWidget({
+                    type: type,
+                    text: "",
+                    interval: 0,
+                    style: $.extend({}, {
+                        width: '500px',
+                        height: '60px',
+                        'line-height': '60px',
+                    }, WebvfxSimpleWidgetStyles['fire']),
+                }));
+                break;
+
+            case 'box':
+                this.webvfxCollection.new = true;
+                this.webvfxCollection.add(new WebvfxWidget({
+                    type: type,
+                    text: "",
+                    interval: 0,
+                    style: $.extend({}, {
+                        width: '300px',
+                        height: '30px',
+                        'line-height': '30px',
+                    }, WebvfxSimpleWidgetStyles['heaven']),
+                }));
+                break;
+
+            case 'time':
+                this.webvfxCollection.new = true;
+                this.webvfxCollection.add(new WebvfxWidget({
+                    type: type,
+                    text: "%H:%M:%S",
+                    interval: 500,
+                    style: $.extend({}, {
+                        width: '100px',
+                        height: '30px',
+                        'line-height': '30px',
+                    }, WebvfxSimpleWidgetStyles['black']),
+                }));
+                break;
+
+            case 'weather':
+                this.webvfxCollection.new = true;
+                this.webvfxCollection.add(new WebvfxWidget({
+                    type: type,
+                    text: "%T%Tunit %H%Hunit",
+                    interval: 2000,
+                    style: $.extend({}, {
+                        width: '100px',
+                        height: '30px',
+                        'line-height': '30px',
+                    }, WebvfxSimpleWidgetStyles['gray']),
+                }));
+                break;
+        }
+
+        $('#objects').val('');
     },
     alert: function(description) {
         var title = i18n.gettext('Alert');
@@ -703,7 +776,7 @@ var ModalConfirm = Backbone.Modal.extend({
 });
 
 var ModalPrompt = Backbone.Modal.extend({
-     initialize: function (options) {
+    initialize: function (options) {
         this.options = options || {};
     },
     template: function() {
@@ -725,3 +798,45 @@ var ModalPrompt = Backbone.Modal.extend({
         this.save();
     }
 });
+
+var Tools = {
+    toCssStyleString: function(obj, exclude) {
+        style = "";
+        for (i in obj) {
+            if ( exclude.indexOf(i) == -1) {
+                style += i + ":" + obj[i] + ";";
+            }
+        }
+        return style;
+    },
+
+    toCssStyleObject: function(str) {
+        var style = {};
+        var lines = str.trim().split('\n');
+        for (i in lines) {
+            var keyValue = lines[i].trim().split(':');
+            style[keyValue[0].trim()] = keyValue[1].trim().replace(';', '');
+        }
+        return style;
+    },
+
+    getIntValues: function(style, keys) {
+        var values = {};
+        keys.forEach(function(key) {
+            if (key in style) {
+                values[key] = parseInt(style[key].replace('px', ''));
+            }
+        });
+        return values;
+    },
+
+    getLineHeight: function(style) {
+        var values = this.getIntValues(style, ['height', 'border-width']);
+        if ('border-width' in values) {
+            return values.height - (values['border-width'] * 2);
+        } else {
+            return values.height;
+        }
+    },
+
+};

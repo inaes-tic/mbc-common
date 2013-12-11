@@ -1,18 +1,23 @@
-- var width = model.getRealValue(model.getWidth())
-- var height = model.getRealValue(model.getHeight())
-- var top = model.getRealValue(model.getTop())
-- var left = model.getRealValue(model.getLeft())
-- var right = model.getRealValue(model.getRight())
-- var bottom = model.getRealValue(model.getBottom())
 - var type = model.getType()
 - var colors = [
--               i18n.gettext('black'),
--               i18n.gettext('red'),
--               i18n.gettext('blue'),
--               i18n.gettext('green'),
--               i18n.gettext('pink'),
--               i18n.gettext('orange')
--     ]
+-   'aqua',
+-   'black',
+-   'blue',
+-   'fuchsia',
+-   'gray',
+-   'green',
+-   'lime',
+-   'maroon',
+-   'navy',
+-   'olive',
+-   'orange',
+-   'purple',
+-   'red',
+-   'silver',
+-   'teal',
+-   'white',
+-   'yellow',
+- ]
 - var effects = [
 -        "flash", "bounce", "shake", "tada", "swing", "wobble",
 -        "wiggle", "pulse", "flip", "flipInX", "flipOutX", "flipInY",
@@ -28,6 +33,11 @@
 -        "rotateOutDownRight", "rotateOutUpLeft", "rotateOutUpRight",
 -        "lightSpeedIn", "lightSpeedOut", "hinge", "rollIn", "rollOut"
 -    ]
+- var animations = [
+-        i18n.gettext('none'),
+-        i18n.gettext('marquee'),
+-        i18n.gettext('onebyone'),
+-     ]
 
 
 mixin positions
@@ -35,137 +45,105 @@ mixin positions
         th
             label(for="width-$#{id}")= i18n.gettext("width")
         td
-            if type == "Text"
-                input(type="text", id="width-#{id}", value="#{width}" , disabled=true, class="disabled")
-            else
-                input(type="text", id="width-#{id}", value="#{width}")
+            input(type="text", id="width-#{id}", value="#{model.getWidth()}")
             | px
     tr
         th
             label(for="height-#{id}")= i18n.gettext("height")
         td
-            if type == "Text"
-                input(type="text", id="height-#{id}", value="#{height}" , disabled=true, class="disabled")
-            else
-                input(type="text", id="height-#{id}", value="#{height}")
+            input(type="text", id="height-#{id}", value="#{model.getHeight()}")
             | px
     tr
         th
             label(for="top-#{id}")= i18n.gettext("top")
         td
-            input(type="text", id="top-#{id}", value="#{top}")
+            input(type="text", id="top-#{id}", value="#{model.getTop()}")
             | px
     tr
         th
             label(for="left-#{id}")= i18n.gettext("left")
         td
-            input(type="text", id="left-#{id}", value="#{left}")
+            input(type="text", id="left-#{id}", value="#{model.getLeft()}")
             | px
     tr
         th
             label(for="right-#{id}")= i18n.gettext("right")
         td
-            input(type="text", id="right-#{id}", value="#{right}")
+            input(type="text", id="right-#{id}", value="#{model.getRight()}")
             | px
     tr
         th
             label(for="bottom-#{id}")= i18n.gettext("bottom")
         td
-            input(type="text", id="bottom-#{id}", value="#{bottom}")
+            input(type="text", id="bottom-#{id}", value="#{model.getBottom()}")
             | px
 
 
 h3(id="title-#{id}")= type + '  ' + id
 div(id="webvfx-data-#{id}", style="display:none")
-    if type == "Text"
-        fieldset
-            table
-                tr
-                    th
-                        label(for="text-#{id}")= i18n.gettext("text")
-                    td
-                        input(type="text", id="text-#{id}", value="#{model.kObj.getText()}", style="width:80px")
-                tr
-                    th
-                        label(for="fill-#{id}")= i18n.gettext("color")
-                    td
-                        select(id="fill-#{id}")
-                            for color in colors
-                                option(selected=model.kObj.getFill() == color) #{color}
-                tr
-                    th
-                        label(for="background-#{id}")= i18n.gettext("background")
-                    td
-                        select.disabled(id="background-#{id}", disabled=true)
-                            for color in colors
-                                option= color
-                tr
-                    th
-                        label(for="scroll-#{id}")= i18n.gettext("scroll")
-                    td
-                        select.disabled(id="scroll-#{id}", disabled=true)
-                            option= i18n.gettext("no")
-                            option= i18n.gettext("yes")
-                mixin positions
-    else
+    if type == "image"
         fieldset
             table
                 tr
                     td(colspan="2", style="text-align:center;padding:5px;")
-                        img(src="#{model.kObj.children[0].attrs.image.src}", id="image-#{id}", width="100")
+                        img(src="#{model.getImageSrc()}", id="image-#{id}", width="100")
                 mixin positions
+    else
+        fieldset
+            table
+                if type != "box"
+                    tr
+                        th
+                            label(for="text-#{id}")= i18n.gettext("text")
+                        td
+                            textarea(id="text-#{id}", style="width:90px;height:60px;font-size:12px")
+                                | #{model.getText()}
+                mixin positions
+                tr
+                    th
+                        label(for="style-#{id}")= i18n.gettext("style")
+                    td
+                        select(id="style-#{id}", style="width:90px")
+                            option(value='')= i18n.gettext("[select]")
+                            each style, name in WebvfxSimpleWidgetStyles
+                                option= i18n.gettext(name)
+                tr
+                    th
+                        label(for="border-color-#{id}")= i18n.gettext("border color")
+                    td
+                        select(id="border-color-#{id}", style="width:90px")
+                            option(value='')= i18n.gettext("[select]")
+                            for color in colors
+                                option #{color}
+                if type != "box"
+                    tr
+                        th
+                            label(for="font-size-#{id}")= i18n.gettext("font size")
+                        td
+                            input(type="text", id="font-size-#{id}", value="#{model.getFontSize()}")
+                            | px
+                    tr
+                        th
+                            label(for="color-#{id}")= i18n.gettext("font color")
+                        td
+                            select(id="color-#{id}", style="width:90px")
+                                option(value='')= i18n.gettext("[select]")
+                                for color in colors
+                                    option #{color}
+                    tr
+                        th
+                            label(for="animation-#{id}")= i18n.gettext("animation")
+                        td
+                            select(id="animation-#{id}", style="width:90px")
+                                for animation in animations
+                                    option(selected=model.options.animation == animation) #{animation}
+                    tr
+                        th
+                            label(for="interval-#{id}")= i18n.gettext("interval")
+                        td
+                            input(type="text", id="interval-#{id}", value="#{model.getInterval()}")
+                            | ms
 
-    fieldset
-        legend.editor= i18n.gettext("Effects")
-        table
-            tr
-                th
-                    label(for="effect-#{id}")= i18n.gettext("effect")
-                td
-                    select(id="effect-#{id}", style="width:90px")
-                        for effect in effects
-                            option= effect
-            tr
-                th
-                    label(for="duration-#{id}")= i18n.gettext("duration")
-                td
-                        input(type="text", id="duration-#{id}")
-            tr
-                th
-                    label(for="iterations-#{id}")= i18n.gettext("iterations")
-                td
-                    input(type="text", id="iterations-#{id}")
-            tr
-                th
-                    label(for="delay-#{id}")= i18n.gettext("delay")
-                td
-                    input(type="text", id="delay-#{id}")
-            tr
-                td.button(colspan="2")
-                    button(id="add-effect-#{id}")= i18n.gettext("add")
-    fieldset
-        legend.editor= i18n.gettext("Move")
-        table
-            tr
-                th
-                    label(for="x-#{id}>")= i18n.gettext("x")
-                td
-                    input(type="text", id="x-#{id}")
-                    | px
-            tr
-                th
-                    label(for="y-#{id}>")= i18n.gettext("y")
-                td
-                    input(type="text", id="y-#{id}")
-                    | px
-            tr
-                th
-                    label(for="move-duration-#{id}")= i18n.gettext("duration")
-                td
-                    input(type="text", id="move-duration-#{id}")
-            tr
-                td.button(colspan="2")
-                    button(id="move-#{id}")= i18n.gettext("move")
     fieldset
         legend.editor= i18n.gettext("Remove")
         table

@@ -472,6 +472,18 @@
                             "description" : "Collection name for list of sketchs"
                         }
                     }
+                },
+                "Widgets" : {
+                    "type" : "object",
+                    "title" : "Widgets",
+                    "description" : "Widgets for Webvfx",
+                    "properties" : {
+                        "Files" : {
+                            "type": "array",
+                            "title": "Files",
+                            "description" : "Collection name for list of widgets"
+                        }
+                    }
                 }
             }
         },
