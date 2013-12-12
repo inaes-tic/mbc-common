@@ -23,6 +23,7 @@ module.exports = {
         },
         Others: {
             timezone: 'UTC',
+            maxage: 365 * 24 * 60 * 60 * 1000,
         },
     },
     Mosto: {
