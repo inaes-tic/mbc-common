@@ -107,6 +107,7 @@ module.exports = {
             Status: 'status',
             Mostomessages: 'mostomessages',
             Sketchs: 'sketchs',
+            Auth: 'users',
         },
         Widgets: {
             Files: [

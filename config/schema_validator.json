@@ -475,6 +475,11 @@
                             "type": "string",
                             "title": "Sketchs",
                             "description" : "Collection name for list of sketchs"
+                        },
+                        "Auth" : {
+                            "type": "string",
+                            "title": "Auth",
+                            "description" : "Collection name for list of users"
                         }
                     }
                 },
