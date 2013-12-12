@@ -98,6 +98,11 @@
                             "type": "string",
                             "title": "Timezone",
                             "description" : "The Timezone of this playout instalation"
+                        },
+                       "maxage" : {
+                            "type": "integer",
+                            "title": "Max Age",
+                            "description" : "Maximun time for caching on server"
                         }
                     }
                 }
