@@ -110,7 +110,7 @@ module.exports = {
         },
         Widgets: {
             Files: [
-                'WebvfxSimpleWidget', 
+                'WebvfxSimpleWidget',
                 'fonts/ShareRegular',
                 'fonts/ShareBold',
             ],
