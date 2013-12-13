@@ -747,6 +747,7 @@ window.WebvfxWidget = WebvfxBase.extend({
                 top: self.getTop() + 'px',
                 left: self.getLeft() + 'px',
             }),
+            id: this.id
         }
     },
 
@@ -769,6 +770,7 @@ window.WebvfxWidget = WebvfxBase.extend({
     },
 
     sendObject: function() {
+        var self = this;
         webvfxClient.addWidget({
             id: this.id,
             zindex: this.zindex,

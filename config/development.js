@@ -107,8 +107,6 @@ module.exports = {
             Mostomessages: 'mostomessages',
             Sketchs: 'sketchs',
             SketchSchedules: 'sketchschedules'
-        }
-        }
         },
         Widgets: {
             Files: [
