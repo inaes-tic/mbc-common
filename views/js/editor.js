@@ -287,24 +287,21 @@ window.EditorView = Backbone.View.extend({
             webvfxClient.fetch(function(data) {
                 console.log('Initializing editor with data:', data);
                 _.each(data.elements, function(element) {
-                    console.log('Loading element:', element)
-                    var s = {};
-                    s.x = getPixels(element.left);
-                    s.y = getPixels(element.top);
-                    s.width = getPixels(element.width);
-                    s.height = getPixels(element.height);
-                    s.id = element.id;
+                    console.log('Loading element:', element);
                     var obj = undefined;
                     if (element.type === 'image') {
+                        var s = {};
+                        s.left = getPixels(element.left);
+                        s.top = getPixels(element.top);
+                        s.width = getPixels(element.width);
+                        s.height = getPixels(element.height);
+                        s.id = element.id;
                         s.image = new Image();
                         s.image.src = element.src;
                         s.image.name = element.src;
                         obj = new WebvfxImage(s);
-                    } else if (element.type === 'banner') {
-                        s.text = element.text;
-                        s.fill = element.color;
-                        s.scroll = element.scroll;
-                        obj = new WebvfxText(s);
+                    } else if (element.type === 'widget') {
+                        obj = new WebvfxWidget(element.options);
                     }
                     console.log("Object created:", obj);
                     self.webvfxCollection.add(obj);
