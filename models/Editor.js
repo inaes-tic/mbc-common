@@ -524,9 +524,14 @@ window.WebvfxImage = WebvfxBase.extend({
 
     sendObject: function() {
         var kImage = this.getImage();
-        console.log("Sending image:", kImage.attrs.image.src);
+        console.log("Sending image:", kImage.attrs.name);
+        var src;
+        if (kImage.attrs.image.src.indexOf("http") >= 0)
+            src = kImage.attrs.image.src;
+        else
+            src = kImage.attrs.name;
         webvfxClient.addImage({
-            images: kImage.attrs.image.src,
+            images: src,
             name: kImage.attrs.name,
             id: this.id,
             zindex: this.zindex,
