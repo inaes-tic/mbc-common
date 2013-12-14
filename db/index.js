@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var logger = require('../logger')().addLogger('mongodb_connection');
 
-exports = module.exports = function(config) {
+exports = module.exports = function(config, error) {
     var conf = require('config');
     var mediadb = config || conf.Common.MediaDB;
     var collections = conf.Common.Collections;
@@ -15,8 +15,10 @@ exports = module.exports = function(config) {
         safe: true
     });
 
+    error = error || function (err) {logger.error ('Unhandled error in mongodb: ' + err);};
+
     db.admin.command(getParameterObj, function(err, result) {
-        if(err) { logger.error(err); return; }
+        if(err) { logger.error('Error: ' + err); return error(err); }
         logger.info("Connected to", mediadb);
         if(result.documents[0].textSearchEnabled) {
             for(col in collections) {
