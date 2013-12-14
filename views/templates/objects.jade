@@ -88,6 +88,10 @@ div(id="webvfx-data-#{id}", style="display:none")
                     td(colspan="2", style="text-align:center;padding:5px;")
                         img(src="#{model.getImageSrc()}", id="image-#{id}", width="100")
                 mixin positions
+    else if type == "animation"
+        fieldset
+            table
+                mixin positions
     else
         fieldset
             table

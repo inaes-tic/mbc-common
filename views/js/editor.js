@@ -157,6 +157,11 @@ window.WebvfxWidgetView = WebvfxBaseView.extend({
     },
 });
 
+window.WebvfxAnimationView = WebvfxBaseView.extend({
+    addEvents: function(model) {
+    },
+});
+
 window.WebvfxCollectionView = Backbone.View.extend({
     el: $('#webvfx-collection'),
 
@@ -339,11 +344,16 @@ window.EditorView = Backbone.View.extend({
         this.webvfxCollection.destroyAll();
 
         _.each(this.sketchs.findWhere({name: key}).get('data'), function(s) {
-            if (s.type == 'image') {
+            if (s.type == 'image' || s.type == 'animation') {
                 s.image = new Image();
+                s.image.onload = function() {
+                    if (s.type == 'image') {
+                        self.webvfxCollection.add(new WebvfxImage(s));
+                    } else {
+                        self.webvfxCollection.add(new WebvfxAnimation(s));
+                    }
+                };
                 s.image.src = self.options.server + 'uploads/' + s.name;
-                s.image.name = s.name;
-                self.webvfxCollection.add(new WebvfxImage(s));
             } else {
                 self.webvfxCollection.add(new WebvfxWidget(s));
             }
@@ -529,7 +539,6 @@ window.EditorView = Backbone.View.extend({
             var self = this;
             var reader = new FileReader();
             reader.onload = function(e) {
-                console.log('loaded ' + file.name);
                 self.uploadImage(file, e);
             };
             reader.readAsDataURL(file);
@@ -549,15 +558,24 @@ window.EditorView = Backbone.View.extend({
             processData: false,
             contentType: false,
             success: function(res) {
-                console.log('uploaded ' + file.name);
                 image = new Image();
-                image.name = file.name;
                 image.type = file.type;
                 image.src = e.target.result;
+
                 self.webvfxCollection.new = true;
-                self.webvfxCollection.add(
-                    new WebvfxImage({image: image, name: file.name})
-                );
+                if (image.width > image.height * 5) {
+                    var chunks = file.name.split('/');
+                    var filename = chunks[chunks.length - 1];
+                    var values = filename.split('.')[1].split('-');
+                    var frames = parseInt(values[0]);
+                    self.webvfxCollection.add(
+                        new WebvfxAnimation({image: image, name: file.name, frames: frames})
+                    );
+                } else {
+                    self.webvfxCollection.add(
+                        new WebvfxImage({image: image, name: file.name})
+                    );
+                }
             }
         });
     },
@@ -655,6 +673,7 @@ window.EditorView = Backbone.View.extend({
 
         switch (type) {
             case 'image':
+            case 'animation':
                 $('#files').click();
                 break;
 
@@ -713,6 +732,7 @@ window.EditorView = Backbone.View.extend({
                     }, WebvfxSimpleWidgetStyles['gray']),
                 }));
                 break;
+
         }
 
         $('#objects').val('');
