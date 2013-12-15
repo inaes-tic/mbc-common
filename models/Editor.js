@@ -100,7 +100,11 @@ window.WebvfxBase = Backbone.Model.extend({
         });
 
         this.kObj.on('mousedown', function() {
-            $('.webvfx-obj div').hide();
+            $('.webvfx-obj div').each(function() {
+                if ($(this).attr('id').indexOf('image-') != 0) {
+                    $(this).hide();
+                }
+            });
             $('#webvfx-data-' + self.id).show();
         });
     },
@@ -145,14 +149,6 @@ window.WebvfxBase = Backbone.Model.extend({
 
     getImage: function() {
         return this.kObj.children[0];
-    },
-
-    getImageSrc: function() {
-        if (this.getImage().attrs.image) {
-            return this.getImage().attrs.image.src;
-        } else {
-            return "";
-        }
     },
 
     getInitialPosition: function(args) {
@@ -463,6 +459,22 @@ window.WebvfxImage = WebvfxBase.extend({
 
     getType: function() {
         return 'image';
+    },
+
+    getImageSrc: function() {
+        return webvfxEditor.get('server') + 'uploads/' + this.get('name');
+    },
+
+    getThumbSize: function() {
+        var width = 80;
+        var height = this.getHeight() * width / this.getWidth();
+
+        return {
+            width: width,
+            height: height,
+            thumbWidth: width,
+            thumbHeight: height
+        };
     },
 
     getView: function() {
@@ -868,6 +880,23 @@ window.WebvfxAnimation = WebvfxBase.extend({
 
     getType: function() {
         return 'animation';
+    },
+
+    getImageSrc: function() {
+        return webvfxEditor.get('server') + 'uploads/' + this.get('name');
+    },
+
+    getThumbSize: function() {
+        var thumbWidth = 150;
+        var thumbHeight = 50;
+        var width = (this.getWidth() * this.get('frames')) * thumbHeight / this.getHeight();
+
+        return {
+            width: width,
+            height: thumbHeight,
+            thumbWidth: thumbWidth,
+            thumbHeight: thumbHeight
+        };
     },
 
     getView: function() {

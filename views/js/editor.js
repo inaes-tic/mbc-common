@@ -42,8 +42,7 @@ window.WebvfxBaseView = Backbone.View.extend({
         this.$('title', id).live('click', function() {
             var selfId = self.$('webvfx-data', id).attr('id');
             $('.webvfx-obj div').each(function() {
-                if ($(this).attr('id') != selfId) {
-                    console.debug('hide ' + $(this).attr('id'));
+                if ($(this).attr('id').indexOf('image-') != 0 && $(this).attr('id') != selfId) {
                     $(this).hide();
                 }
             });

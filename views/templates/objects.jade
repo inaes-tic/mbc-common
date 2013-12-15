@@ -81,16 +81,13 @@ mixin positions
 
 h3(id="title-#{id}")= type + '  ' + id
 div(id="webvfx-data-#{id}", style="display:none")
-    if type == "image"
+    if type == "image" || type == "animation"
         fieldset
             table
                 tr
                     td(colspan="2", style="text-align:center;padding:5px;")
-                        img(src="#{model.getImageSrc()}", id="image-#{id}", width="100")
-                mixin positions
-    else if type == "animation"
-        fieldset
-            table
+                        - var size = model.getThumbSize()
+                        div(id="image-#{id}", style="margin: 0 auto;background-position:top left;background-repeat:no-repeat;background-image:url(#{model.getImageSrc()});background-size:#{size.width}px #{size.height}px;width:#{size.thumbWidth}px;height:#{size.thumbHeight}px")
                 mixin positions
     else
         fieldset
