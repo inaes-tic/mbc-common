@@ -930,15 +930,17 @@ window.WebvfxAnimation = WebvfxBase.extend({
         this.remove();
         webvfxClient.addAnimation({
             id: this.id,
-            name: this.getName(),
-            frames: this.get('frames'),
             zindex: this.zindex,
-            width: this.getWidth() + 'px',
-            height: this.getHeight() + 'px',
-            top: this.getTop() + 'px',
-            left: this.getLeft() + 'px',
-            right: this.getRight() + 'px',
-            bottom: this.getBottom() + 'px',
+            options: {
+                id: this.id,
+                zindex: this.zindex,
+                image: this.getName(),
+                frames: this.get('frames'),
+                width: this.getWidth(),
+                height: this.getHeight(),
+                top: this.getTop(),
+                left: this.getLeft(),
+            },
         });
     },
 
@@ -952,7 +954,7 @@ window.WebvfxCollection = Backbone.Collection.extend({
 
     onModelAdded: function(model) {
         model.zindex = this.models.length;
-        if (model.getType() == 'image' && webvfxEditor.get('realTimeEdition')) {
+        if (['image', 'animation'].indexOf(model.getType()) != -1 && webvfxEditor.get('realTimeEdition')) {
             model.send();
         }
     },
@@ -1003,7 +1005,7 @@ window.webvfxClient = {
 
     addAnimation: function(data) {
         this.send('addAnimation', data, function(res) {
-            console.log('animation', data.name, 'added');
+            console.log('animation', data.options.image, 'added');
         });
     },
 
