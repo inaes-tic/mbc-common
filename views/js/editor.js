@@ -42,7 +42,8 @@ window.WebvfxBaseView = Backbone.View.extend({
         this.$('title', id).live('click', function() {
             var selfId = self.$('webvfx-data', id).attr('id');
             $('.webvfx-obj div').each(function() {
-                if ($(this).attr('id').indexOf('image-') != 0 && $(this).attr('id') != selfId) {
+                var id = $(this).attr('id');
+                if (!id.match(/^image-/) && id != selfId) {
                     $(this).hide();
                 }
             });
@@ -561,12 +562,9 @@ window.EditorView = Backbone.View.extend({
                 image.type = file.type;
                 image.src = e.target.result;
 
-                self.webvfxCollection.new = true;
                 if (image.width > image.height * 5) {
-                    var chunks = file.name.split('/');
-                    var filename = chunks[chunks.length - 1];
-                    var values = filename.split('.')[1].split('-');
-                    var frames = parseInt(values[0]);
+                    var chunks = _.last(file.name.split('.'), 2);
+                    var frames = parseInt(chunks[0]);
                     self.webvfxCollection.add(
                         new WebvfxAnimation({image: image, name: file.name, frames: frames})
                     );
@@ -575,6 +573,7 @@ window.EditorView = Backbone.View.extend({
                         new WebvfxImage({image: image, name: file.name})
                     );
                 }
+                self.webvfxCollection.new = true;
             }
         });
     },

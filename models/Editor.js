@@ -101,7 +101,7 @@ window.WebvfxBase = Backbone.Model.extend({
 
         this.kObj.on('mousedown', function() {
             $('.webvfx-obj div').each(function() {
-                if ($(this).attr('id').indexOf('image-') != 0) {
+                if ( ! $(this).attr('id').match(/image-/) ) {
                     $(this).hide();
                 }
             });
@@ -273,7 +273,8 @@ window.WebvfxBase = Backbone.Model.extend({
         anchor.on('dragend', function() {
             group.setDraggable(true);
             self.locked = false;
-            if ( ['text', 'box', 'time', 'weather'].indexOf(self.getType()) >= 0 ) {
+            var type = self.getType();
+            if (type == 'text' || type == 'box' || type == 'time' || type == 'weather') {
                 var fontSize = Math.ceil(self.get('height') * self.getFontSize() / self._startHeight);
                 self.reload({
                     style: { 'font-size': fontSize + 'px', }
@@ -367,8 +368,9 @@ window.WebvfxBase = Backbone.Model.extend({
 
         if (this.getType() == 'animation') {
             var scale = webvfxEditor.get('scale');
-            var x = width / (image.getImage().width / this.get('frames'));
-            var y = height / image.getImage().height;
+            var img = image.getImage();
+            var x = width / (img.width / this.get('frames'));
+            var y = height / img.height;
             image.setScale(x, y);
         }
 
@@ -960,16 +962,12 @@ window.WebvfxAnimation = WebvfxBase.extend({
         webvfxClient.addAnimation({
             id: this.id,
             zindex: this.zindex,
-            options: {
-                id: this.id,
-                zindex: this.zindex,
-                image: this.getName(),
-                frames: this.get('frames'),
-                width: this.getWidth(),
-                height: this.getHeight(),
-                top: this.getTop(),
-                left: this.getLeft(),
-            },
+            name: this.getName(),
+            frames: this.get('frames'),
+            width: this.getWidth(),
+            height: this.getHeight(),
+            top: this.getTop(),
+            left: this.getLeft(),
         });
     },
 
@@ -983,7 +981,8 @@ window.WebvfxCollection = Backbone.Collection.extend({
 
     onModelAdded: function(model) {
         model.zindex = this.models.length;
-        if (['image', 'animation'].indexOf(model.getType()) != -1 && webvfxEditor.get('realTimeEdition')) {
+        var type = model.getType();
+        if ((type == 'image' || type == 'animation') && webvfxEditor.get('realTimeEdition')) {
             model.send();
         }
     },
@@ -1034,7 +1033,7 @@ window.webvfxClient = {
 
     addAnimation: function(data) {
         this.send('addAnimation', data, function(res) {
-            console.log('animation', data.options.image, 'added');
+            console.log('animation', data.name, 'added');
         });
     },
 
