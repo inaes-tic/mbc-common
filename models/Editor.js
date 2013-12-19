@@ -70,7 +70,7 @@ window.WebvfxBase = Backbone.Model.extend({
 
     initialize: function() {
         this.id = this.cid;
-        this.zindex = 0,
+        this.zindex = (arguments[0].zindex >= 0) ? arguments[0].zindex : -1,
         this.locked = false,
         this.created = false,
         this.layer = webvfxEditor.get('stage').children[0];
@@ -497,6 +497,7 @@ window.WebvfxImage = WebvfxBase.extend({
 
     getDataToStore: function() {
         return {
+            zindex: this.zindex,
             type: this.getType(),
             name: this.getName(),
             left: this.getLeft(),
@@ -694,7 +695,7 @@ window.WebvfxWidget = WebvfxBase.extend({
     },
 
     getName: function() {
-        return this.widget + this.cid;
+        return 'widget ' + this.options.type;
     },
 
     getType: function() {
@@ -743,6 +744,7 @@ window.WebvfxWidget = WebvfxBase.extend({
     getDataToStore: function() {
         var self = this;
         return {
+            zindex: this.zindex,
             type: this.options.type,
             text: this.options.text,
             interval: this.options.interval,
@@ -919,6 +921,7 @@ window.WebvfxAnimation = WebvfxBase.extend({
 
     getDataToStore: function() {
         return {
+            zindex: this.zindex,
             type: this.getType(),
             name: this.getName(),
             frames: this.get('frames'),
@@ -979,8 +982,15 @@ window.WebvfxCollection = Backbone.Collection.extend({
         this.bind('add', this.onModelAdded, this);
     },
 
+    comparator: function(model) {
+        if (model.zindex == -1) {
+            model.zindex = this.models.length; // new object
+        }
+        model.kObj.setZIndex(model.zindex);
+        return model.zindex;
+    },
+
     onModelAdded: function(model) {
-        model.zindex = this.models.length;
         var type = model.getType();
         if ((type == 'image' || type == 'animation') && webvfxEditor.get('realTimeEdition')) {
             model.send();

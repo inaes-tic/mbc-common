@@ -179,7 +179,7 @@ window.WebvfxCollectionView = Backbone.View.extend({
     updateSort: function(event, model, index) {
         this.collection.remove(model);
         this.collection.add(model, {at: index});
-        var count = 1;
+        var count = 0;
         this.collection.each(function(model) {
             model.zindex = count++;
         });
