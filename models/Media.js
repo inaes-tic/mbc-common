@@ -212,7 +212,9 @@ Media.CollectionPageable = PageableCollection.extend(_.extend(Collection, Pageab
 
 Media.Piece = Media.Model.extend({
     urlRoot: 'piece',
-    backend: 'piecebackend',
+    backend: {  name:    'piecebackend',
+                channel: 'piece'
+    },
     idAttribute: '_id',
     initialize: function () {
         console.log ('creating new Media.Piece');
@@ -222,7 +224,9 @@ Media.Piece = Media.Model.extend({
 var PieceCollection = {
     url: 'piece',
     model: Media.Piece,
-    backend: 'piecebackend',
+    backend: {  name:    'piecebackend',
+                channel: 'collection'
+    },
     initialize: function () {
         if (!server) {
             this.bindBackend();
@@ -240,7 +244,10 @@ Media.PieceCollectionPageable = PageableCollection.extend(_.extend(PieceCollecti
 
 Media.Playlist = Backbone.RelationalModel.extend({
     urlRoot: 'list',
-    backend: 'listbackend', // Makes HasOne relation from Media.Occurrence work.
+    // Makes HasOne relation from Media.Occurrence work.
+    backend: {  name:    'listbackend',
+                channel: 'list'
+    },
     idAttribute: '_id',
     relations: [{
         type: Backbone.HasMany,
@@ -288,7 +295,9 @@ Media.Playlist = Backbone.RelationalModel.extend({
 var Universe = {
     url: 'list',
     model: Media.Playlist,
-    backend: 'listbackend',
+    backend: {  name:    'listbackend',
+                channel: 'universe'
+    },
     comparator: '_id',
     initialize: function () {
         if (!server) {
