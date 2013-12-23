@@ -532,7 +532,6 @@ window.WebvfxImage = WebvfxBase.extend({
     },
 
     send: function() {
-        this.remove();
         webvfxClient.addImage({
             id: this.id,
             name: this.getName(),
@@ -777,7 +776,6 @@ window.WebvfxWidget = WebvfxBase.extend({
     },
 
     send: function() {
-        this.remove();
         var self = this;
         webvfxClient.addWidget({
             id: this.id,
@@ -961,7 +959,6 @@ window.WebvfxAnimation = WebvfxBase.extend({
     },
 
     send: function() {
-        this.remove();
         webvfxClient.addAnimation({
             id: this.id,
             zindex: this.zindex,
