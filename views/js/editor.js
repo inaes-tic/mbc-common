@@ -534,8 +534,38 @@ window.EditorView = Backbone.View.extend({
             }
         }
     },
+    showStartActionMessage: function(message, id) {
+        var div = $('<div />').attr('id', id);
+        $('#action-messages').append(div);
+        div.animate({height: '40px'}, 250, function() {
+            $(this).text(message);
+        });
+    },
+    showEndActionMessage: function(message, id) {
+        var div = $('#' + id);
+        var ms = 250;
+        setTimeout(function() {
+            div.fadeOut(ms, function() {
+                div.text(message).fadeIn(ms, function() {
+                    setTimeout(function() {
+                        div.fadeOut(ms, function() {
+                            div.text("").show().animate({height: '0px'}, ms, function() {
+                                div.remove();
+                            });
+                        });
+                    }, ms * 2);
+                });
+            });
+        }, ms * 2);
+    },
     readFile : function(file) {
-        if( (/image/i).test(file.type) ) {
+        if( (/(image|zip)/i).test(file.type) ) {
+            file.id = (new Date()).getTime();
+            var message = (/image/i).test(file.type)
+                        ? i18n.gettext('Uploading image')
+                        : i18n.gettext('Creating animation');
+            message += ' ' + file.name + '...';
+            this.showStartActionMessage(message, file.id)
             var self = this;
             var reader = new FileReader();
             reader.onload = function(e) {
@@ -552,28 +582,31 @@ window.EditorView = Backbone.View.extend({
         var formdata = new FormData();
         formdata.append('uploadedFile', file);
         $.ajax({
-            url: self.options.server + 'uploadImage',
+            url: self.options.server + 'uploadFile',
             type: 'POST',
             data: formdata,
             processData: false,
             contentType: false,
             success: function(res) {
                 image = new Image();
-                image.type = file.type;
-                image.src = e.target.result;
-
-                if (image.width > image.height * 5) {
-                    var chunks = _.last(file.name.split('.'), 2);
-                    var frames = parseInt(chunks[0]);
-                    self.webvfxCollection.add(
-                        new WebvfxAnimation({image: image, name: file.name, frames: frames})
-                    );
-                } else {
-                    self.webvfxCollection.add(
-                        new WebvfxImage({image: image, name: file.name})
-                    );
+                image.onload = function() {
+                    if  {
+                    var message = ('error' in res)
+                                ? 'Error ' + res.error
+                                : 'Done ' + res.type + ' ' + file.name + ' !';
+                    self.showEndActionMessage(message, file.id);
+                    self.webvfxCollection.new = true;
+                    if (res.type == 'animation') {
+                        self.webvfxCollection.add(
+                            new WebvfxAnimation({image: this, name: res.filename, frames: res.frames})
+                        );
+                    } else {
+                        self.webvfxCollection.add(
+                            new WebvfxImage({image: this, name: res.filename})
+                        );
+                    }
                 }
-                self.webvfxCollection.new = true;
+                image.src = self.options.server + 'uploads/' + res.filename;
             }
         });
     },
