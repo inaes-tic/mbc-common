@@ -496,6 +496,7 @@ window.WebvfxImage = WebvfxBase.extend({
             top: this.getTop(),
             width: this.getWidth(),
             height: this.getHeight(),
+            zindex: this.zindex,
             id: this.id        
         }
     },
@@ -752,7 +753,8 @@ window.WebvfxWidget = WebvfxBase.extend({
                 top: self.getTop() + 'px',
                 left: self.getLeft() + 'px',
             }),
-            id: this.id
+            id: this.id,
+            zindex: this.zindex
         }
     },
 
