@@ -452,6 +452,9 @@ window.EditorView = Backbone.View.extend({
                     self.schedules.create({ sketch_id: model.id, date: date, length: length }, {success: function() {
                         console.log('Success scheduling sketch: '+ model.get('name'));
                     }});
+                    self.reloadSchedules(function() {
+                        console.log('RELOAD: schedule "' + key + '" created');
+                    });
                     var k = date + " | " + length + " sec | " + key;
                     var opt_key = '<option value="' + k + '">';
                     $('#schedules').append($(opt_key).html(k).prop('selected', true));
@@ -489,6 +492,9 @@ window.EditorView = Backbone.View.extend({
                         }
                     ).remove();
                     console.log('schedule "' + key + '" deleted');
+                    self.reloadSchedules(function() {
+                        console.log('RELOAD: schedule "' + key + '" deleted');
+                    });
                 } else {
                     console.log('tried to delete: "' + key + '" but not found in schedules');
                 }
@@ -497,6 +503,19 @@ window.EditorView = Backbone.View.extend({
                 console.log('Not deleting schedule "' + key + '"');
             }
         );
+    },
+    reloadSchedules: function(callback) {
+        var self = this;
+        var formdata = new FormData();
+        formdata.append('dummy', 'dummy');
+        $.ajax({
+            url: self.options.server + 'reloadSchedules',
+            type: 'POST',
+            data: formdata,
+            processData: false,
+            contentType: false,
+            success: callback
+        });
     },
     getSketchs: function () {
         var keys = this.sketchs.pluck('name');
