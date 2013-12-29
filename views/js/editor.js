@@ -999,7 +999,7 @@ var ScheduleModalPrompt = Backbone.Modal.extend({
         this.options = options || {};
     },
     template: function() {
-        var parse_tpl = template.schedulePrompt(this.options);
+        var parse_tpl = template.schedule_prompt(this.options);
         return _.template(parse_tpl);
     },
     submitEl: '.submit',
