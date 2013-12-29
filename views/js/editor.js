@@ -276,26 +276,13 @@ window.EditorView = Backbone.View.extend({
             self.updateVideoStream();
             self.updateStatusBar();
             
-            var getPixels = function(data) {
-                var pos = data.indexOf('px');
-                if (pos >= 0)
-                    return data.substring(0, pos);
-                else
-                    return data;
-            };
-            
             webvfxClient.fetch(function(data) {
                 console.log('Initializing editor with data:', data);
                 _.each(data.elements, function(element) {
                     console.log('Loading element:', element);
                     var obj = undefined;
                     if (element.type === 'image') {
-                        var s = {};
-                        s.left = getPixels(element.left);
-                        s.top = getPixels(element.top);
-                        s.width = getPixels(element.width);
-                        s.height = getPixels(element.height);
-                        s.id = element.id;
+                        var s = _.extend(element);
                         s.image = new Image();
                         s.image.src = element.src;
                         s.image.name = element.src;

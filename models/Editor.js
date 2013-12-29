@@ -76,8 +76,22 @@ window.WebvfxBase = Backbone.Model.extend({
         console.log("Initializing object:", arguments[0]);
         if (!arguments[0].id) 
             this.id = uuid.v1();
+        this.fixPixels(arguments[0]);
         this.layer = webvfxEditor.get('stage').children[0];
         console.log("Object initialized:", this.id);
+    },
+            
+    fixPixels: function(values) {
+        var self = this;
+        var props = _.pairs(values);
+        _.each(props, function(prop) {
+            if (_.contains(['width', 'height', 'top', 'left', 'right', 'bottom'], prop[0]))
+                self.set(prop[0], self.getPixels(prop[1]));
+        })
+    },
+            
+    getPixels: function(data) {
+        return data.replace('px', '');
     },
 
     createEvents: function() {
