@@ -396,15 +396,14 @@ window.WebvfxBase = Backbone.Model.extend({
 
     send: function() {
         console.log('send ' + this.id + ' called');
-        if (this.get("removed")) {
+        if (this.get("removed")) 
             this.remove();
-            this.collection.remove(this.id);
-        } else {
+        else 
             this.sendObject();
-        }
     },
             
     remove: function() {
+        webvfxEditor.objects.remove(this.id);
         webvfxClient.remove({elements: this.id});
     },
 
@@ -414,12 +413,12 @@ window.WebvfxBase = Backbone.Model.extend({
             this.widget.remove();
             this.widget = null;
         }
-        if (webvfxEditor.get('realTimeEdition')) {
+        
+        if (webvfxEditor.get('realTimeEdition')) 
             this.remove();
-            webvfxEditor.objects.remove(this.id);
-        } else {
+         else 
             this.set("removed", true);
-        }
+        
         this.kObj.destroy();       
         this.layer.draw();
     },
