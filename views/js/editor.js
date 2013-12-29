@@ -938,7 +938,7 @@ var ModalPrompt = Backbone.Modal.extend({
     events: {
         "click .submit"              : "save",
         "keypress input[id=textkey]" : "saveOnEnter",
-        "click .cancel"              : function() { this.options.cancelCallback(); },
+        "click .cancel"              : "cancel",
     },
     save: function () {
         this.options.submitCallback($('#textkey').val());
@@ -946,6 +946,9 @@ var ModalPrompt = Backbone.Modal.extend({
     saveOnEnter: function (e) {
         if (e.keyCode != 13) return;
         this.save();
+    },
+    cancel: function() { 
+        this.options.cancelCallback();
     }
 });
 
@@ -1004,7 +1007,7 @@ var ScheduleModalPrompt = Backbone.Modal.extend({
     events: {
         "click .submit"              : "save",
         "keypress input[id=textkey]" : "saveOnEnter",
-        "click .cancel"              : function() { this.options.cancelCallback(); },
+        "click .cancel"              : "cancel"
     },
     save: function () {
         this.options.submitCallback($('#time').val(), $('#duration').val());
@@ -1012,5 +1015,8 @@ var ScheduleModalPrompt = Backbone.Modal.extend({
     saveOnEnter: function (e) {
         if (e.keyCode != 13) return;
         this.save();
+    },
+    cancel: function() {
+        this.options.cancelCallback();
     }
 });
