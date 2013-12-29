@@ -859,7 +859,10 @@ window.EditorView = Backbone.View.extend({
         var noCallback = noCallback || function() { return; };
         var title = i18n.gettext('Confirm');
         var description = description || i18n.gettext('Wait there was a problem');
-        $('#modal').html(new ModalConfirm({ title: title, description: description, yesCallback: yesCallback, noCallback: noCallback }).render().el);
+        $('#modal').html(new ModalConfirm({ title: title, 
+                                            description: description, 
+                                            yesCallback: yesCallback, 
+                                            noCallback: noCallback }).render().el);
         window.scrollTo(0,0);
     },
     prompt: function (description, submitCallback, cancelCallback) {
@@ -867,7 +870,10 @@ window.EditorView = Backbone.View.extend({
         var cancelCallback = cancelCallback || function() {};
         var title = i18n.gettext('Prompt');
         var description = description || i18n.gettext('Wait there was a problem');
-        $('#modal').html(new ModalPrompt({ title: title, description: description, submitCallback: submitCallback, cancelCallback: cancelCallback }).render().el);
+        $('#modal').html(new ModalPrompt({ title: title, 
+                                           description: description, 
+                                           submitCallback: submitCallback, 
+                                           cancelCallback: cancelCallback }).render().el);
         window.scrollTo(0,0);
     },
     schedulePrompt: function (time, duration, submitCallback, cancelCallback) {
@@ -876,7 +882,11 @@ window.EditorView = Backbone.View.extend({
         var title = i18n.gettext('Schedule');
         var time = time || i18n.gettext('Wait there was a problem');
         var duration = duration || i18n.gettext('Wait there was a problem');
-        $('#modal').html(new ScheduleModalPrompt({ title: title, time: time, duration: duration, submitCallback: submitCallback, cancelCallback: cancelCallback }).render().el);
+        $('#modal').html(new ScheduleModalPrompt({ title: title, 
+                                                   time: time, 
+                                                   duration: duration, 
+                                                   submitCallback: submitCallback, 
+                                                   cancelCallback: cancelCallback }).render().el);
         window.scrollTo(0,0);
     },
     canNavigateAway: function (options) {
