@@ -590,7 +590,6 @@ window.EditorView = Backbone.View.extend({
             success: function(res) {
                 image = new Image();
                 image.onload = function() {
-                    if  {
                     var message = ('error' in res)
                                 ? 'Error ' + res.error
                                 : 'Done ' + res.type + ' ' + file.name + ' !';
