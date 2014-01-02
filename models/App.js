@@ -226,6 +226,24 @@ function flatten_conf (conf, defaults, descriptions, root) {
     return root;
 };
 
+// Given a nested structure like the one from RelationalConfig.toJSON()
+// transforms it to the format expected by configStore
+function relational_to_server_conf (rel, root) {
+    var root = root || {};
+
+    _.each(rel.properties, function(contents, name, par) {
+        if (!_.has(contents, 'properties') || contents.properties.length==0) {
+            root[contents.name] = contents.value;
+        } else {
+            var elm = { };
+            root[contents.name] = elm;
+            relational_to_server_conf(contents, elm);
+        }
+    });
+
+    return root;
+};
+
 if(!server){
 App.RelationalConfig = Backbone.RelationalModel.extend({
     idAttribute: '_id',
