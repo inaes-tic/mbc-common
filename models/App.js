@@ -140,6 +140,92 @@ App.TranscodeStatus = Backbone.Model.extend({
     }
 });
 
+// Given a path like 'Caspa.Branding.name', a hash-like with the user config
+// and another one with defaults retrieves both.
+function get_value (path, conf, defaults) {
+    var path = path.split('.');
+    var val = conf;
+    var dfl = defaults;
+
+    var found = false;
+    var key;
+    var ret = {
+        value:   null,
+        default: null,
+        found:   false,
+    };
+
+
+    do {
+        key = path.shift();
+        if (_.has(val, key) ) {
+            val = val[key];
+            if (path.length == 0) {
+                found = true;
+            }
+        }
+
+        if (_.has(dfl, key) ) {
+            dfl = dfl[key];
+        }
+    } while (path.length);
+
+    ret.default = ret.value = dfl;
+    ret.found = found;
+    if (found) {
+        ret.value = val;
+    }
+
+    return ret;
+};
+
+// Given three objects like the ones returned from configStore, merge them
+// in a structure suitable to parse into nested relational models.
+// Guess how big N is...
+function flatten_conf (conf, defaults, descriptions, root) {
+    if (root == undefined) {
+        var root = {
+            properties: [],
+        };
+
+        // XXX: _.omit() returns a copy of the object.
+        _.extend(root, _.omit(descriptions, ['properties', 'type']));
+        if (!descriptions.type.match(/config|defaults|descriptions|object/)) {
+            root.type = descriptions.type;
+        }
+    }
+
+    _.each(descriptions.properties, function(contents, name, par) {
+        var dfl, dsc, cnf;
+        var ret = get_value(name, conf, defaults);
+
+        dfl = ret.default;
+        cnf = ret.value;
+        dsc = contents;
+
+        var elm = {
+            name: name,
+            properties: [],
+        };
+
+        // XXX: _.omit() returns a copy of the object.
+        _.extend(elm, _.omit(contents, ['properties', 'type']));
+        if (!contents.type.match(/config|defaults|descriptions|object/)) {
+            elm.type = contents.type;
+        }
+
+        if (!_.has(dsc, 'properties') || dsc.properties.length==0) {
+            elm.value = cnf;
+            elm.default = dfl;
+        }
+
+        root.properties.push(elm);
+        flatten_conf(cnf, dfl, dsc, elm);
+    });
+
+    return root;
+};
+
 if(!server){
 App.RelationalConfig = Backbone.RelationalModel.extend({
     idAttribute: '_id',
