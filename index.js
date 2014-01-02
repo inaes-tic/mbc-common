@@ -3,4 +3,5 @@ exports = module.exports = {
     pubsub: require('./pubsub'),
     config: require('config'),
     logger: require('./logger'),
+    iobackends: require('./models/iobackends'),
 }
