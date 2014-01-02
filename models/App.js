@@ -140,6 +140,34 @@ App.TranscodeStatus = Backbone.Model.extend({
     }
 });
 
+if(!server){
+App.RelationalConfig = Backbone.RelationalModel.extend({
+    idAttribute: '_id',
+    relations: [{
+        type: Backbone.HasMany,
+        key: 'properties',
+        relatedModel: 'App.RelationalConfig',
+        collectionType: 'Backbone.Collection',
+        includeInJSON: true,
+    }],
+    initialize: function () {
+        var self = this;
+        console.log ('creating new RelationalConfig');
+        Backbone.RelationalModel.prototype.initialize.call (this);
+    },
+
+    defaults: {
+        type:           null,
+        widget:         'input',
+        title:          '',
+        description:    '',
+        name:           '',
+        value:          null,
+        default:        null,
+        properties:     [],
+    },
+});
+}
 
 if(server) module.exports = App;
 else root.App = App;
