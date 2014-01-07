@@ -4,13 +4,13 @@ var    _ = require('underscore'),
     search_options = mbc.config.Search,
     collections = mbc.config.Common.Collections,
     uuid = require('node-uuid'),
-    logger = mbc.logger().addLogger('caspa_backends'),
+    logger = mbc.logger().addLogger('iobindings'),
     backboneio = require('backbone.io');
 
 // Override mongoStore read method with custom
 var searchWrapper = require('./searchWrapper.js');
 
-var iobackends = module.exports = exports = function (db, publisher) {
+var iobindings = module.exports = exports = function (db, publisher) {
     var self = this;
     this.middleware = {
         debug: function (req, res, next) {
@@ -131,7 +131,7 @@ var iobackends = module.exports = exports = function (db, publisher) {
     logger.info ('binding to mongo collections:', binded.join(', ') + '.');
 };
 
-iobackends.prototype.register_sync = function (collection, name) {
+iobindings.prototype.register_sync = function (collection, name) {
     logger.info ('binding sync on', name);
     var backend = this.get(name).io;
 
@@ -165,11 +165,11 @@ iobackends.prototype.register_sync = function (collection, name) {
         }
 };
 
-iobackends.prototype.emit = function (name, args) {
+iobindings.prototype.emit = function (name, args) {
     _.apply(this.backends[name].emit, args);
 };
 
-iobackends.prototype.get_ios = function () {
+iobindings.prototype.get_ios = function () {
     var ret = {};
     var self = this;
     _(_.keys(this.backends)).each (function (backend) {
@@ -178,7 +178,7 @@ iobackends.prototype.get_ios = function () {
     return ret;
 };
 
-iobackends.prototype.get = function (name) {
+iobindings.prototype.get = function (name) {
     return this.backends[name];
 };
 
