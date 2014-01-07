@@ -10,7 +10,7 @@ var _              = require('underscore'),
 // Override mongoStore read method with custom
 var searchWrapper = require('./searchWrapper.js');
 
-var iobindings = module.exports = exports = function (db, publisher) {
+var iobindings = module.exports = exports = function (db, backends, publisher) {
     var self = this;
     this.middleware = {
         debug: function (req, res, next) {
@@ -35,74 +35,7 @@ var iobindings = module.exports = exports = function (db, publisher) {
         }
     };
 
-    this.backends = {
-        app: {
-            use: [backboneio.middleware.configStore()]
-        },
-        transform: {
-            use: [this.middleware.uuid],
-            mongo: {
-                db: db,
-                collection: collections.Transforms,
-                opts: { search: search_options.Transforms },
-            }},
-        media: {
-            mongo: {
-                db: db,
-                collection: collections.Medias,
-                opts: { search: search_options.Medias },
-            }},
-        piece: {
-            use: [this.middleware.uuid],
-            mongo: {
-                db: db,
-                collection: collections.Pieces,
-                opts: { search: search_options.Pieces },
-            }},
-        list: {
-            use: [this.middleware.uuid],
-            mongo: {
-                db: db,
-                collection: collections.Lists,
-                opts: { search: search_options.Lists },
-            }},
-        sched: {
-            use: [this.middleware.uuid, this.middleware.publishJSON],
-            mongo: {
-                db: db,
-                collection: collections.Scheds,
-                opts: { search: search_options.Scheds },
-            }},
-        status: {
-            use: [this.middleware.uuid],
-            mongo: {
-                db: db,
-                collection: collections.Status,
-                opts: { search: search_options.Status },
-            }},
-        frame: {
-            use: [backboneio.middleware.memoryStore(db, 'progress', {})],
-        },
-        mostomessages: {
-            mongo: {
-                db: db,
-                collection: collections.Mostomessages,
-                opts: { search: search_options.Mostomessages },
-            }},
-        sketch: {
-            use: [this.middleware.uuid],
-            mongo: {
-                db: db,
-                collection: collections.Sketchs,
-                opts: { search: search_options.Sketchs },
-            }},
-        user: {
-            use: [this.middleware.uuid],
-            mongo: {
-                db: db,
-                collection: collections.Auth,
-            }},
-    };
+    this.backends = backends || [];
 
     /* process the backends object to streamline code */
     var binded = [];
