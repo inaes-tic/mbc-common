@@ -1,10 +1,11 @@
-var    _ = require('underscore'),
-    config = require('config'),
+var _              = require('underscore'),
+    uuid           = require('node-uuid'),
+    backboneio     = require('backbone.io'),
+    config         = require('config'),
     search_options = config.Search,
-    collections = config.Common.Collections,
-    uuid = require('node-uuid'),
-    logger = require("../logger")().addLogger('iobackends'),
-    backboneio = require('backbone.io');
+    collections    = config.Common.Collections,
+    logger         = require("../logger")().addLogger('iobackends')
+;
 
 // Override mongoStore read method with custom
 var searchWrapper = require('./searchWrapper.js');
