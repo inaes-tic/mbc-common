@@ -84,6 +84,7 @@
                     "properties" : {
                         "horizontal" : {
                             "type" : "string",
+                            "widget": "switch",
                             "title": "Horizontal Playout View",
                             "description" : "Should the Playout View use the horizontal Layout"
                         }
@@ -147,6 +148,7 @@
                         },
                         "min_scheduled_hours" : {
                             "type": "string",
+                            "widget": "spinner",
                             "title": "Mininum Hours Scheduled",
                             "description" : "Minimum amount of hours to be scheduled"
                         },
