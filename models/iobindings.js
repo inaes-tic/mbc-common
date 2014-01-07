@@ -1,8 +1,7 @@
 var    _ = require('underscore'),
-     mbc = require('mbc-common'),
-    conf = mbc.config.Caspa,
-    search_options = mbc.config.Search,
-    collections = mbc.config.Common.Collections,
+    config = require('config'),
+    search_options = config.Search,
+    collections = config.Common.Collections,
     uuid = require('node-uuid'),
     logger = mbc.logger().addLogger('iobindings'),
     backboneio = require('backbone.io');
