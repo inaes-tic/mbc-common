@@ -43,6 +43,9 @@ var iobindings = module.exports = exports = function (db, backends, publisher) {
         backend.io = backboneio.createBackend();
         if (backend.use) {
             _(backend.use).each (function (usefn) {
+                if (!_.isFunction(usefn)) {
+                    usefn = (self.middleware[usefn]) ? self.middleware[usefn] : backboneio.middleware[usefn]();
+                }
                 backend.io.use(usefn);
             });
         }
