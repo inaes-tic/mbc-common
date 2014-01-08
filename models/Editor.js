@@ -119,6 +119,34 @@ window.WebvfxBase = Backbone.Model.extend({
         }
     },
 
+    isImage: function() {
+        return this.getType() == 'image';
+    },
+
+    isBox: function() {
+        return this.getType() == 'box';
+    },
+
+    isText: function() {
+        return this.getType() == 'text';
+    },
+
+    isTime: function() {
+        return this.getType() == 'time';
+    },
+
+    isWeather: function() {
+        return this.getType() == 'weather';
+    },
+
+    isWidget: function() {
+        return (this.isBox() || this.isText() || this.isTime() || this.isWeather());
+    },
+
+    isAnimation: function() {
+        return this.getType() == 'animation';
+    },
+
     getWidth: function() {
         return this.get('width');
     },
@@ -269,8 +297,7 @@ window.WebvfxBase = Backbone.Model.extend({
         anchor.on('dragend', function() {
             group.setDraggable(true);
             self.locked = false;
-            var type = self.getType();
-            if (type == 'text' || type == 'box' || type == 'time' || type == 'weather') {
+            if (self.isWidget()) {
                 var fontSize = Math.ceil(self.get('height') * self.getFontSize() / self._startHeight);
                 self.reload({
                     style: { 'font-size': fontSize + 'px', }
@@ -362,7 +389,7 @@ window.WebvfxBase = Backbone.Model.extend({
         group.setSize(width, height);
         image.setSize(width, height);
 
-        if (this.getType() == 'animation') {
+        if (this.isAnimation()) {
             var scale = webvfxEditor.get('scale');
             var img = image.getImage();
             var x = width / (img.width / this.get('frames'));
@@ -984,8 +1011,7 @@ window.WebvfxCollection = Backbone.Collection.extend({
     },
 
     onModelAdded: function(model) {
-        var type = model.getType();
-        if ((type == 'image' || type == 'animation') && webvfxEditor.get('realTimeEdition')) {
+        if ((model.isImage() || model.isAnimation()) && webvfxEditor.get('realTimeEdition')) {
             model.send();
         }
     },

@@ -1,4 +1,3 @@
-- var type = model.getType()
 - var colors = [
 -   'aqua',
 -   'black',
@@ -79,9 +78,9 @@ mixin positions
             | px
 
 
-h3(id="title-#{id}")= type + '  ' + id
+h3(id="title-#{id}")= model.getType() + '  ' + id
 div(id="webvfx-obj-properties-#{id}", class="webvfx-obj-properties", style="display:none")
-    if type == "image" || type == "animation"
+    if model.isImage() || model.isAnimation()
         fieldset
             table
                 tr
@@ -89,10 +88,10 @@ div(id="webvfx-obj-properties-#{id}", class="webvfx-obj-properties", style="disp
                         - var size = model.getThumbSize()
                         div(id="image-#{id}", style="margin: 0 auto;background-position:top left;background-repeat:no-repeat;background-image:url(#{model.getImageSrc()});background-size:#{size.width}px #{size.height}px;width:#{size.thumbWidth}px;height:#{size.thumbHeight}px")
                 mixin positions
-    else
+    if model.isWidget()
         fieldset
             table
-                if type != "box"
+                if ! model.isBox()
                     tr
                         th
                             label(for="text-#{id}")= i18n.gettext("text")
@@ -116,7 +115,7 @@ div(id="webvfx-obj-properties-#{id}", class="webvfx-obj-properties", style="disp
                             option(value='')= i18n.gettext("[select]")
                             for color in colors
                                 option #{color}
-                if type != "box"
+                if ! model.isBox()
                     tr
                         th
                             label(for="font-size-#{id}")= i18n.gettext("font size")
