@@ -40,14 +40,14 @@ window.WebvfxBaseView = Backbone.View.extend({
         var self = this;
 
         this.$('title', id).live('click', function() {
-            var selfId = self.$('webvfx-data', id).attr('id');
-            $('.webvfx-obj div').each(function() {
-                var id = $(this).attr('id');
-                if (!id.match(/^image-/) && id != selfId) {
+            var selfId = self.$('webvfx-obj-properties', id).attr('id');
+            $('.webvfx-obj-properties').each(function() {
+                if ($(this).attr('id') == selfId) {
+                    $(this).toggle();
+                } else {
                     $(this).hide();
                 }
             });
-            self.$('webvfx-data', id).toggle();
         });
 
         this.$('title', id).live('mouseover', function() {
@@ -204,7 +204,7 @@ window.WebvfxCollectionView = Backbone.View.extend({
         if (this.collection.new) {
             this.collection.new = false;
             var lastId = this.collection.models[this.collection.length -1].id
-            $('#webvfx-data-' + lastId).show();
+            $('#webvfx-obj-properties-' + lastId).show();
         }
     }
 });

@@ -100,12 +100,8 @@ window.WebvfxBase = Backbone.Model.extend({
         });
 
         this.kObj.on('mousedown', function() {
-            $('.webvfx-obj div').each(function() {
-                if ( ! $(this).attr('id').match(/image-/) ) {
-                    $(this).hide();
-                }
-            });
-            $('#webvfx-data-' + self.id).show();
+            $('.webvfx-obj-properties').hide();
+            $('#webvfx-obj-properties-' + self.id).show();
         });
     },
 
