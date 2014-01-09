@@ -40,14 +40,14 @@ window.WebvfxBaseView = Backbone.View.extend({
         var self = this;
 
         this.$('title', id).live('click', function() {
-            var selfId = self.$('webvfx-data', id).attr('id');
-            $('.webvfx-obj div').each(function() {
-                if ($(this).attr('id') != selfId) {
-                    console.debug('hide ' + $(this).attr('id'));
+            var selfId = self.$('webvfx-obj-properties', id).attr('id');
+            $('.webvfx-obj-properties').each(function() {
+                if ($(this).attr('id') == selfId) {
+                    $(this).toggle();
+                } else {
                     $(this).hide();
                 }
             });
-            self.$('webvfx-data', id).toggle();
         });
 
         this.$('title', id).live('mouseover', function() {
@@ -157,6 +157,11 @@ window.WebvfxWidgetView = WebvfxBaseView.extend({
     },
 });
 
+window.WebvfxAnimationView = WebvfxBaseView.extend({
+    addEvents: function(model) {
+    },
+});
+
 window.WebvfxCollectionView = Backbone.View.extend({
     el: $('#webvfx-collection'),
 
@@ -174,7 +179,7 @@ window.WebvfxCollectionView = Backbone.View.extend({
     updateSort: function(event, model, index) {
         this.collection.remove(model);
         this.collection.add(model, {at: index});
-        var count = 1;
+        var count = 0;
         this.collection.each(function(model) {
             model.zindex = count++;
         });
@@ -199,7 +204,7 @@ window.WebvfxCollectionView = Backbone.View.extend({
         if (this.collection.new) {
             this.collection.new = false;
             var lastId = this.collection.models[this.collection.length -1].id
-            $('#webvfx-data-' + lastId).show();
+            $('#webvfx-obj-properties-' + lastId).show();
         }
     }
 });
@@ -339,11 +344,16 @@ window.EditorView = Backbone.View.extend({
         this.webvfxCollection.destroyAll();
 
         _.each(this.sketchs.findWhere({name: key}).get('data'), function(s) {
-            if (s.type == 'image') {
+            if (s.type == 'image' || s.type == 'animation') {
                 s.image = new Image();
+                s.image.onload = function() {
+                    if (s.type == 'image') {
+                        self.webvfxCollection.add(new WebvfxImage(s));
+                    } else {
+                        self.webvfxCollection.add(new WebvfxAnimation(s));
+                    }
+                };
                 s.image.src = self.options.server + 'uploads/' + s.name;
-                s.image.name = s.name;
-                self.webvfxCollection.add(new WebvfxImage(s));
             } else {
                 self.webvfxCollection.add(new WebvfxWidget(s));
             }
@@ -524,12 +534,41 @@ window.EditorView = Backbone.View.extend({
             }
         }
     },
+    showStartActionMessage: function(message, id) {
+        var div = $('<div />').attr('id', id);
+        $('#action-messages').append(div);
+        div.animate({height: '40px'}, 250, function() {
+            $(this).text(message);
+        });
+    },
+    showEndActionMessage: function(message, id) {
+        var div = $('#' + id);
+        var ms = 250;
+        setTimeout(function() {
+            div.fadeOut(ms, function() {
+                div.text(message).fadeIn(ms, function() {
+                    setTimeout(function() {
+                        div.fadeOut(ms, function() {
+                            div.text("").show().animate({height: '0px'}, ms, function() {
+                                div.remove();
+                            });
+                        });
+                    }, ms * 2);
+                });
+            });
+        }, ms * 2);
+    },
     readFile : function(file) {
-        if( (/image/i).test(file.type) ) {
+        if( /(image|zip|x-compressed-tar)/i.test(file.type) ) {
+            file.id = (new Date()).getTime();
+            var message = (/image/i).test(file.type)
+                        ? i18n.gettext('Uploading image')
+                        : i18n.gettext('Creating animation');
+            message += ' ' + file.name + '...';
+            this.showStartActionMessage(message, file.id)
             var self = this;
             var reader = new FileReader();
             reader.onload = function(e) {
-                console.log('loaded ' + file.name);
                 self.uploadImage(file, e);
             };
             reader.readAsDataURL(file);
@@ -543,21 +582,30 @@ window.EditorView = Backbone.View.extend({
         var formdata = new FormData();
         formdata.append('uploadedFile', file);
         $.ajax({
-            url: self.options.server + 'uploadImage',
+            url: self.options.server + 'uploadFile',
             type: 'POST',
             data: formdata,
             processData: false,
             contentType: false,
             success: function(res) {
-                console.log('uploaded ' + file.name);
                 image = new Image();
-                image.name = file.name;
-                image.type = file.type;
-                image.src = e.target.result;
-                self.webvfxCollection.new = true;
-                self.webvfxCollection.add(
-                    new WebvfxImage({image: image, name: file.name})
-                );
+                image.onload = function() {
+                    var message = ('error' in res)
+                                ? 'Error ' + res.error
+                                : 'Done ' + res.type + ' ' + file.name + ' !';
+                    self.showEndActionMessage(message, file.id);
+                    self.webvfxCollection.new = true;
+                    if (res.type == 'animation') {
+                        self.webvfxCollection.add(
+                            new WebvfxAnimation({image: this, name: res.filename, frames: res.frames})
+                        );
+                    } else {
+                        self.webvfxCollection.add(
+                            new WebvfxImage({image: this, name: res.filename})
+                        );
+                    }
+                }
+                image.src = self.options.server + 'uploads/' + res.filename;
             }
         });
     },
@@ -655,6 +703,7 @@ window.EditorView = Backbone.View.extend({
 
         switch (type) {
             case 'image':
+            case 'animation':
                 $('#files').click();
                 break;
 
@@ -713,6 +762,7 @@ window.EditorView = Backbone.View.extend({
                     }, WebvfxSimpleWidgetStyles['gray']),
                 }));
                 break;
+
         }
 
         $('#objects').val('');

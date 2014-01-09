@@ -28,7 +28,7 @@ var WebvfxSimpleWidget = function(options) {
                 self.el.html(self.getText());
             },
 
-        }, options)
+        }, options);
 
         if (this.options.type == 'time') {
             this.feed = TimeFeed;
