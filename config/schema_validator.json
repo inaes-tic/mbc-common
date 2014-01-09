@@ -98,11 +98,6 @@
                             "type": "string",
                             "title": "Timezone",
                             "description" : "The Timezone of this playout instalation"
-                        },
-                       "maxage" : {
-                            "type": "integer",
-                            "title": "Max Age",
-                            "description" : "Maximun time for caching on server"
                         }
                     }
                 }
@@ -492,6 +487,18 @@
                             "type": "array",
                             "title": "Files",
                             "description" : "Collection name for list of widgets"
+                        }
+                    }
+                },
+                "Others" : {
+                    "type" : "object",
+                    "title" : "Misc Config",
+                    "description" : "Miscellaneous Configuration for apps",
+                    "properties" : {
+                       "maxage" : {
+                            "type": "integer",
+                            "title": "Max Age",
+                            "description" : "Maximun time for caching on server"
                         }
                     }
                 }

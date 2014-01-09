@@ -23,7 +23,6 @@ module.exports = {
         },
         Others: {
             timezone: 'UTC',
-            maxage: 365 * 24 * 60 * 60 * 1000,
         },
     },
     Mosto: {
@@ -114,6 +113,9 @@ module.exports = {
                 'fonts/ShareRegular',
                 'fonts/ShareBold',
             ],
+        },
+        Others: {
+            maxage: 365 * 24 * 60 * 60 * 1000,
         },
     },
     Search: {
