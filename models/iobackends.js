@@ -5,12 +5,13 @@ var _              = require('underscore'),
     search_options = config.Search,
     collections    = config.Common.Collections,
     logger         = require("../logger")().addLogger('iobackends')
+    publisher      = require('../pubsub')();
 ;
 
 // Override mongoStore read method with custom
 var searchWrapper = require('./searchWrapper.js');
 
-var iobackends = module.exports = exports = function (db, publisher, backends) {
+var iobackends = module.exports = exports = function (db, backends) {
     var self = this;
 
     this.middleware = {
