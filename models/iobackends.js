@@ -4,7 +4,7 @@ var    _ = require('underscore'),
     search_options = mbc.config.Search,
     collections = mbc.config.Common.Collections,
     uuid = require('node-uuid'),
-    logger = mbc.logger().addLogger('caspa_backends'),
+    logger = require("../logger")().addLogger('iobackends'),
     backboneio = require('backbone.io');
 
 // Override mongoStore read method with custom
