@@ -122,3 +122,6 @@ iobackends.prototype.get = function (name) {
     return this.backends[name];
 };
 
+iobackends.prototype.get_middleware = function () {
+    return this.middleware;
+};
