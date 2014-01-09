@@ -559,7 +559,7 @@ window.EditorView = Backbone.View.extend({
         }, ms * 2);
     },
     readFile : function(file) {
-        if( (/(image|zip)/i).test(file.type) ) {
+        if( /(image|zip|x-compressed-tar)/i.test(file.type) ) {
             file.id = (new Date()).getTime();
             var message = (/image/i).test(file.type)
                         ? i18n.gettext('Uploading image')
