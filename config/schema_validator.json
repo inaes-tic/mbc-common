@@ -507,6 +507,7 @@
                     "properties" : {
                         "Files" : {
                             "type": "array",
+                            "widget" : "list",
                             "title": "Files",
                             "description" : "Collection name for list of widgets"
                         },
@@ -543,11 +544,13 @@
                     "properties" : {
                         "fulltext" : {
                             "type": "array",
+                            "widget" : "list",
                             "title": "Fulltext",
                             "description": "Fields array to make a full text search"
                         },
                         "facets" : {
                             "type": "array",
+                            "widget" : "list",
                             "title": "Facets",
                             "description": "Facets array to make faceted search"
                         },
@@ -570,11 +573,13 @@
                     "properties" : {
                         "fulltext" : {
                             "type": "array",
+                            "widget" : "list",
                             "title": "Fulltext",
                             "description": "Fields array to make a full text search"
                         },
                         "facets" : {
                             "type": "array",
+                            "widget" : "list",
                             "title": "Facets",
                             "description": "Facets array to make faceted search"
                         },
@@ -597,11 +602,13 @@
                     "properties" : {
                         "fulltext" : {
                             "type": "array",
+                            "widget" : "list",
                             "title": "Fulltext",
                             "description": "Fields array to make a full text search"
                         },
                         "facets" : {
                             "type": "array",
+                            "widget" : "list",
                             "title": "Facets",
                             "description": "Facets array to make faceted search"
                         },
@@ -624,11 +631,13 @@
                     "properties" : {
                         "fulltext" : {
                             "type": "array",
+                            "widget" : "list",
                             "title": "Fulltext",
                             "description": "Fields array to make a full text search"
                         },
                         "facets" : {
                             "type": "array",
+                            "widget" : "list",
                             "title": "Facets",
                             "description": "Facets array to make faceted search"
                         },
@@ -651,11 +660,13 @@
                     "properties" : {
                         "fulltext" : {
                             "type": "array",
+                            "widget" : "list",
                             "title": "Fulltext",
                             "description": "Fields array to make a full text search"
                         },
                         "facets" : {
                             "type": "array",
+                            "widget" : "list",
                             "title": "Facets",
                             "description": "Facets array to make faceted search"
                         },
@@ -678,11 +689,13 @@
                     "properties" : {
                         "fulltext" : {
                             "type": "array",
+                            "widget" : "list",
                             "title": "Fulltext",
                             "description": "Fields array to make a full text search"
                         },
                         "facets" : {
                             "type": "array",
+                            "widget" : "list",
                             "title": "Facets",
                             "description": "Facets array to make faceted search"
                         },
@@ -705,11 +718,13 @@
                     "properties" : {
                         "fulltext" : {
                             "type": "array",
+                            "widget" : "list",
                             "title": "Fulltext",
                             "description": "Fields array to make a full text search"
                         },
                         "facets" : {
                             "type": "array",
+                            "widget" : "list",
                             "title": "Facets",
                             "description": "Facets array to make faceted search"
                         },
@@ -732,11 +747,13 @@
                     "properties" : {
                         "fulltext" : {
                             "type": "array",
+                            "widget" : "list",
                             "title": "Fulltext",
                             "description": "Fields array to make a full text search"
                         },
                         "facets" : {
                             "type": "array",
+                            "widget" : "list",
                             "title": "Facets",
                             "description": "Facets array to make faceted search"
                         },
