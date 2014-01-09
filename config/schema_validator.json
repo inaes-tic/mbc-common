@@ -35,37 +35,37 @@
                             "title": "Pub",
                             "description" : "Public directory"
                         },
-                         "views" : {
+                        "views" : {
                             "type": "string",
                             "title": "Views",
                             "description" : ""
                         },
-                         "styles" : {
+                        "styles" : {
                             "type": "string",
                             "title": "Styles",
                             "description" : "Css - Styling Stuff"
                         },
-                         "models" : {
+                        "models" : {
                             "type": "string",
                             "title": "Models",
                             "description" : "Models "
                         },
-                         "vendor" : {
+                        "vendor" : {
                             "type": "string",
                             "title": "Vendor",
                             "description" : "Third party libraries"
                         },
-                         "uploads" : {
+                        "uploads" : {
                             "type": "string",
                             "title": "Uploads",
                             "description" : "File upload directory"
                         },
-                         "screenshots" : {
+                        "screenshots" : {
                             "type": "string",
                             "title": "Screenshots",
                             "description" : ""
                         },
-                         "scrape" : {
+                        "scrape" : {
                             "type": "string",
                             "title": "Scrape",
                             "description" : ""
@@ -289,27 +289,27 @@
                             "title": "Pub",
                             "description" : "Public directory"
                         },
-                         "views" : {
+                        "views" : {
                             "type": "string",
                             "title": "Views",
                             "description" : ""
                         },
-                         "styles" : {
+                        "styles" : {
                             "type": "string",
                             "title": "Styles",
                             "description" : "Css - Styling Stuff"
                         },
-                         "models" : {
+                        "models" : {
                             "type": "string",
                             "title": "Models",
                             "description" : "Models "
                         },
-                         "vendor" : {
+                        "vendor" : {
                             "type": "string",
                             "title": "Vendor",
                             "description" : "Third party libraries"
                         },
-                         "uploads" : {
+                        "uploads" : {
                             "type": "string",
                             "title": "Uploads",
                             "description" : "File upload directory"
@@ -365,7 +365,7 @@
                     "title" : "Branding",
                     "description" : "Application Info",
                     "properties" : {
-                         "name" : {
+                        "name" : {
                             "type": "string",
                             "title": "Name",
                             "description" : ""
@@ -542,7 +542,7 @@
                         "facets" : {
                             "type": "array",
                             "title": "Facets",
-                             "description": "Facets array to make faceted search"
+                            "description": "Facets array to make faceted search"
                         },
                         "criteria" : {
                             "type": "object",
@@ -550,7 +550,7 @@
                             "description": "Custom criteria for queries in mongo style"
                         },
                         "max_facets" : {
-                             "type": "integer",
+                            "type": "integer",
                             "title": "Max Facets",
                             "description": "Maximun limit for faceted queries"
                         }
