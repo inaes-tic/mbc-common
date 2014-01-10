@@ -96,20 +96,11 @@ block content
                         h2.colapse= i18n.gettext("Options")
                         .content
                             fieldset.well.well-small.options
-                                if realTimeEdition
-                                    input#real-time-edition(type="checkbox", checked="checked")
-                                else
-                                    input#real-time-edition(type="checkbox")
+                                input#real-time-edition(type="checkbox", checked=(realTimeEdition || undefined))
                                 label(for="real-time-edition")= i18n.gettext("real time edition")
-                                if showSafeArea
-                                    input#safe-area(type="checkbox", checked="checked")
-                                else
-                                    input#safe-area(type="checkbox")
+                                input#safe-area(type="checkbox", checked=(showSafeArea || undefined))
                                 label(for="safe-area")= i18n.gettext("show safe area")
-                                if videoPreview
-                                    input#video-preview(type="checkbox", checked="checked")
-                                else
-                                    input#video-preview(type="checkbox")
+                                input#video-preview(type="checkbox", checked=(videoPreview || undefined))
                                 label(for="video-preview")= i18n.gettext("video preview")
                     fieldset.well.well-small.resolution
                         label(for="resolution")= i18n.gettext("Resolution: ")
