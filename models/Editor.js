@@ -5,6 +5,7 @@ window.WebvfxEditor = Backbone.Model.extend({
         height: 0,
         scale: 1,
         stage: null,
+        server: '',
         actionSafe: {
             width: 0,
             height: 0
@@ -14,7 +15,8 @@ window.WebvfxEditor = Backbone.Model.extend({
             height: 0
         },
         realTimeEdition: false,
-        server: '',
+        showSafeArea: false,
+        videoPreview: false,
     },
 
     initialize: function() {
@@ -29,7 +31,9 @@ window.WebvfxEditor = Backbone.Model.extend({
             width: this.getScaledWidth(),
             height: this.getScaledHeight(),
         }));
-        this.get('stage').add(new Kinetic.Layer());
+        this.get('stage').add(
+            (('layer' in args) ? args.layer : new Kinetic.Layer())
+        );
 
         var actionPercentage = 0.9;
         this.set('actionSafe', {
@@ -44,6 +48,9 @@ window.WebvfxEditor = Backbone.Model.extend({
         });
 
         this.set('server', args.server);
+        this.set('realTimeEdition', args.realTimeEdition);
+        this.set('showSafeArea', args.showSafeArea);
+        this.set('videoPreview', args.videoPreview);
     },
 
     getScaledWidth: function() {
@@ -52,6 +59,18 @@ window.WebvfxEditor = Backbone.Model.extend({
 
     getScaledHeight: function() {
         return (this.get('height') * this.get('scale'));
+    },
+
+    getLayer: function() {
+        return this.get('stage').children[0];
+    },
+
+    add: function(obj) {
+        this.getLayer().add(obj);
+    },
+
+    draw: function() {
+        this.getLayer().draw();
     },
 
 });
@@ -70,10 +89,9 @@ window.WebvfxBase = Backbone.Model.extend({
 
     initialize: function() {
         this.id = this.cid;
-        this.zindex = (arguments[0].zindex >= 0) ? arguments[0].zindex : -1,
-        this.locked = false,
-        this.created = false,
-        this.layer = webvfxEditor.get('stage').children[0];
+        this.zindex = (arguments[0].zindex >= 0) ? arguments[0].zindex : -1;
+        this.locked = false;
+        this.created = false;
     },
 
     createEvents: function() {
@@ -106,7 +124,7 @@ window.WebvfxBase = Backbone.Model.extend({
     },
 
     draw: function() {
-        this.layer.draw();
+        webvfxEditor.draw();
         if (webvfxEditor.get('realTimeEdition')) {
             webvfxEditor.objects.sendAll();
         }
@@ -198,7 +216,15 @@ window.WebvfxBase = Backbone.Model.extend({
         this.set('height', height);
         var realWidth = width * webvfxEditor.get('scale');
         var realHeight = height * webvfxEditor.get('scale');
-        this.getImage().setSize(realWidth, realHeight);
+        if (this.isAnimation()) {
+            var sprite = this.kObj.children[0];
+            var image = sprite.getImage();
+            var x = realWidth / (image.width / this.get('frames'));
+            var y = realHeight / image.height;
+            sprite.setScale(x, y);
+        } else {
+            this.getImage().setSize(realWidth, realHeight);
+        }
         this.kObj.setSize(realWidth, realHeight);
         this.setPosition(this.get('left'), this.get('top'));
     },
@@ -308,13 +334,13 @@ window.WebvfxBase = Backbone.Model.extend({
         anchor.on('mouseover', function() {
             document.body.style.cursor = 'pointer';
             this.setStrokeWidth(4);
-            self.layer.draw();
+            webvfxEditor.draw();
         });
 
         anchor.on('mouseout', function() {
             document.body.style.cursor = 'default';
             this.setStrokeWidth(2);
-            self.layer.draw();
+            webvfxEditor.draw();
         });
 
         group.add(anchor);
@@ -326,7 +352,7 @@ window.WebvfxBase = Backbone.Model.extend({
         }
 
         var group = activeAnchor.getParent();
-        var image = group.children[0];
+        var object = group.children[0];
         var topLeft = group.get('.topLeft')[0];
         var topRight = group.get('.topRight')[0];
         var bottomRight = group.get('.bottomRight')[0];
@@ -339,7 +365,7 @@ window.WebvfxBase = Backbone.Model.extend({
             case 'topLeft':
                 if (fixed) {
                     var x = bottomRight.getX() - anchorX;
-                    var y = x * image.getHeight() / image.getWidth();
+                    var y = x * object.getHeight() / object.getWidth();
                     topLeft.setY(bottomRight.getY() - y);
                     topRight.setY(bottomRight.getY() - y);
                     bottomLeft.setX(anchorX);
@@ -350,7 +376,7 @@ window.WebvfxBase = Backbone.Model.extend({
                 break;
             case 'topRight':
                 if (fixed) {
-                    var y = anchorX * image.getHeight() / image.getWidth();
+                    var y = anchorX * object.getHeight() / object.getWidth();
                     topRight.setY(bottomLeft.getY() - y);
                     topLeft.setY(bottomLeft.getY() - y);
                     bottomRight.setX(anchorX);
@@ -361,7 +387,7 @@ window.WebvfxBase = Backbone.Model.extend({
                 break;
             case 'bottomRight':
                 if (fixed) {
-                    var y = anchorX * image.getHeight() / image.getWidth();
+                    var y = anchorX * object.getHeight() / object.getWidth();
                     bottomRight.setY(y);
                     bottomLeft.setY(y);
                     topRight.setX(anchorX);
@@ -373,7 +399,7 @@ window.WebvfxBase = Backbone.Model.extend({
             case 'bottomLeft':
                 if (fixed) {
                     var x = topRight.getX() - anchorX;
-                    var y = x * image.getHeight() / image.getWidth();
+                    var y = x * object.getHeight() / object.getWidth();
                     bottomLeft.setY(topRight.getY() + y);
                     bottomRight.setY(topRight.getY() + y);
                     topLeft.setX(anchorX);
@@ -387,14 +413,14 @@ window.WebvfxBase = Backbone.Model.extend({
         var width = topRight.getAbsolutePosition().x - topLeft.getAbsolutePosition().x;
         var height = bottomLeft.getAbsolutePosition().y - topLeft.getAbsolutePosition().y;
         group.setSize(width, height);
-        image.setSize(width, height);
+        object.setSize(width, height);
 
         if (this.isAnimation()) {
             var scale = webvfxEditor.get('scale');
-            var img = image.getImage();
-            var x = width / (img.width / this.get('frames'));
-            var y = height / img.height;
-            image.setScale(x, y);
+            var image = object.getImage();
+            var x = width / (image.width / this.get('frames'));
+            var y = height / image.height;
+            object.setScale(x, y);
         }
 
         var pos = topLeft.getAbsolutePosition();
@@ -420,7 +446,7 @@ window.WebvfxBase = Backbone.Model.extend({
         }
         this.kObj.destroy();
         webvfxEditor.objects.remove(this.id);
-        this.layer.draw();
+        webvfxEditor.draw();
     },
 
 });
@@ -434,8 +460,8 @@ window.WebvfxImage = WebvfxBase.extend({
         var pos = this.getInitialPosition(args);
         this.setPosition(pos.x, pos.y);
         this.createEvents();
-        this.layer.add(this.kObj);
-        this.layer.draw();
+        webvfxEditor.add(this.kObj);
+        webvfxEditor.draw();
         this.created = true;
     },
 
@@ -460,14 +486,14 @@ window.WebvfxImage = WebvfxBase.extend({
             this.get('Circle').each(function(circle) {
                 circle.show();
             });
-            this.getLayer().draw();
+            webvfxEditor.draw();
         });
 
         group.on('mouseout', function() {
             this.get('Circle').each(function(circle) {
                 circle.hide();
             });
-            this.getLayer().draw();
+            webvfxEditor.draw();
         });
 
         group.add(kImage);
@@ -580,7 +606,7 @@ window.WebvfxWidget = WebvfxBase.extend({
         this.initialized = false;
         this.kObj = this.createWidget();
         this.createEvents();
-        this.layer.add(this.kObj);
+        webvfxEditor.add(this.kObj);
     },
 
     setOptions: function(args) {
@@ -607,14 +633,14 @@ window.WebvfxWidget = WebvfxBase.extend({
             this.get('Circle').each(function(circle) {
                 circle.show();
             });
-            this.getLayer().draw();
+            webvfxEditor.draw();
         });
 
         group.on('mouseout', function() {
             this.get('Circle').each(function(circle) {
                 circle.hide();
             });
-            this.getLayer().draw();
+            webvfxEditor.draw();
         });
 
         group.add(kImage);
@@ -689,7 +715,7 @@ window.WebvfxWidget = WebvfxBase.extend({
                     self.setPosition(self.get('left'), self.get('top'));
                     self.initialized = true;
                 }
-                self.layer.draw();
+                webvfxEditor.draw();
 
                 if (!self.created) {
                     self.showInfo();
@@ -830,8 +856,8 @@ window.WebvfxAnimation = WebvfxBase.extend({
         var pos = this.getInitialPosition(args);
         this.setPosition(pos.x, pos.y);
         this.createEvents();
-        this.layer.add(this.kObj);
-        this.layer.draw();
+        webvfxEditor.add(this.kObj);
+        webvfxEditor.draw();
         this.kObj.children[0].start();
         this.created = true;
     },
@@ -881,14 +907,14 @@ window.WebvfxAnimation = WebvfxBase.extend({
             this.get('Circle').each(function(circle) {
                 circle.show();
             });
-            this.getLayer().draw();
+            webvfxEditor.draw();
         });
 
         group.on('mouseout', function() {
             this.get('Circle').each(function(circle) {
                 circle.hide();
             });
-            this.getLayer().draw();
+            webvfxEditor.draw();
         });
 
         group.add(sprite);

@@ -75,9 +75,12 @@ module.exports = {
         Editor: {
             server: process.env.WEBVFX_SERVER,
             width:  720,
-            height: 570,
+            height: 576,
             scale:  1,
-            stream_url: process.env.WEBVFX_STREAM_URL
+            stream_url: process.env.WEBVFX_STREAM_URL,
+            realTimeEdition: false,
+            showSafeArea: false,
+            videoPreview: false,
         },
     },
     Common: {

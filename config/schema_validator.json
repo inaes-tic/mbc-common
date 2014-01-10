@@ -345,6 +345,21 @@
                             "type": "string",
                             "title": "Stream Url",
                             "description" : "Stream url for displaying in editor background"
+                        },
+                        "realTimeEdition" : {
+                            "type": "boolean",
+                            "title": "Real time edition",
+                            "description" : "Edit sketchs in real time"
+                        },
+                        "showSafeArea" : {
+                            "type": "boolean",
+                            "title": "Show safe area",
+                            "description" : "Show safe area guides"
+                        },
+                        "videoPreview" : {
+                            "type": "boolean",
+                            "title": "Video preview",
+                            "description" : "Preview video behind editor area"
                         }
                     }
                 }
