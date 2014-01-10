@@ -190,8 +190,10 @@ function flatten_conf (conf, defaults, descriptions, root) {
 
         // XXX: _.omit() returns a copy of the object.
         _.extend(root, _.omit(descriptions, ['properties', 'type']));
-        if (!descriptions.type.match(/config|defaults|descriptions|object/)) {
-            root.type = descriptions.type;
+        if (!_.has(descriptions, 'properties') || descriptions.properties.length==0) {
+            if (descriptions.type && !descriptions.type.match(/config|defaults|descriptions/)) {
+                root.type = descriptions.type;
+            }
         }
     }
 
@@ -210,13 +212,12 @@ function flatten_conf (conf, defaults, descriptions, root) {
 
         // XXX: _.omit() returns a copy of the object.
         _.extend(elm, _.omit(contents, ['properties', 'type']));
-        if (!contents.type.match(/config|defaults|descriptions|object/)) {
-            elm.type = contents.type;
-        }
-
         if (!_.has(dsc, 'properties') || dsc.properties.length==0) {
             elm.value = cnf;
             elm.default = dfl;
+            if (contents.type && !contents.type.match(/config|defaults|descriptions/)) {
+                elm.type = contents.type;
+            }
         }
 
         root.properties.push(elm);
