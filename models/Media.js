@@ -184,6 +184,7 @@ Media.Model = Backbone.RelationalModel.extend({
         template: 'mediaview',
         checksum: "",
         durationraw: "",
+        type: "none",
         notes: ""
     }
 });
