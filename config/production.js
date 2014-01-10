@@ -82,6 +82,9 @@ module.exports = {
             showSafeArea: false,
             videoPreview: false,
         },
+        Widgets: {
+            woeid: 468739, // Autonomous City of Buenos Aires
+        },
     },
     Common: {
         Branding: {

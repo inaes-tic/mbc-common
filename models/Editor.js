@@ -620,6 +620,7 @@ window.WebvfxWidget = WebvfxBase.extend({
         this.set('left', pos.x);
         this.set('top', pos.y);
         this.options = args;
+        this.options.woeid = appCollection.models[0].get('Webvfx').Widgets.woeid;
     },
 
     createWidget: function() {

@@ -35,6 +35,7 @@ var WebvfxSimpleWidget = function(options) {
         }
         if (this.options.type == 'weather') {
             this.feed = WeatherFeed;
+            this.feed.woeid = this.options.woeid;
         }
 
         if (this.feed && !this.feed.started) {
@@ -187,7 +188,7 @@ var WeatherFeed = {
 
     data: {},
     interval: 60000,
-    woeid: 468739,
+    woeid: 0,
     unit: 'c',
     started: false,
 
