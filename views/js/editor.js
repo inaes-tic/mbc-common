@@ -27,7 +27,7 @@ window.WebvfxBaseView = Backbone.View.extend({
 
     drop: function(event, index) {
         this.model.kObj.setZIndex(index);
-        this.model.layer.draw();
+        webvfxEditor.draw();
         this.$el.trigger('updateSort', [this.model, index]);
     },
 
@@ -237,7 +237,10 @@ window.EditorView = Backbone.View.extend({
             width: config.width,
             height: config.height,
             scale: config.scale,
-            server: config.server
+            server: config.server,
+            realTimeEdition: config.realTimeEdition,
+            showSafeArea: config.showSafeArea,
+            videoPreview: config.videoPreview,
         };
         var debounce_resize = _.debounce( _.bind(this.render, this), 300);
         $(window).on('resize', debounce_resize);
@@ -245,31 +248,49 @@ window.EditorView = Backbone.View.extend({
     },
     render: function() {
         var self = this;
+        if (window.webvfxEditor != undefined) {
+            this.options.realTimeEdition = webvfxEditor.get('realTimeEdition');
+            this.options.showSafeArea = webvfxEditor.get('showSafeArea');
+            this.options.videoPreview = webvfxEditor.get('videoPreview');
+        }
         $(this.el).html(template.editor(this.options));
 
-        this.webvfxCollection = new WebvfxCollection();
+        if (this.webvfxCollection == undefined) {
+            this.webvfxCollection = new WebvfxCollection();
+            this.sketchs = new Sketch.Collection();
+            this.sketchs.fetch({ success: function() {
+                    self.getSketchs();
+                }
+            });
+        }
 
-        var sketchs = new Sketch.Collection();
-        this.sketchs = sketchs;
-
-        this.sketchs.fetch({ success: function() {
-                self.getSketchs();
-            }
-        });
-
-        var webvfxCollectionView = new WebvfxCollectionView({
+        this.webvfxCollectionView = new WebvfxCollectionView({
             collection: this.webvfxCollection,
             el: $("#webvfx-collection", self.$el)
         });
 
         $(document).ready(function() {
             self.options.scale = self.autoScale();
+            if (window.webvfxEditor != undefined) {
+                self.options.layer = webvfxEditor.getLayer();
+            }
             window.webvfxEditor = new WebvfxEditor(self.options);
-            window.webvfxEditor.objects = self.webvfxCollection;
+            webvfxEditor.objects = self.webvfxCollection;
+            webvfxEditor.objects.each(function(o) {
+                o.setSize(o.get('width'), o.get('height'));
+            });
+            webvfxEditor.draw();
             self.makeSortable();
             self.updateCss();
             self.updateVideoStream();
             self.updateStatusBar();
+            if (webvfxEditor.get('showSafeArea')) {
+                self.createSafeArea();
+                self.safeArea();
+            }
+            if (webvfxEditor.get('videoPreview')) {
+                self.videoPreview();
+            }
         });
     },
     colapse:function(ev) {
@@ -414,10 +435,12 @@ window.EditorView = Backbone.View.extend({
         }
         if ($("#safe-area").is(':checked')) {
             console.log('showing safe area');
+            webvfxEditor.set('showSafeArea', true);
             this.safeAreaLayer.show();
             this.safeAreaLayer.draw();
         } else {
             console.log('hiding safe area');
+            webvfxEditor.set('showSafeArea', false);
             this.safeAreaLayer.hide();
         }
     },
@@ -495,10 +518,12 @@ window.EditorView = Backbone.View.extend({
     videoPreview: function() {
         if ($("#video-preview").is(':checked')) {
             console.log('showing video preview');
+            webvfxEditor.set('videoPreview', true);
             $('#container').removeClass('container-background');
             $(video).show();
         } else {
             console.log('hiding video preview');
+            webvfxEditor.set('videoPreview', false);
             $(video).hide();
             $('#container').addClass('container-background');
         }
@@ -655,8 +680,8 @@ window.EditorView = Backbone.View.extend({
     },
     updateVideoStream: function() {
         window.video = $('#player').get(0);
-        video.width = webvfxEditor.get('width');
-        video.height = webvfxEditor.get('height');
+        video.width = webvfxEditor.getScaledWidth();
+        video.height = webvfxEditor.getScaledHeight();
     },
     updateStatusBar: function() {
         var getStatusBarInfo = function() {

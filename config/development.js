@@ -78,7 +78,10 @@ module.exports = {
             height: 576,
             scale:  1,
             stream_url: 'http://localhost:8000/consume/mbc?password=malbec',
-        }
+            realTimeEdition: false,
+            showSafeArea: false,
+            videoPreview: false,
+        },
     },
     Common: {
         Branding: {
