@@ -110,6 +110,8 @@ iobackends.prototype.emit = function (name, args) {
     if (backend) {
         var _io = backend.io;
         _io.emit.apply(_io, args);
+    } else {
+        logger.error('iobackends.emit() no such backend:', name);
     }
 };
 
