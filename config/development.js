@@ -117,6 +117,7 @@ module.exports = {
                 'fonts/ShareRegular',
                 'fonts/ShareBold',
             ],
+            WeatherWoeid: 468739, // Autonomous City of Buenos Aires
         },
         Others: {
             maxage: 365 * 24 * 60 * 60 * 1000,

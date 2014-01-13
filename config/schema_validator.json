@@ -502,6 +502,11 @@
                             "type": "array",
                             "title": "Files",
                             "description" : "Collection name for list of widgets"
+                        },
+                        "WeatherWoeid" : {
+                            "type": "integer",
+                            "title": "Weather WOEID",
+                            "description" : "Where on Earth IDentifier for weather widget"
                         }
                     }
                 },
