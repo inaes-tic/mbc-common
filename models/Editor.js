@@ -891,7 +891,7 @@ window.WebvfxAnimation = WebvfxBase.extend({
             image: args.image,
             animation: 'animation',
             animations: animations,
-            frameRate: 30,
+            frameRate: appCollection.models[0].get('Mosto').General.fps,
         })
         sprite.setScale(
             realWidth / (sprite.getImage().width / this.get('frames')),

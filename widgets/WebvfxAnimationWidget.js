@@ -7,7 +7,7 @@ var WebvfxAnimationWidget = function(options) {
             zindex: 0,
             image: '',
             frames: 0,
-            frameRate: 30,
+            frameRate: 0,
             width: 0,
             height: 0,
             top: 0,
