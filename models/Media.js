@@ -261,7 +261,7 @@ Media.Playlist = Backbone.RelationalModel.extend({
         var self = this;
         var pieces = this.get('pieces');
 
-        pieces.bind('relational:change relational:add relational:reset relational:remove', function(){
+        pieces.bind('relational:change relational:add relational:reset relational:remove change', function(){
             self.update_duration(self);
         }, this);
 
