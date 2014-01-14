@@ -66,7 +66,7 @@ block content
                 #add.tab
                     .content
                         fieldset.well.well-small
-                            h3.editor= i18n.gettext("Add object")
+                            h3(style="width:70px").editor= i18n.gettext("Add object")
                             input(type="file", id="files", value="files", multiple=true, style="display:none")
                             select(type="text", id="objects", style="width:130px;float:left")
                                 option(value='')= i18n.gettext("[select]")
@@ -76,6 +76,9 @@ block content
                                 option(value='box')= i18n.gettext("Box")
                                 option(value='time')= i18n.gettext("Time")
                                 option(value='weather')= i18n.gettext("Weather")
+                            h3(style="width:70px").editor= i18n.gettext("Files")
+                            select(type="text", id="images", style="width:130px;float:left")
+                                option(value='')= i18n.gettext("[select]")
                             button#clear-all(style="width:100%")= i18n.gettext("clear all")
                 h2= i18n.gettext("object collection")
                 #webvfx-collection.v-container
