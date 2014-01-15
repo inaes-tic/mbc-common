@@ -4,6 +4,7 @@ var WebvfxAnimationWidget = function(options) {
 
         this.options = $.extend(true, {
             id: '',
+            el: $('body'),
             zindex: 0,
             image: '',
             frames: 0,
@@ -60,7 +61,7 @@ var WebvfxAnimationWidget = function(options) {
             '-webkit-animation': this.animationName + ' ' + animationDuration + ' steps(' + this.options.frames + ') infinite',
         });
 
-        $('body').append(this.widget);
+        this.options.el.append(this.widget);
 
     };
 
