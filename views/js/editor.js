@@ -585,7 +585,7 @@ window.EditorView = Backbone.View.extend({
     },
     readFile : function(file) {
         if( /(image|zip|x-compressed-tar)/i.test(file.type) ) {
-            file.id = (new Date()).getTime();
+            file.id = uuid.v4();
             var message = (/image/i).test(file.type)
                         ? i18n.gettext('Uploading image')
                         : i18n.gettext('Creating animation');
@@ -813,12 +813,20 @@ window.EditorView = Backbone.View.extend({
     addObjectFromImage: function() {
         var self = this;
         var filename = $('#images').val();
+        var id = uuid.v4();
+        this.showStartActionMessage('Loading ' + filename, id);
         $.ajax({
             url: this.options.server + 'images/' + filename,
             dataType: 'json',
             success: function(res) {
+                if ('error' in res) {
+                    self.showEndActionMessage('Error ' + res.error, id);
+                    return;
+                }
+
                 image = new Image();
                 image.onload = function() {
+                    self.showEndActionMessage('Done ' + filename, id);
                     self.webvfxCollection.new = true;
                     self.webvfxCollection.add(
                         self.createObjectFactory(res.type, {image: this, name: filename, frames: res.metadata.frames})
