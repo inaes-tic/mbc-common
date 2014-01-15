@@ -1,6 +1,7 @@
 var _              = require('underscore'),
     uuid           = require('node-uuid'),
     backboneio     = require('backbone.io'),
+    Backbone       = require('backbone'),
     config         = require('config'),
     search_options = config.Search,
     collections    = config.Common.Collections,
@@ -254,3 +255,173 @@ iobackends.prototype.get = function (name) {
 iobackends.prototype.get_middleware = function () {
     return this.middleware;
 };
+
+iobackends.prototype.patchBackbone = function () {
+    var _self = this;
+// Here be dragons.
+    function buildBackend(collection) {
+        var options = collection.backend;
+        var name;
+        if (typeof options === 'string') {
+            name = options;
+        } else {
+            name = options.name;
+        }
+        name = name.replace(/backend$/,'');
+        // may fail.
+        var _io = _self.get(name).io;
+        if (!_io) {
+            logger.error('patchBackbone() no io backend found for: ', name);
+        }
+        _io.name = name;
+        return _io
+    };
+
+    function buildSync(model) {
+        var backend = model.backend;
+
+        return function (method, model, options) {
+            var collection = model.collection || model;
+
+            function success (_mdl) {
+                // Oh sweet joy.
+                // For collections here we get something like
+                // [ {total_entries: N}, [array of models]]
+                // or sometimes just
+                // [array of models]
+                if (_.isArray(_mdl)
+                    && _mdl.length >=1
+                    && _mdl[0].hasOwnProperty('total_entries')
+                    && _.isArray(_mdl[1]) )
+                {
+                    _mdl = _mdl[1];
+                }
+
+                if (method != 'read') {
+                    var event = {create: 'created', read: 'updated', update: 'updated', delete: 'removed'};
+
+                    logger.info ('emmiting', method);
+                    backend.emit (event[method], _mdl);
+                }
+
+                if (options.success) {
+                    options.success(_mdl);
+                }
+            };
+
+            var error   = options.error   || function (err)  {logger.error ('error:' + err )};
+
+            var res = {end: success, error: error};
+            var req = {method: method, model: model.toJSON(), options: options};
+
+            backend.handle (req, res, function(err, result) {
+                logger.error ('while sync: ' + err);
+            });
+
+        };
+    };
+
+
+    var CollectionMixins = {
+        // Listen for backend notifications and update the
+        // collection models accordingly.
+        bindBackend: function() {
+            var self = this;
+            var idAttribute = this.model.prototype.idAttribute;
+            var _chan = '_RedisSync.' + self.backend;
+
+            function _onMessage(chan, msg) {
+                if (chan != _chan) {
+                    return;
+                }
+
+                //XXX: we are not using this but will be nice to have.
+                //var event = self.backend.options.event;
+                var event = 'backend';
+                var method = msg.method;
+                var model  = msg.model;
+
+                if (method == 'create') {
+                    self.add(model);
+                } else if (method == 'update') {
+                    var item = self.get(model[idAttribute]);
+                    if (item) {
+                        item.set(model);
+                    }
+                } else if (method == 'delete') {
+                    self.remove(model[idAttribute]);
+                }
+
+                self.trigger(event + ':' + method, model);
+                self.trigger(event, method, model);
+            };
+
+            listener.subscribe(_chan);
+            listener.on('JSONmessage', _onMessage);
+        },
+    };
+
+    var ModelMixins = {
+        bindBackend: function() {
+            var self = this;
+            var idAttribute = this.idAttribute;
+            var _chan = '_RedisSync.' + self.backend;
+
+            function _onMessage(chan, msg) {
+                if (chan != _chan) {
+                    return;
+                }
+
+                //XXX: we are not using this but will be nice to have.
+                //var event = self.backend.options.event;
+                var event = 'backend';
+                var method = msg.method;
+                var model  = msg.model;
+
+                if (method == 'create') {
+                    self.save(model);
+                } else if (method == 'update') {
+                    self.set(model);
+                } else if (method == 'delete') {
+                    self.destroy();
+                }
+
+                self.trigger(event + ':' + method, model);
+                self.trigger(event, method, model);
+            };
+
+
+            listener.subscribe(_chan);
+            listener.on('JSONmessage', _onMessage);
+        }
+    };
+
+    Backbone.Model = (function(Parent) {
+        // Override the parent constructor
+        var Child = function() {
+            if (this.backend) {
+                this.backend = buildBackend(this);
+                this.sync = buildSync(this);
+            }
+
+            Parent.apply(this, arguments);
+        };
+        // Inherit everything else from the parent
+        return inherits(Parent, Child, [ModelMixins]);
+    })(Backbone.Model);
+
+    Backbone.Collection = (function(Parent) {
+        // Override the parent constructor
+        var Child = function() {
+            if (this.backend) {
+                this.backend = buildBackend(this);
+                this.sync = buildSync(this);
+            }
+
+            Parent.apply(this, arguments);
+        };
+        // Inherit everything else from the parent
+        return inherits(Parent, Child, [CollectionMixins]);
+    })(Backbone.Collection);
+};
+
