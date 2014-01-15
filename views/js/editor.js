@@ -370,11 +370,9 @@ window.EditorView = Backbone.View.extend({
             if (s.type == 'image' || s.type == 'animation') {
                 s.image = new Image();
                 s.image.onload = function() {
-                    if (s.type == 'image') {
-                        self.webvfxCollection.add(new WebvfxImage(s));
-                    } else {
-                        self.webvfxCollection.add(new WebvfxAnimation(s));
-                    }
+                    self.webvfxCollection.add(
+                        self.createObjectFactory(s.type, s)
+                    );
                 };
                 s.image.src = self.options.server + 'uploads/' + s.name;
             } else {
@@ -604,6 +602,16 @@ window.EditorView = Backbone.View.extend({
             this.alert(description);
         }
     },
+    createObjectFactory: function(type, params) {
+        switch (type) {
+            case 'image':
+                return new WebvfxImage(params)
+                break;
+            case 'animation':
+                return new WebvfxAnimation(params)
+                break;
+        }
+    },
     uploadImage : function(file, e) {
         var self = this;
         var formdata = new FormData();
@@ -623,16 +631,9 @@ window.EditorView = Backbone.View.extend({
                     self.showEndActionMessage(message, file.id);
                     self.updateImagesList();
                     self.webvfxCollection.new = true;
-                    if (res.type == 'animation') {
-                        self.webvfxCollection.add(
-                            new WebvfxAnimation({image: this, name: res.filename, frames: res.frames})
-                        );
-                    }
-                    if (res.type == 'image') {
-                        self.webvfxCollection.add(
-                            new WebvfxImage({image: this, name: res.filename})
-                        );
-                    }
+                    self.webvfxCollection.add(
+                        self.createObjectFactory(res.type, {image: this, name: res.filename, frames: res.frames})
+                    );
                 }
                 image.src = self.options.server + 'uploads/' + res.filename;
             }
@@ -819,19 +820,9 @@ window.EditorView = Backbone.View.extend({
                 image = new Image();
                 image.onload = function() {
                     self.webvfxCollection.new = true;
-                    if (res.type == 'animation') {
-                        self.webvfxCollection.add(
-                            new WebvfxAnimation({
-                                image: this,
-                                name: filename,
-                                frames: res.metadata.frames
-                            })
-                        );
-                    } else {
-                        self.webvfxCollection.add(
-                            new WebvfxImage({image: this, name: filename})
-                        );
-                    }
+                    self.webvfxCollection.add(
+                        self.createObjectFactory(res.type, {image: this, name: filename, frames: res.metadata.frames})
+                    );
                 }
                 image.src = self.options.server + 'uploads/' + filename;
             },
