@@ -29,15 +29,24 @@ function inherits(Parent, Child, mixins) {
     return _.extend(Child, Parent);
 };
 
-// stupid way to not process our own redis messages.
+// Stupid way to not process our own redis messages.
+// When we publish something it comes back also to our
+// listener, so we add a unike token to distinguish them.
 var _client_id = uuid.v4();
 
+// This middleware broadcasts and processes changes over Redis,
+// sending them thru io to the browser and also emmiting the
+// 'redis' and 'redis:[create|update|delete]' events to update
+// our models here in the server.
 function makeRedisMiddleware(backend, name, chain) {
     // smelly code, smelly code... It's not your fault...
     var _chan = '_RedisSync.' + name;
     logger.error('_chan: ', _chan);
     var io = backend.io;
 
+    // Called when something arrives via redis.
+    // If the origin is not from us (different _client_id)
+    // we turn that into a fake request to io.
     function _onMessage(chan, msg) {
         if (chan != _chan) {
             return;
@@ -65,6 +74,19 @@ function makeRedisMiddleware(backend, name, chain) {
     listener.subscribe(_chan);
     listener.on('JSONmessage', _onMessage);
 
+    // The real middleware.
+    // For methods other than 'read' we send them to redis.
+    //
+    // If this request came from redis normally we stop processing here, as
+    // the data is already persisted (at the end of the chain we have something
+    // that writes to a permanent storage, so if we do a 'read' it will give the
+    // correct result, and we avoid saving the same multiple times and some races.
+    // Unless we have something like a different mongo instance that is not in sync
+    // with ours.)
+    //
+    // However, for storage backends like memoryStore we also need to save because
+    // if we try to read from that it will return whatever it has and not the most
+    // recent data.
     function _middleware(req, res, next) {
         if (req._redis_source) {
             if (chain) {
@@ -83,8 +105,15 @@ function makeRedisMiddleware(backend, name, chain) {
     return _middleware;
 };
 
-// this forwards events from the browser so we can
-// keep our models here in sync.
+// This middleware forwards events from the browser so we can
+// keep our models here in sync, using bindBackend() as usual.
+//
+// For requests that came over redis we do nothing as the model
+// already listens for the 'redis' events, we just pass it along
+// the chain.
+//
+// Else, if the request came from the browser we emit a new pair
+// of events and keep churning.
 function makeEventMiddleware(backend) {
     var io = backend.io;
     function _middleware(req, res, next) {
@@ -147,7 +176,8 @@ var iobackends = module.exports = exports = function (db, backends) {
         //
         // Some middlewares like memoryStore, configStore and mongo do a res.end().
         // This is not bad as normally we put them on the end of the chain (and it
-        // kind of make sense as they imply that the data is persisted somewhere).
+        // kind of make sense as they imply that the data is persisted somewhere and
+        // we are done processing it).
         //
         // However, here by default we append debug and it is not called on those
         // cases.
@@ -172,6 +202,7 @@ var iobackends = module.exports = exports = function (db, backends) {
             backend.io.use(_middleware);
         }
 
+        // We need this so bindBackend() works on the server too.
         backend.io.use( makeEventMiddleware(backend) );
 
         if (tail) {
@@ -256,9 +287,12 @@ iobackends.prototype.get_middleware = function () {
     return this.middleware;
 };
 
+// Here be dragons.
+// This patches Backbone.sync, Backbone.Collection
+// and Backbone.Model so sync() and bindBackend()
+// work on the server.
 iobackends.prototype.patchBackbone = function () {
     var _self = this;
-// Here be dragons.
     function buildBackend(collection) {
         var options = collection.backend;
         var name;
@@ -277,6 +311,7 @@ iobackends.prototype.patchBackbone = function () {
         return _io
     };
 
+    // Custom sync() implementation that proxies to the io stack.
     function _sync (method, model, options) {
         var collection = model.collection || model;
         var backend = collection.backend;
@@ -291,6 +326,11 @@ iobackends.prototype.patchBackbone = function () {
             return
         }
 
+        // The callback passed to backend.handle() is called
+        // only if we reach the end of the chain and have errors
+        // according to the code of backbone.io/lib/backend.js
+        //
+        // So we use the 'end' callback of the request.
         function success (_mdl) {
             // Oh sweet joy.
             // For collections here we get something like
@@ -324,6 +364,16 @@ iobackends.prototype.patchBackbone = function () {
 
     Backbone.sync = _sync;
 
+    // The following block is mostly the same as backbone.io but
+    // we use two different event names ('redis' and 'browser').
+    //
+    // For changes that came from redis the model/collection
+    // emits a 'backend' and 'backend:[create|update|delete' event
+    // and it behaves just like backbone.io.
+    //
+    // XXX:
+    // For changes that came from the browser we use another prefix
+    // but perhaps it would be better to not make that distinction.
     var CollectionMixins = {
         // Listen for backend notifications and update the
         // collection models accordingly.
