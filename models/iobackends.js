@@ -277,50 +277,52 @@ iobackends.prototype.patchBackbone = function () {
         return _io
     };
 
-    function buildSync(model) {
-        var backend = model.backend;
+    function _sync (method, model, options) {
+        var collection = model.collection || model;
+        var backend = collection.backend;
 
-        return function (method, model, options) {
-            var collection = model.collection || model;
+        var error   = options.error || function (err)  {logger.error ('error:' + err )};
+        var res = {end: success, error: error};
+        var req = {method: method, model: model.toJSON(), options: options};
 
-            function success (_mdl) {
-                // Oh sweet joy.
-                // For collections here we get something like
-                // [ {total_entries: N}, [array of models]]
-                // or sometimes just
-                // [array of models]
-                if (_.isArray(_mdl)
+        if (!backend) {
+            logger.error('iobackends custom sync, missing backend');
+            error(' missing backend');
+            return
+        }
+
+        function success (_mdl) {
+            // Oh sweet joy.
+            // For collections here we get something like
+            // [ {total_entries: N}, [array of models]]
+            // or sometimes just
+            // [array of models]
+            if (_.isArray(_mdl)
                     && _mdl.length >=1
                     && _mdl[0].hasOwnProperty('total_entries')
                     && _.isArray(_mdl[1]) )
-                {
-                    _mdl = _mdl[1];
-                }
+            {
+                _mdl = _mdl[1];
+            }
 
-                if (method != 'read') {
-                    var event = {create: 'created', read: 'updated', update: 'updated', delete: 'removed'};
+            if (method != 'read') {
+                var event = {create: 'created', read: 'updated', update: 'updated', delete: 'removed'};
 
-                    logger.info ('emmiting', method);
-                    backend.emit (event[method], _mdl);
-                }
+                logger.info ('emmiting', method);
+                backend.emit (event[method], _mdl);
+            }
 
-                if (options.success) {
-                    options.success(_mdl);
-                }
-            };
-
-            var error   = options.error   || function (err)  {logger.error ('error:' + err )};
-
-            var res = {end: success, error: error};
-            var req = {method: method, model: model.toJSON(), options: options};
-
-            backend.handle (req, res, function(err, result) {
-                logger.error ('while sync: ' + err);
-            });
-
+            if (options.success) {
+                options.success(_mdl);
+            }
         };
+
+        backend.handle (req, res, function(err, result) {
+            logger.error ('while sync: ' + err);
+        });
     };
 
+    Backbone.sync = _sync;
 
     var CollectionMixins = {
         // Listen for backend notifications and update the
@@ -382,7 +384,6 @@ iobackends.prototype.patchBackbone = function () {
         var Child = function() {
             if (this.backend) {
                 this.backend = buildBackend(this);
-                this.sync = buildSync(this);
             }
 
             Parent.apply(this, arguments);
@@ -396,7 +397,6 @@ iobackends.prototype.patchBackbone = function () {
         var Child = function() {
             if (this.backend) {
                 this.backend = buildBackend(this);
-                this.sync = buildSync(this);
             }
 
             Parent.apply(this, arguments);
