@@ -230,6 +230,7 @@ window.EditorView = Backbone.View.extend({
         "change #files"         : "filesChange",
         "change #resolutions"   : "changeResolution",
         "change #objects"       : "addObject",
+        "change #images"        : "addObjectFromImage",
     },
     initialize: function() {
         var config = appCollection.models[0].get('Webvfx').Editor;
@@ -284,6 +285,7 @@ window.EditorView = Backbone.View.extend({
             self.updateCss();
             self.updateVideoStream();
             self.updateStatusBar();
+            self.updateImagesList();
             if (webvfxEditor.get('showSafeArea')) {
                 self.createSafeArea();
                 self.safeArea();
@@ -368,11 +370,9 @@ window.EditorView = Backbone.View.extend({
             if (s.type == 'image' || s.type == 'animation') {
                 s.image = new Image();
                 s.image.onload = function() {
-                    if (s.type == 'image') {
-                        self.webvfxCollection.add(new WebvfxImage(s));
-                    } else {
-                        self.webvfxCollection.add(new WebvfxAnimation(s));
-                    }
+                    self.webvfxCollection.add(
+                        self.createObjectFactory(s.type, s)
+                    );
                 };
                 s.image.src = self.options.server + 'uploads/' + s.name;
             } else {
@@ -585,7 +585,7 @@ window.EditorView = Backbone.View.extend({
     },
     readFile : function(file) {
         if( /(image|zip|x-compressed-tar)/i.test(file.type) ) {
-            file.id = (new Date()).getTime();
+            file.id = uuid.v4();
             var message = (/image/i).test(file.type)
                         ? i18n.gettext('Uploading image')
                         : i18n.gettext('Creating animation');
@@ -600,6 +600,16 @@ window.EditorView = Backbone.View.extend({
         } else {
             var description = i18n.gettext('File format not supported');
             this.alert(description);
+        }
+    },
+    createObjectFactory: function(type, params) {
+        switch (type) {
+            case 'image':
+                return new WebvfxImage(params)
+                break;
+            case 'animation':
+                return new WebvfxAnimation(params)
+                break;
         }
     },
     uploadImage : function(file, e) {
@@ -619,16 +629,11 @@ window.EditorView = Backbone.View.extend({
                                 ? 'Error ' + res.error
                                 : 'Done ' + res.type + ' ' + file.name + ' !';
                     self.showEndActionMessage(message, file.id);
+                    self.updateImagesList();
                     self.webvfxCollection.new = true;
-                    if (res.type == 'animation') {
-                        self.webvfxCollection.add(
-                            new WebvfxAnimation({image: this, name: res.filename, frames: res.frames})
-                        );
-                    } else {
-                        self.webvfxCollection.add(
-                            new WebvfxImage({image: this, name: res.filename})
-                        );
-                    }
+                    self.webvfxCollection.add(
+                        self.createObjectFactory(res.type, {image: this, name: res.filename, frames: res.frames})
+                    );
                 }
                 image.src = self.options.server + 'uploads/' + res.filename;
             }
@@ -705,6 +710,19 @@ window.EditorView = Backbone.View.extend({
 
         $(webvfxEditor.get('stage').getContent()).on('mousemove', function(event) {
             $('#status-bar').html(getStatusBarInfo());
+        });
+    },
+    updateImagesList: function() {
+        $.ajax({
+            url: this.options.server + 'images',
+            dataType: 'json',
+            success: function(data) {
+                $('#images option:gt(0)').remove();
+                var el = $('#images');
+                _.each(data.images, function(image) {
+                    el.append($('<option/>').text(image));
+                });
+            },
         });
     },
     changeResolution: function () {
@@ -791,6 +809,33 @@ window.EditorView = Backbone.View.extend({
         }
 
         $('#objects').val('');
+    },
+    addObjectFromImage: function() {
+        var self = this;
+        var filename = $('#images').val();
+        var id = uuid.v4();
+        this.showStartActionMessage('Loading ' + filename, id);
+        $.ajax({
+            url: this.options.server + 'images/' + filename,
+            dataType: 'json',
+            success: function(res) {
+                if ('error' in res) {
+                    self.showEndActionMessage('Error ' + res.error, id);
+                    return;
+                }
+
+                image = new Image();
+                image.onload = function() {
+                    self.showEndActionMessage('Done ' + filename, id);
+                    self.webvfxCollection.new = true;
+                    self.webvfxCollection.add(
+                        self.createObjectFactory(res.type, {image: this, name: filename, frames: res.metadata.frames})
+                    );
+                }
+                image.src = self.options.server + 'uploads/' + filename;
+            },
+        });
+        $('#images').val('');
     },
     alert: function(description) {
         var title = i18n.gettext('Alert');
