@@ -203,7 +203,7 @@ var WeatherFeed = {
 
         var self = this;
         $.getJSON(weatherUrl, function(data) {
-            if (data !== null && data.query.results !== null && 
+            if (data !== null && data.query.results !== null &&
                 data.query.results.channel.description !== 'Yahoo! Weather Error') {
                 self.data = {
                     T: data.query.results.channel.item.condition.temp,
