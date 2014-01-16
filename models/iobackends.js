@@ -329,11 +329,9 @@ iobackends.prototype.patchBackbone = function () {
             var self = this;
             var idAttribute = this.model.prototype.idAttribute;
 
-            function _onMessage(method, model) {
-                //XXX: we are not using this but will be nice to have.
-                //var event = self.backend.options.event;
-                var event = 'backend';
-
+            //XXX: we are not using this but will be nice to have.
+            //var event = self.backend.options.event;
+            function _onMessage(event, method, model) {
                 if (method == 'create') {
                     self.add(model);
                 } else if (method == 'update') {
@@ -349,7 +347,8 @@ iobackends.prototype.patchBackbone = function () {
                 self.trigger(event, method, model);
             };
 
-            self.backend.on('redis', _onMessage);
+            self.backend.on('redis', _.partial(_onMessage, 'backend'));
+            self.backend.on('browser', _.partial(_onMessage, 'browser'));
         },
     };
 
@@ -358,11 +357,9 @@ iobackends.prototype.patchBackbone = function () {
             var self = this;
             var idAttribute = this.idAttribute;
 
-            function _onMessage(method, model) {
-                //XXX: we are not using this but will be nice to have.
-                //var event = self.backend.options.event;
-                var event = 'backend';
-
+            //XXX: we are not using this but will be nice to have.
+            //var event = self.backend.options.event;
+            function _onMessage(event, method, model) {
                 if (method == 'create') {
                     self.save(model);
                 } else if (method == 'update') {
@@ -375,7 +372,8 @@ iobackends.prototype.patchBackbone = function () {
                 self.trigger(event, method, model);
             };
 
-            self.backend.on('redis', _onMessage);
+            self.backend.on('redis', _.partial(_onMessage, 'backend'));
+            self.backend.on('browser', _.partial(_onMessage, 'browser'));
         }
     };
 
