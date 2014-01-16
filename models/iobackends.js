@@ -328,18 +328,11 @@ iobackends.prototype.patchBackbone = function () {
         bindBackend: function() {
             var self = this;
             var idAttribute = this.model.prototype.idAttribute;
-            var _chan = '_RedisSync.' + self.backend;
 
-            function _onMessage(chan, msg) {
-                if (chan != _chan) {
-                    return;
-                }
-
+            function _onMessage(method, model) {
                 //XXX: we are not using this but will be nice to have.
                 //var event = self.backend.options.event;
                 var event = 'backend';
-                var method = msg.method;
-                var model  = msg.model;
 
                 if (method == 'create') {
                     self.add(model);
@@ -356,8 +349,7 @@ iobackends.prototype.patchBackbone = function () {
                 self.trigger(event, method, model);
             };
 
-            listener.subscribe(_chan);
-            listener.on('JSONmessage', _onMessage);
+            self.backend.on('redis', _onMessage);
         },
     };
 
@@ -365,18 +357,11 @@ iobackends.prototype.patchBackbone = function () {
         bindBackend: function() {
             var self = this;
             var idAttribute = this.idAttribute;
-            var _chan = '_RedisSync.' + self.backend;
 
-            function _onMessage(chan, msg) {
-                if (chan != _chan) {
-                    return;
-                }
-
+            function _onMessage(method, model) {
                 //XXX: we are not using this but will be nice to have.
                 //var event = self.backend.options.event;
                 var event = 'backend';
-                var method = msg.method;
-                var model  = msg.model;
 
                 if (method == 'create') {
                     self.save(model);
@@ -390,9 +375,7 @@ iobackends.prototype.patchBackbone = function () {
                 self.trigger(event, method, model);
             };
 
-
-            listener.subscribe(_chan);
-            listener.on('JSONmessage', _onMessage);
+            self.backend.on('redis', _onMessage);
         }
     };
 
