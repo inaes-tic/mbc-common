@@ -82,6 +82,25 @@ function makeRedisMiddleware(backend, name, chain) {
     return _middleware;
 };
 
+// this forwards events from the browser so we can
+// keep our models here in sync.
+function makeEventMiddleware(backend) {
+    var io = backend.io;
+    function _middleware(req, res, next) {
+        if (req._redis_source) {
+            next();
+            return;
+        }
+        if (req.method.match(/create|update|delete/)) {
+            io.emit('browser', req.method, req.model);
+            io.emit('browser:'+req.method, req.model);
+        }
+        next();
+    };
+
+    return _middleware;
+};
+
 var iobackends = module.exports = exports = function (db, backends) {
     var self = this;
 
@@ -151,6 +170,8 @@ var iobackends = module.exports = exports = function (db, backends) {
             var _middleware = makeRedisMiddleware(backend, name, backend.redisChain);
             backend.io.use(_middleware);
         }
+
+        backend.io.use( makeEventMiddleware(backend) );
 
         if (tail) {
             backend.io.use(tail);
