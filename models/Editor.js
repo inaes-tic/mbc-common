@@ -611,7 +611,7 @@ window.WebvfxWidget = WebvfxBase.extend({
 
     setOptions: function(args) {
         var self = this;
-        var values = Tools.getIntValues(args.style, ['width', 'height', 'top', 'left']); 
+        var values = Tools.getIntValues(args.style, ['width', 'height', 'top', 'left']);
         for (key in values) {
             self.set(key, values[key]);
             delete args.style[key];
@@ -681,7 +681,7 @@ window.WebvfxWidget = WebvfxBase.extend({
 
             var text = widget.getText();
             if (widget.options.animation == 'marquee') {
-                text = 
+                text =
                    "<div xmlns='http://www.w3.org/1999/xhtml' " +
                      "style='position:absolute;white-space:nowrap;left:" +
                      widget.count + "px'>" + text  +
@@ -694,7 +694,7 @@ window.WebvfxWidget = WebvfxBase.extend({
                      ? WebvfxSimpleWidgetFonts.getFont(widget.options.style['font-family'])
                      : "";
 
-            var svg = 
+            var svg =
                 "<svg xmlns='http://www.w3.org/2000/svg' " +
                 "width='" + widget.options.style.width + "' height='" + widget.options.style.height + "'>" +
                  "<foreignObject width='100%' height='100%'>" +
