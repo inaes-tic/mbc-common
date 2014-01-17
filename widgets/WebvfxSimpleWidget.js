@@ -109,9 +109,10 @@ var WebvfxSimpleWidget = function(options) {
     };
 
     this.remove = function() {
-
-        this.widget.remove();
-        console.debug('remove', this.options.id);
+        if(this.widget) {
+            this.widget.remove();
+            console.debug('remove', this.options.id);
+        }
 
     };
 
