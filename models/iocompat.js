@@ -10,6 +10,7 @@ var iocompat = module.exports = exports = {};
 
 var _              = require('underscore'),
     uuid           = require('node-uuid'),
+    Backbone       = require('backbone'),
     logger         = require("../logger")().addLogger('io.compat')
     publisher      = require('../pubsub')(),
     listener       = require('../pubsub')();
@@ -140,4 +141,192 @@ iocompat.eventMiddleware = function (backend) {
     };
 
     return _middleware;
+};
+
+
+
+/*
+ * Here be dragons.
+ * This patches Backbone.sync, Backbone.Collection and Backbone.Model
+ * so sync() and bindBackend() work on the server.
+ */
+iocompat.patchBackbone = function (iobackend) {
+
+   /*
+    * In the models we have backend: blahbackend
+    * but here (iobackends) we strip the trailing 'backend' from
+    * the name.
+    */
+    function buildBackend(collection) {
+        var options = collection.backend;
+        var name;
+        var channel = '';
+        if (typeof options === 'string') {
+            name = options;
+            name = name.replace(/backend$/,'');
+        } else {
+            name = options.name;
+            name = name.replace(/backend$/,'');
+            channel = options.channel || '';
+        }
+        // may fail.
+        var _io = iobackend.get(name).io;
+        if (!_io) {
+            logger.error('patchBackbone() no io backend found for: ', name);
+        }
+        _io.name = name;
+        _io.channel = channel;
+        return _io
+    };
+
+    // Custom sync() implementation that proxies to the io stack.
+    function _sync (method, model, options) {
+        var collection = model.collection || model;
+        var backend = collection.backend;
+
+        var error   = options.error || function (err)  {logger.error ('error:' + err )};
+        var res = {end: success, error: error};
+        var req = {method: method, model: model.toJSON(), options: options};
+
+        if (!backend) {
+            logger.error('iobackends custom sync, missing backend');
+            error(' missing backend');
+            return
+        }
+
+       /*
+        * The callback passed to backend.handle() is called
+        * only if we reach the end of the chain and have errors
+        * according to the code of backbone.io/lib/backend.js
+        *
+        * So we use the 'end' callback of the request.
+        */
+        function success (_mdl) {
+           /*
+            * Oh sweet joy.
+            * For collections here we get something like
+            * [ {total_entries: N}, [array of models]]
+            * or sometimes just
+            * [array of models]
+            */
+            if (_.isArray(_mdl)
+                    && _mdl.length >= 1
+                    && _.has(_mdl[0], 'total_entries')
+                    && _.isArray(_mdl[1]) )
+            {
+                _mdl = _mdl[1];
+            }
+
+            if (method != 'read') {
+                var event = {create: 'created', read: 'updated', update: 'updated', delete: 'deleted'};
+
+                backend.emit (event[method], _mdl);
+            }
+
+            if (options.success) {
+                options.success(_mdl);
+            }
+        };
+
+        backend.handle (req, res, function(err, result) {
+            logger.error ('while sync: ' + err);
+        });
+    };
+
+    Backbone.sync = _sync;
+
+   /*
+    * The following block is mostly the same as backbone.io.
+    *
+    * For changes that came from redis or the browser the model/collection
+    * emits a 'backend' and 'backend:[create|update|delete]' event
+    * and it behaves just like backbone.io.
+    *
+    */
+    var CollectionMixins = {
+        // Listen for backend notifications and update the
+        // collection models accordingly.
+        bindBackend: function() {
+            var self = this;
+            var idAttribute = this.model.prototype.idAttribute;
+
+           /*
+            * XXX: we are not using this but will be nice to have
+            * to be fully compatible with io.
+            * var event = self.backend.options.event;
+            */
+            function _onMessage(event, method, model) {
+                if (method == 'create') {
+                    self.add(model);
+                } else if (method == 'update') {
+                    var item = self.get(model[idAttribute]);
+                    if (item) {
+                        item.set(model);
+                    }
+                } else if (method == 'delete') {
+                    self.remove(model[idAttribute]);
+                }
+
+                self.trigger(event + ':' + method, model);
+                self.trigger(event, method, model);
+            };
+
+            self.backend.on('redis', _.partial(_onMessage, 'backend'));
+            self.backend.on('browser', _.partial(_onMessage, 'backend'));
+        },
+    };
+
+    var ModelMixins = {
+        bindBackend: function() {
+            var self = this;
+            var idAttribute = this.idAttribute;
+
+           /*
+            * XXX: we are not using this but will be nice to have
+            * to be fully compatible with io.
+            * var event = self.backend.options.event;
+            */
+            function _onMessage(event, method, model) {
+                if (method == 'create') {
+                    self.save(model);
+                } else if (method == 'update') {
+                    self.set(model);
+                } else if (method == 'delete') {
+                    self.destroy();
+                }
+
+                self.trigger(event + ':' + method, model);
+                self.trigger(event, method, model);
+            };
+
+            self.backend.on('redis', _.partial(_onMessage, 'backend'));
+            self.backend.on('browser', _.partial(_onMessage, 'backend'));
+        }
+    };
+
+    Backbone.Model = (function(Parent) {
+        // Override the parent constructor
+        var Child = function() {
+            if (this.backend) {
+                this.backend = buildBackend(this);
+            }
+
+            Parent.apply(this, arguments);
+        };
+        // Inherit everything else from the parent
+        return inherits(Parent, Child, [ModelMixins]);
+    })(Backbone.Model);
+
+    Backbone.Collection = (function(Parent) {
+        // Override the parent constructor
+        var Child = function() {
+            if (this.backend) {
+                this.backend = buildBackend(this);
+            }
+
+            Parent.apply(this, arguments);
+        };
+        // Inherit everything else from the parent
+        return inherits(Parent, Child, [CollectionMixins]);
+    })(Backbone.Collection);
 };
