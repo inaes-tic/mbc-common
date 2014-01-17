@@ -15,6 +15,21 @@ var _              = require('underscore'),
     listener       = require('../pubsub')();
 ;
 
+// copypasta from backbone.io/lib/browser.js
+function inherits(Parent, Child, mixins) {
+    var Func = function() {};
+    Func.prototype = Parent.prototype;
+
+    mixins || (mixins = [])
+    _.each(mixins, function(mixin) {
+        _.extend(Func.prototype, mixin);
+    });
+
+    Child.prototype = new Func();
+    Child.prototype.constructor = Child;
+
+    return _.extend(Child, Parent);
+};
 
 // When we publish something it comes back also to our
 // listener, so we add a unike token to distinguish them.
