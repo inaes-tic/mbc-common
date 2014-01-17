@@ -55,6 +55,9 @@ var iobackends = module.exports = exports = function (db, backends) {
         }
 
 
+        /* adds a debugging middleware before the storage (see below) */
+        backend.io.use (self.middleware.debug);
+
         /*
          * On the backend definition we either pass a 'mongo' hash with the
          * connection details or a middleware that stores data.
@@ -79,7 +82,6 @@ var iobackends = module.exports = exports = function (db, backends) {
                                                     mongo.collection,
                                                     mongo.opts)));
         }
-        backend.io.use (self.middleware.debug);
     });
 
     logger.info ('binding to mongo collections:', binded.join(', ') + '.');
