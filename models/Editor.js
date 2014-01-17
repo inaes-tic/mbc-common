@@ -17,6 +17,7 @@ window.WebvfxEditor = Backbone.Model.extend({
         realTimeEdition: false,
         showSafeArea: false,
         videoPreview: false,
+        liveCollection: null,
     },
 
     initialize: function() {
@@ -51,6 +52,7 @@ window.WebvfxEditor = Backbone.Model.extend({
         this.set('realTimeEdition', args.realTimeEdition);
         this.set('showSafeArea', args.showSafeArea);
         this.set('videoPreview', args.videoPreview);
+        this.set('liveCollection', new Sketch.LiveCollection());
     },
 
     getScaledWidth: function() {
@@ -432,7 +434,10 @@ window.WebvfxBase = Backbone.Model.extend({
     },
 
     remove: function() {
-        webvfxClient.remove({elements: this.id});
+        var model = webvfxEditor.get('liveCollection').findWhere({element_id: this.id});
+        if(model) {
+            model.destroy();
+        }
     },
 
     destroy: function() {
@@ -448,6 +453,18 @@ window.WebvfxBase = Backbone.Model.extend({
         webvfxEditor.objects.remove(this.id);
         webvfxEditor.draw();
     },
+
+    sendLive: function(item) {
+        var model = webvfxEditor.get('liveCollection').findWhere({element_id: this.id});
+        if(model) {
+            model.set(item);
+            model.save();
+        } else {
+            var new_model = new Sketch.Live(item);
+            webvfxEditor.get('liveCollection').add(new_model);
+            new_model.save();
+        }
+    }
 
 });
 
@@ -581,9 +598,12 @@ window.WebvfxImage = WebvfxBase.extend({
     },
 
     send: function() {
-        webvfxClient.addImage({
-            id: this.id,
+        var full_url = webvfxEditor.get('server') + 'uploads/' + this.getName();
+        var image = {
+            element_id: this.id,
+            type: 'image',
             name: this.getName(),
+            src: full_url,
             images: this.getName(),
             zindex: this.zindex,
             width: this.getWidth() + 'px',
@@ -592,7 +612,8 @@ window.WebvfxImage = WebvfxBase.extend({
             left: this.getLeft() + 'px',
             right: this.getRight() + 'px',
             bottom: this.getBottom() + 'px',
-        });
+        };
+        this.sendLive(image);
     },
 
 });
@@ -827,15 +848,17 @@ window.WebvfxWidget = WebvfxBase.extend({
 
     send: function() {
         var self = this;
-        webvfxClient.addWidget({
-            id: this.id,
+        var widget = {
+            element_id: this.id,
             zindex: this.zindex,
+            type: 'widget',
             options: {
                 id: this.id,
                 type: this.options.type,
                 text: this.options.text,
                 interval: this.options.interval,
                 animation: this.options.animation,
+                woeid: appCollection.models[0].get('Common').Widgets.WeatherWoeid,
                 style: $.extend({}, this.options.style, {
                     width: self.getWidth() + 'px',
                     height: self.getHeight() + 'px',
@@ -843,9 +866,9 @@ window.WebvfxWidget = WebvfxBase.extend({
                     left: self.getLeft() + 'px',
                 }),
             },
-        });
-    },
-
+        };
+        this.sendLive(widget);
+    }
 });
 
 window.WebvfxAnimation = WebvfxBase.extend({
@@ -1009,16 +1032,24 @@ window.WebvfxAnimation = WebvfxBase.extend({
     },
 
     send: function() {
-        webvfxClient.addAnimation({
-            id: this.id,
-            zindex: this.zindex,
-            name: this.getName(),
-            frames: this.get('frames'),
-            width: this.getWidth(),
-            height: this.getHeight(),
-            top: this.getTop(),
-            left: this.getLeft(),
-        });
+        var full_url = webvfxEditor.get('server') + 'uploads/' + this.getName();
+        var animation = {
+            element_id: this.id,
+            type: 'animation',
+            options: {
+                id: this.id,
+                zindex: this.zindex,
+                name: this.getName(),
+                image: full_url,
+                frames: this.get('frames'),
+                frameRate: appCollection.models[0].get('Mosto').General.fps,
+                width: this.getWidth(),
+                height: this.getHeight(),
+                top: this.getTop(),
+                left: this.getLeft(),
+            }
+        };
+        this.sendLive(animation);
     },
 
 });
@@ -1060,56 +1091,3 @@ window.WebvfxCollection = Backbone.Collection.extend({
     },
 
 });
-
-window.webvfxClient = {
-
-    remove: function(data) {
-        this.send('remove', data, function(res) {
-            console.log('remove object ' + data.elements);
-        });
-    },
-
-    removeAll: function() {
-        this.send('removeAll', {all: true}, function(res) {
-            console.log('remove all objects');
-        });
-    },
-
-    addImage: function(data) {
-        this.send('addImage', data, function(res) {
-            console.log('image', data.name, 'added');
-        });
-    },
-
-    addWidget: function(data) {
-        this.send('addWidget', data, function(res) {
-            console.log('widget', data.options.type, 'added');
-        });
-    },
-
-    addAnimation: function(data) {
-        this.send('addAnimation', data, function(res) {
-            console.log('animation', data.name, 'added');
-        });
-    },
-
-    send: function(url, data, callback) {
-        var formdata = new FormData();
-        for (var key in data) {
-            if (typeof data[key] == 'object') {
-                formdata.append(key, JSON.stringify(data[key]));
-            } else {
-                formdata.append(key, data[key]);
-            }
-        }
-        $.ajax({
-            url: webvfxEditor.get('server') + url,
-            type: 'POST',
-            data: formdata,
-            processData: false,
-            contentType: false,
-            success: callback
-        });
-    }
-
-};
