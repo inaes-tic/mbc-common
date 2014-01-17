@@ -97,3 +97,32 @@ iocompat.redisMiddleware = function (backend, name, chain) {
 
     return _middleware;
 };
+
+/*
+ * eventMiddleware
+ * This middleware forwards events from the browser so we can
+ * keep our models here in sync, using bindBackend() as usual.
+ *
+ * For requests that came over redis we do nothing as the model
+ * already listens for the 'redis' events, we just pass it along
+ * the chain.
+ *
+ * Else, if the request came from the browser we emit a new pair
+ * of events and keep churning.
+ */
+iocompat.eventMiddleware = function (backend) {
+    var io = backend.io;
+    function _middleware(req, res, next) {
+        if (req._redis_source) {
+            next();
+            return;
+        }
+        if (req.method.match(/create|update|delete/)) {
+            io.emit('browser', req.method, req.model);
+            io.emit('browser:'+req.method, req.model);
+        }
+        next();
+    };
+
+    return _middleware;
+};
