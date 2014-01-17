@@ -53,7 +53,21 @@ var iobackends = module.exports = exports = function (db, backends) {
                 backend.io.use(usefn);
             });
         }
-        if (backend.mongo) {
+
+
+        /*
+         * On the backend definition we either pass a 'mongo' hash with the
+         * connection details or a middleware that stores data.
+         *
+         * This is so because most of the storage middlewares end up doing
+         * a res.end() stopping the processing there and sometimes we want
+         * things like the debugbackend to work.
+         */
+
+        if (backend.store) {
+            backend.io.use(backend.store);
+
+        } else if (backend.mongo) {
             var mongo = _.extend ({db: db, opts: {}}, backend.mongo);
             var fn = _.identity;
             binded.push (backend.mongo.collection);
