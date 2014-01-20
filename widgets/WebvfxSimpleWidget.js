@@ -11,7 +11,7 @@ var WebvfxSimpleWidget = function(options) {
 
             id: '',
             type: 'text',
-            el: 'div',
+            el: $('body'),
             text: '',
             interval: 500,
             increment: 2,
@@ -83,10 +83,10 @@ var WebvfxSimpleWidget = function(options) {
 
         var text = this.getText();
 
-        this.widget = $('<' + this.options.el + ' />')
+        this.widget = $('<div/>')
                       .attr({id: this.options.id})
                       .css(this.options.style);
-        $('body').append(this.widget);
+        this.options.el.append(this.widget);
 
         if (this.options.animation == 'marquee') {
             this.count = this.widget.width();
@@ -109,9 +109,10 @@ var WebvfxSimpleWidget = function(options) {
     };
 
     this.remove = function() {
-
-        this.widget.remove();
-        console.debug('remove', this.options.id);
+        if(this.widget) {
+            this.widget.remove();
+            console.debug('remove', this.options.id);
+        }
 
     };
 

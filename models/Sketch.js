@@ -46,6 +46,28 @@ Sketch.Collection = Backbone.Collection.extend({
     },
 });
 
+
+Sketch.Live = Backbone.Model.extend({
+    urlRoot: 'live',
+    backend: 'livebackend',
+    defaults: {
+    }
+});
+
+Sketch.LiveCollection = Backbone.Collection.extend({
+    model: Sketch.Live,
+    url: 'live',
+    backend: 'livebackend',
+    initialize: function() {
+        this.bindBackend();
+        this.bind('backend', function(method, model) {
+            console.log ('got from backend:', method, model);
+        });
+        console.log ('creating new Sketch Live Collection');
+        Backbone.Collection.prototype.initialize.call (this);
+    }
+});
+
 if(server) {
     module.exports = Sketch;
 } else {
