@@ -6,6 +6,7 @@ var _              = require('underscore'),
     collections    = config.Common.Collections,
     logger         = require("../logger")().addLogger('iobackends')
     publisher      = require('../pubsub')();
+    iocompat       = require('./iocompat');
 ;
 
 // Override mongoStore read method with custom
@@ -57,6 +58,12 @@ var iobackends = module.exports = exports = function (db, backends) {
 
         /* adds a debugging middleware before the storage (see below) */
         backend.io.use (self.middleware.debug);
+
+        /*
+         * adds the io compatibility layer middleware that forwards changes
+         * from the browser as events so we can react and update our models.
+         */
+        backend.io.use (iocompat.eventMiddleware(backend));
 
         /*
          * On the backend definition we either pass a 'mongo' hash with the
