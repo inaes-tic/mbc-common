@@ -162,3 +162,7 @@ iobackends.prototype.get = function (name) {
 iobackends.prototype.get_middleware = function () {
     return this.middleware;
 };
+
+iobackends.prototype.patchBackbone = function () {
+    return iocompat.patchBackbone(this);
+};
