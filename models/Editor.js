@@ -563,14 +563,17 @@ window.WebvfxImage = WebvfxBase.extend({
 
     getDataToStore: function() {
         return {
-            zindex: this.zindex,
+            element_id: this.id,
             type: this.getType(),
             name: this.getName(),
-            left: this.getLeft(),
-            top: this.getTop(),
+            zindex: this.zindex,
             width: this.getWidth(),
             height: this.getHeight(),
-        }
+            top: this.getTop(),
+            left: this.getLeft(),
+            right: this.getRight(),
+            bottom: this.getBottom(),
+        };
     },
 
     setWidth: function(width) {
@@ -598,21 +601,7 @@ window.WebvfxImage = WebvfxBase.extend({
     },
 
     send: function() {
-        var full_url = webvfxEditor.get('server') + 'uploads/' + this.getName();
-        var image = {
-            element_id: this.id,
-            type: 'image',
-            name: this.getName(),
-            src: full_url,
-            images: this.getName(),
-            zindex: this.zindex,
-            width: this.getWidth() + 'px',
-            height: this.getHeight() + 'px',
-            top: this.getTop() + 'px',
-            left: this.getLeft() + 'px',
-            right: this.getRight() + 'px',
-            bottom: this.getBottom() + 'px',
-        };
+        var image = this.getDataToStore();
         this.sendLive(image);
     },
 
