@@ -880,6 +880,7 @@ window.WebvfxAnimation = WebvfxBase.extend({
         this.set('frames', args.frames);
         this.set('width', (args.width ? args.width : args.image.width / args.frames));
         this.set('height', (args.height ? args.height : args.image.height));
+        this.frameRate = appCollection.models[0].get('Mosto').General.fps;
 
         var realWidth = this.get('width') * webvfxEditor.get('scale');
         var realHeight = this.get('height') * webvfxEditor.get('scale');
@@ -903,7 +904,7 @@ window.WebvfxAnimation = WebvfxBase.extend({
             image: args.image,
             animation: 'animation',
             animations: animations,
-            frameRate: appCollection.models[0].get('Mosto').General.fps,
+            frameRate: this.frameRate,
         })
         sprite.setScale(
             realWidth / (sprite.getImage().width / this.get('frames')),
@@ -986,7 +987,7 @@ window.WebvfxAnimation = WebvfxBase.extend({
             zindex: this.zindex,
             name: this.getName(),
             frames: this.get('frames'),
-            frameRate: appCollection.models[0].get('Mosto').General.fps,
+            frameRate: this.frameRate,
             width: this.getWidth(),
             height: this.getHeight(),
             top: this.getTop(),
