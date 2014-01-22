@@ -621,15 +621,15 @@ window.WebvfxWidget = WebvfxBase.extend({
 
     setOptions: function(args) {
         var self = this;
-        var values = Tools.getIntValues(args.style, ['width', 'height', 'top', 'left']);
+        var values = Tools.getIntValues(args.options.style, ['width', 'height', 'top', 'left']);
         for (key in values) {
             self.set(key, values[key]);
-            delete args.style[key];
+            delete args.options.style[key];
         }
         var pos = this.getInitialPosition(values);
         this.set('left', pos.x);
         this.set('top', pos.y);
-        this.options = args;
+        this.options = args.options;
         this.options.woeid = appCollection.models[0].get('Common').Widgets.WeatherWoeid;
     },
 
@@ -803,17 +803,23 @@ window.WebvfxWidget = WebvfxBase.extend({
     getDataToStore: function() {
         var self = this;
         return {
+            element_id: this.id,
             zindex: this.zindex,
-            type: this.options.type,
-            text: this.options.text,
-            interval: this.options.interval,
-            animation: this.options.animation,
-            style: $.extend({}, this.options.style, {
-                width: self.getWidth() + 'px',
-                height: self.getHeight() + 'px',
-                top: self.getTop() + 'px',
-                left: self.getLeft() + 'px',
-            }),
+            type: 'widget',
+            options: {
+                id: this.id,
+                type: this.options.type,
+                text: this.options.text,
+                interval: this.options.interval,
+                animation: this.options.animation,
+                woeid: this.options.woeid,
+                style: $.extend({}, this.options.style, {
+                    width: self.getWidth() + 'px',
+                    height: self.getHeight() + 'px',
+                    top: self.getTop() + 'px',
+                    left: self.getLeft() + 'px',
+                }),
+            },
         }
     },
 
@@ -836,26 +842,7 @@ window.WebvfxWidget = WebvfxBase.extend({
     },
 
     send: function() {
-        var self = this;
-        var widget = {
-            element_id: this.id,
-            zindex: this.zindex,
-            type: 'widget',
-            options: {
-                id: this.id,
-                type: this.options.type,
-                text: this.options.text,
-                interval: this.options.interval,
-                animation: this.options.animation,
-                woeid: appCollection.models[0].get('Common').Widgets.WeatherWoeid,
-                style: $.extend({}, this.options.style, {
-                    width: self.getWidth() + 'px',
-                    height: self.getHeight() + 'px',
-                    top: self.getTop() + 'px',
-                    left: self.getLeft() + 'px',
-                }),
-            },
-        };
+        var widget = this.getDataToStore();
         this.sendLive(widget);
     }
 });
