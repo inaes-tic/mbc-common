@@ -981,14 +981,16 @@ window.WebvfxAnimation = WebvfxBase.extend({
 
     getDataToStore: function() {
         return {
-            zindex: this.zindex,
+            element_id: this.id,
             type: this.getType(),
+            zindex: this.zindex,
             name: this.getName(),
             frames: this.get('frames'),
-            left: this.getLeft(),
-            top: this.getTop(),
+            frameRate: appCollection.models[0].get('Mosto').General.fps,
             width: this.getWidth(),
             height: this.getHeight(),
+            top: this.getTop(),
+            left: this.getLeft(),
         }
     },
 
@@ -1021,23 +1023,7 @@ window.WebvfxAnimation = WebvfxBase.extend({
     },
 
     send: function() {
-        var full_url = webvfxEditor.get('server') + 'uploads/' + this.getName();
-        var animation = {
-            element_id: this.id,
-            type: 'animation',
-            options: {
-                id: this.id,
-                zindex: this.zindex,
-                name: this.getName(),
-                image: full_url,
-                frames: this.get('frames'),
-                frameRate: appCollection.models[0].get('Mosto').General.fps,
-                width: this.getWidth(),
-                height: this.getHeight(),
-                top: this.getTop(),
-                left: this.getLeft(),
-            }
-        };
+        var animation = this.getDataToStore();
         this.sendLive(animation);
     },
 
