@@ -756,56 +756,64 @@ window.EditorView = Backbone.View.extend({
             case 'text':
                 this.webvfxCollection.new = true;
                 this.webvfxCollection.add(new WebvfxWidget({
-                    type: type,
-                    text: "",
-                    interval: 0,
-                    style: $.extend({}, {
-                        width: '500px',
-                        height: '60px',
-                        'line-height': '60px',
-                    }, WebvfxSimpleWidgetStyles['fire']),
+                    options: {
+                        type: type,
+                        text: "",
+                        interval: 0,
+                        style: $.extend({}, {
+                            width: '500px',
+                            height: '60px',
+                            'line-height': '60px',
+                        }, WebvfxSimpleWidgetStyles['fire']),
+                    }
                 }));
                 break;
 
             case 'box':
                 this.webvfxCollection.new = true;
                 this.webvfxCollection.add(new WebvfxWidget({
-                    type: type,
-                    text: "",
-                    interval: 0,
-                    style: $.extend({}, {
-                        width: '300px',
-                        height: '30px',
-                        'line-height': '30px',
-                    }, WebvfxSimpleWidgetStyles['heaven']),
+                    options: {
+                        type: type,
+                        text: "",
+                        interval: 0,
+                        style: $.extend({}, {
+                            width: '300px',
+                            height: '30px',
+                            'line-height': '30px',
+                        }, WebvfxSimpleWidgetStyles['heaven']),
+                    }
                 }));
                 break;
 
             case 'time':
                 this.webvfxCollection.new = true;
                 this.webvfxCollection.add(new WebvfxWidget({
-                    type: type,
-                    text: "%H:%M:%S",
-                    interval: 500,
-                    style: $.extend({}, {
-                        width: '100px',
-                        height: '30px',
-                        'line-height': '30px',
-                    }, WebvfxSimpleWidgetStyles['black']),
+                    options: {
+                        type: type,
+                        text: "%H:%M:%S",
+                        interval: 500,
+                        style: $.extend({}, {
+                            width: '100px',
+                            height: '30px',
+                            'line-height': '30px',
+                        }, WebvfxSimpleWidgetStyles['black']),
+                    }
                 }));
                 break;
 
             case 'weather':
                 this.webvfxCollection.new = true;
                 this.webvfxCollection.add(new WebvfxWidget({
-                    type: type,
-                    text: "%T%Tunit %H%Hunit",
-                    interval: 2000,
-                    style: $.extend({}, {
-                        width: '100px',
-                        height: '30px',
-                        'line-height': '30px',
-                    }, WebvfxSimpleWidgetStyles['gray']),
+                    options: {
+                        type: type,
+                        text: "%T%Tunit %H%Hunit",
+                        interval: 2000,
+                        style: $.extend({}, {
+                            width: '100px',
+                            height: '30px',
+                            'line-height': '30px',
+                        }, WebvfxSimpleWidgetStyles['gray']),
+                    }
                 }));
                 break;
 
