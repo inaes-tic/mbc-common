@@ -459,13 +459,13 @@ window.WebvfxBase = Backbone.Model.extend({
         this.sendLive(data);
     },
 
-    sendLive: function(item) {
+    sendLive: function(data) {
         var model = webvfxEditor.get('liveCollection').findWhere({element_id: this.id});
         if(model) {
-            model.set(item);
+            model.set(data);
             model.save();
         } else {
-            var new_model = new Sketch.Live(item);
+            var new_model = new Sketch.Live(data);
             webvfxEditor.get('liveCollection').add(new_model);
             new_model.save();
         }
