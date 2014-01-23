@@ -454,6 +454,11 @@ window.WebvfxBase = Backbone.Model.extend({
         webvfxEditor.draw();
     },
 
+    send: function() {
+        var data = this.getDataToStore();
+        this.sendLive(data);
+    },
+
     sendLive: function(item) {
         var model = webvfxEditor.get('liveCollection').findWhere({element_id: this.id});
         if(model) {
@@ -599,12 +604,6 @@ window.WebvfxImage = WebvfxBase.extend({
         this.kObj.get('.bottomRight')[0].setY(topY + realHeight);
         this.draw();
     },
-
-    send: function() {
-        var image = this.getDataToStore();
-        this.sendLive(image);
-    },
-
 });
 
 window.WebvfxWidget = WebvfxBase.extend({
@@ -840,11 +839,6 @@ window.WebvfxWidget = WebvfxBase.extend({
         this.set('height', height);
         this.reload();
     },
-
-    send: function() {
-        var widget = this.getDataToStore();
-        this.sendLive(widget);
-    }
 });
 
 window.WebvfxAnimation = WebvfxBase.extend({
@@ -1009,12 +1003,6 @@ window.WebvfxAnimation = WebvfxBase.extend({
         this.kObj.get('.bottomRight')[0].setY(topY + realHeight);
         this.draw();
     },
-
-    send: function() {
-        var animation = this.getDataToStore();
-        this.sendLive(animation);
-    },
-
 });
 
 window.WebvfxCollection = Backbone.Collection.extend({
