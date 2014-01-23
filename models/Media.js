@@ -228,12 +228,10 @@ var PieceCollection = {
                 channel: 'collection'
     },
     initialize: function () {
-        if (!server) {
-            this.bindBackend();
-            this.bind('backend', function(method, model) {
-                console.log ('got from backend:', method, model);
-            });
-        }
+        this.bindBackend();
+        this.bind('backend', function(method, model) {
+            console.log ('got from backend:', method, model);
+        });
         console.log ('creating new Media.PieceCollection');
         Backbone.Collection.prototype.initialize.call (this);
     },
@@ -300,12 +298,10 @@ var Universe = {
     },
     comparator: '_id',
     initialize: function () {
-        if (!server) {
-            this.bindBackend();
-            this.bind('backend', function(method, model) {
-                console.log ('got from backend:', method, model);
-            });
-        }
+        this.bindBackend();
+        this.bind('backend', function(method, model) {
+            console.log ('got from backend:', method, model);
+        });
         console.log ('creating new Media.Universe');
         Backbone.Collection.prototype.initialize.call (this);
     },
