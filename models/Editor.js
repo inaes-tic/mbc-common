@@ -110,7 +110,7 @@ window.WebvfxBase = Backbone.Model.extend({
 
         this.kObj.on('dragend', function() {
             if (self.created && webvfxEditor.get('realTimeEdition')) {
-                webvfxEditor.objects.sendAll();
+                self.send();
             }
         });
 
@@ -128,7 +128,7 @@ window.WebvfxBase = Backbone.Model.extend({
     draw: function() {
         webvfxEditor.draw();
         if (webvfxEditor.get('realTimeEdition')) {
-            webvfxEditor.objects.sendAll();
+            this.send();
         }
     },
 
