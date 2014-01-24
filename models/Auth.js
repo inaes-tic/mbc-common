@@ -26,14 +26,12 @@ Auth.User = Backbone.Model.extend({
 });
 
 Auth.UserList = Backbone.Collection.extend({
-    model: function (attrs, opts) {
-        var ret   = new Auth.User(attrs, opts);
-        var col   = ret.collection;
-        ret.sync  = col.sync;
-        ret.osync = col.osync;
-        return ret;
-    },
+    model: Auth.User,
     backend: 'userbackend',
     url: 'user',
-    sync: delayed_sync,
+    initialize: function() {
+        console.log ('creating new Auth.User');
+        this.bindBackend();
+        return Backbone.Model.prototype.initialize.call (this);
+    },
 });
