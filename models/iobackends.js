@@ -6,6 +6,7 @@ var _              = require('underscore'),
     collections    = config.Common.Collections,
     logger         = require("../logger")().addLogger('iobackends')
     publisher      = require('../pubsub')();
+    iocompat       = require('./iocompat');
 ;
 
 // Override mongoStore read method with custom
@@ -46,14 +47,45 @@ var iobackends = module.exports = exports = function (db, backends) {
 
     /* process the backends object to streamline code */
     var binded = [];
-    _(this.backends).each (function (backend) {
+    _(this.backends).each (function (backend, name) {
         backend.io = backboneio.createBackend();
         if (backend.use) {
             _(backend.use).each (function (usefn) {
                 backend.io.use(usefn);
             });
         }
-        if (backend.mongo) {
+
+
+        /* adds a debugging middleware before the storage (see below) */
+        backend.io.use (self.middleware.debug);
+
+        /*
+         * adds the io compatibility layer middleware that forwards changes
+         * from the browser as events so we can react and update our models.
+         */
+        backend.io.use (iocompat.eventMiddleware(backend));
+
+        /*
+         * adds the redis link layer middleware that listens for changes on
+         * other servers and also broadcasts ours.
+         */
+        if (backend.redis) {
+            backend.io.use (iocompat.redisMiddleware(backend, name, backend.redis.chain));
+        }
+
+        /*
+         * On the backend definition we either pass a 'mongo' hash with the
+         * connection details or a middleware that stores data.
+         *
+         * This is so because most of the storage middlewares end up doing
+         * a res.end() stopping the processing there and sometimes we want
+         * things like the debugbackend to work.
+         */
+
+        if (backend.store) {
+            backend.io.use(backend.store);
+
+        } else if (backend.mongo) {
             var mongo = _.extend ({db: db, opts: {}}, backend.mongo);
             var fn = _.identity;
             binded.push (backend.mongo.collection);
@@ -65,7 +97,6 @@ var iobackends = module.exports = exports = function (db, backends) {
                                                     mongo.collection,
                                                     mongo.opts)));
         }
-        backend.io.use (self.middleware.debug);
     });
 
     logger.info ('binding to mongo collections:', binded.join(', ') + '.');
@@ -130,4 +161,8 @@ iobackends.prototype.get = function (name) {
 
 iobackends.prototype.get_middleware = function () {
     return this.middleware;
+};
+
+iobackends.prototype.patchBackbone = function () {
+    return iocompat.patchBackbone(this);
 };
