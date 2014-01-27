@@ -2,11 +2,11 @@ var WebvfxAnimationWidget = function(options) {
 
     this.initialize = function() {
 
-        this.options = $.extend(true, {
-            id: '',
+        $.extend(this, {
+            element_id: '',
             el: $('body'),
             zindex: 0,
-            image: '',
+            name: '',
             frames: 0,
             frameRate: 0,
             width: 0,
@@ -33,35 +33,35 @@ var WebvfxAnimationWidget = function(options) {
         this.createSheet().addRule(
             '@-webkit-keyframes ' + this.animationName,
             '0% { background-position: 0px 0; } ' +
-            '100% { background-position: -' + (this.options.width * this.options.frames) + 'px 0; }'
+            '100% { background-position: -' + (this.width * this.frames) + 'px 0; }'
         );
 
     };
 
     this.create = function() {
 
-        this.animationName = 'play-' + this.options.id + (new Date()).getTime();
+        this.animationName = 'play-' + this.element_id + (new Date()).getTime();
         this.addCssKeyframes();
 
-        var animationDuration = (this.options.frames / this.options.frameRate) + 's';
+        var animationDuration = (this.frames / this.frameRate) + 's';
 
         this.widget = $('<div />');
-        this.widget.attr('id', this.options.id);
+        this.widget.attr('id', this.element_id);
         this.widget.css({
             position: 'absolute',
-            'z-index': this.options.zindex,
-            width: this.options.width + 'px',
-            height: this.options.height + 'px',
-            top: this.options.top + 'px',
-            left: this.options.left + 'px',
-            'background-image': 'url(' + this.options.image + ')',
+            'z-index': this.zindex,
+            width: this.width + 'px',
+            height: this.height + 'px',
+            top: this.top + 'px',
+            left: this.left + 'px',
+            'background-image': 'url(' + this.path + this.name + ')',
             'background-repeat': 'no-repeat',
             'background-position': 'left top',
-            'background-size':  (this.options.width * this.options.frames) + 'px ' + this.options.height + 'px',
-            '-webkit-animation': this.animationName + ' ' + animationDuration + ' steps(' + this.options.frames + ') infinite',
+            'background-size':  (this.width * this.frames) + 'px ' + this.height + 'px',
+            '-webkit-animation': this.animationName + ' ' + animationDuration + ' steps(' + this.frames + ') infinite',
         });
 
-        this.options.el.append(this.widget);
+        this.el.append(this.widget);
 
     };
 

@@ -110,7 +110,7 @@ window.WebvfxBase = Backbone.Model.extend({
 
         this.kObj.on('dragend', function() {
             if (self.created && webvfxEditor.get('realTimeEdition')) {
-                webvfxEditor.objects.sendAll();
+                self.send();
             }
         });
 
@@ -128,7 +128,7 @@ window.WebvfxBase = Backbone.Model.extend({
     draw: function() {
         webvfxEditor.draw();
         if (webvfxEditor.get('realTimeEdition')) {
-            webvfxEditor.objects.sendAll();
+            this.send();
         }
     },
 
@@ -454,13 +454,18 @@ window.WebvfxBase = Backbone.Model.extend({
         webvfxEditor.draw();
     },
 
-    sendLive: function(item) {
+    send: function() {
+        var data = this.getDataToStore();
+        this.sendLive(data);
+    },
+
+    sendLive: function(data) {
         var model = webvfxEditor.get('liveCollection').findWhere({element_id: this.id});
         if(model) {
-            model.set(item);
+            model.set(data);
             model.save();
         } else {
-            var new_model = new Sketch.Live(item);
+            var new_model = new Sketch.Live(data);
             webvfxEditor.get('liveCollection').add(new_model);
             new_model.save();
         }
@@ -563,14 +568,17 @@ window.WebvfxImage = WebvfxBase.extend({
 
     getDataToStore: function() {
         return {
-            zindex: this.zindex,
+            element_id: this.id,
             type: this.getType(),
             name: this.getName(),
-            left: this.getLeft(),
-            top: this.getTop(),
+            zindex: this.zindex,
             width: this.getWidth(),
             height: this.getHeight(),
-        }
+            top: this.getTop(),
+            left: this.getLeft(),
+            right: this.getRight(),
+            bottom: this.getBottom(),
+        };
     },
 
     setWidth: function(width) {
@@ -596,26 +604,6 @@ window.WebvfxImage = WebvfxBase.extend({
         this.kObj.get('.bottomRight')[0].setY(topY + realHeight);
         this.draw();
     },
-
-    send: function() {
-        var full_url = webvfxEditor.get('server') + 'uploads/' + this.getName();
-        var image = {
-            element_id: this.id,
-            type: 'image',
-            name: this.getName(),
-            src: full_url,
-            images: this.getName(),
-            zindex: this.zindex,
-            width: this.getWidth() + 'px',
-            height: this.getHeight() + 'px',
-            top: this.getTop() + 'px',
-            left: this.getLeft() + 'px',
-            right: this.getRight() + 'px',
-            bottom: this.getBottom() + 'px',
-        };
-        this.sendLive(image);
-    },
-
 });
 
 window.WebvfxWidget = WebvfxBase.extend({
@@ -632,15 +620,15 @@ window.WebvfxWidget = WebvfxBase.extend({
 
     setOptions: function(args) {
         var self = this;
-        var values = Tools.getIntValues(args.style, ['width', 'height', 'top', 'left']);
+        var values = Tools.getIntValues(args.options.style, ['width', 'height', 'top', 'left']);
         for (key in values) {
             self.set(key, values[key]);
-            delete args.style[key];
+            delete args.options.style[key];
         }
         var pos = this.getInitialPosition(values);
         this.set('left', pos.x);
         this.set('top', pos.y);
-        this.options = args;
+        this.options = args.options;
         this.options.woeid = appCollection.models[0].get('Common').Widgets.WeatherWoeid;
     },
 
@@ -814,17 +802,23 @@ window.WebvfxWidget = WebvfxBase.extend({
     getDataToStore: function() {
         var self = this;
         return {
+            element_id: this.id,
             zindex: this.zindex,
-            type: this.options.type,
-            text: this.options.text,
-            interval: this.options.interval,
-            animation: this.options.animation,
-            style: $.extend({}, this.options.style, {
-                width: self.getWidth() + 'px',
-                height: self.getHeight() + 'px',
-                top: self.getTop() + 'px',
-                left: self.getLeft() + 'px',
-            }),
+            type: 'widget',
+            options: {
+                id: this.id,
+                type: this.options.type,
+                text: this.options.text,
+                interval: this.options.interval,
+                animation: this.options.animation,
+                woeid: this.options.woeid,
+                style: $.extend({}, this.options.style, {
+                    width: self.getWidth() + 'px',
+                    height: self.getHeight() + 'px',
+                    top: self.getTop() + 'px',
+                    left: self.getLeft() + 'px',
+                }),
+            },
         }
     },
 
@@ -845,30 +839,6 @@ window.WebvfxWidget = WebvfxBase.extend({
         this.set('height', height);
         this.reload();
     },
-
-    send: function() {
-        var self = this;
-        var widget = {
-            element_id: this.id,
-            zindex: this.zindex,
-            type: 'widget',
-            options: {
-                id: this.id,
-                type: this.options.type,
-                text: this.options.text,
-                interval: this.options.interval,
-                animation: this.options.animation,
-                woeid: appCollection.models[0].get('Common').Widgets.WeatherWoeid,
-                style: $.extend({}, this.options.style, {
-                    width: self.getWidth() + 'px',
-                    height: self.getHeight() + 'px',
-                    top: self.getTop() + 'px',
-                    left: self.getLeft() + 'px',
-                }),
-            },
-        };
-        this.sendLive(widget);
-    }
 });
 
 window.WebvfxAnimation = WebvfxBase.extend({
@@ -891,6 +861,7 @@ window.WebvfxAnimation = WebvfxBase.extend({
         this.set('frames', args.frames);
         this.set('width', (args.width ? args.width : args.image.width / args.frames));
         this.set('height', (args.height ? args.height : args.image.height));
+        this.frameRate = appCollection.models[0].get('Mosto').General.fps;
 
         var realWidth = this.get('width') * webvfxEditor.get('scale');
         var realHeight = this.get('height') * webvfxEditor.get('scale');
@@ -914,7 +885,7 @@ window.WebvfxAnimation = WebvfxBase.extend({
             image: args.image,
             animation: 'animation',
             animations: animations,
-            frameRate: appCollection.models[0].get('Mosto').General.fps,
+            frameRate: this.frameRate,
         })
         sprite.setScale(
             realWidth / (sprite.getImage().width / this.get('frames')),
@@ -992,14 +963,16 @@ window.WebvfxAnimation = WebvfxBase.extend({
 
     getDataToStore: function() {
         return {
-            zindex: this.zindex,
+            element_id: this.id,
             type: this.getType(),
+            zindex: this.zindex,
             name: this.getName(),
             frames: this.get('frames'),
-            left: this.getLeft(),
-            top: this.getTop(),
+            frameRate: this.frameRate,
             width: this.getWidth(),
             height: this.getHeight(),
+            top: this.getTop(),
+            left: this.getLeft(),
         }
     },
 
@@ -1030,28 +1003,6 @@ window.WebvfxAnimation = WebvfxBase.extend({
         this.kObj.get('.bottomRight')[0].setY(topY + realHeight);
         this.draw();
     },
-
-    send: function() {
-        var full_url = webvfxEditor.get('server') + 'uploads/' + this.getName();
-        var animation = {
-            element_id: this.id,
-            type: 'animation',
-            options: {
-                id: this.id,
-                zindex: this.zindex,
-                name: this.getName(),
-                image: full_url,
-                frames: this.get('frames'),
-                frameRate: appCollection.models[0].get('Mosto').General.fps,
-                width: this.getWidth(),
-                height: this.getHeight(),
-                top: this.getTop(),
-                left: this.getLeft(),
-            }
-        };
-        this.sendLive(animation);
-    },
-
 });
 
 window.WebvfxCollection = Backbone.Collection.extend({
