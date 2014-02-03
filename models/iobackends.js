@@ -35,7 +35,25 @@ var iobackends = module.exports = exports = function (db, backends) {
         publishJSON: function (req, res, next) {
             publisher.publishJSON([req.backend, req.method].join('.'), { model: req.model });
             next();
-        }
+        },
+
+        /*
+         * On the browser sometimes we need to set the '_id' of new objects so Backbone-relational
+         * does not break (when we try to save new objects their relations end up pointing to 'undefined').
+         *
+         * On that case we need to turn the 'update' request into a 'create' for other browsers to add the
+         * newly created objects.
+         *
+         * To signal this particular condition we add an '_tmpid' attribute to the model and catch that here.
+         */
+        tmpId: function (req, res, next) {
+            if( req.method == 'update' && req.model._tmpid) {
+                delete req.model._tmpid;
+                req.method = 'create';
+            }
+            next();
+        },
+
     };
 
 
