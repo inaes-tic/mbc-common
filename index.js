@@ -5,4 +5,5 @@ exports = module.exports = {
     logger: require('./logger'),
     iobackends: require('./models/iobackends'),
     utils: require('./utils'),
+    avahi: require('./avahi')
 }
