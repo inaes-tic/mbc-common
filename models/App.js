@@ -91,5 +91,21 @@ App.ProgressStatus = Backbone.Model.extend({
     },
 });
 
+App.MostoMessage = Backbone.Model.extend({
+    defaults: {
+        type: 'notification',
+        title: '',
+        message: '',
+    },
+    isNotification: function() {
+        return this.get('type') == 'notification';
+    },
+    isError: function() {
+        return this.get('type') == 'error';
+    },
+});
+
+App.MostoMessages = Backbone.Collection.extend({ model: App.MostoMessage });
+
 if(server) module.exports = App;
 else root.App = App;
