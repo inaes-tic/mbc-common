@@ -96,6 +96,10 @@ App.MostoMessage = Backbone.Model.extend({
         type: 'notification',
         title: '',
         message: '',
+        time: null,
+    },
+    initialize: function() {
+        this.set('time', moment(arguments[0].time));
     },
     isNotification: function() {
         return this.get('type') == 'notification';
