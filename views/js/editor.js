@@ -32,14 +32,18 @@ window.WebvfxBaseView = Backbone.View.extend({
     },
 
     $: function(name, id) {
-        return $('#' + name + '-' + id);
+        return $(this.selector(name, id));
+    },
+
+    selector: function(name, id) {
+        return '#' + name + '-' + id;
     },
 
     addCommonEvents: function(model) {
         var id = model.id;
         var self = this;
 
-        this.$('title', id).live('click', function() {
+        $('body').on('click', this.selector('title', id) , function() {
             var selfId = self.$('webvfx-obj-properties', id).attr('id');
             $('.webvfx-obj-properties').each(function() {
                 if ($(this).attr('id') == selfId) {
@@ -50,57 +54,57 @@ window.WebvfxBaseView = Backbone.View.extend({
             });
         });
 
-        this.$('title', id).live('mouseover', function() {
+        $('body').on('mouseover', this.selector('title', id), function() {
             document.body.style.cursor = 'pointer';
         });
 
-        this.$('title', id).live('mouseout', function() {
+        $('body').on('mouseout', this.selector('title', id), function() {
             document.body.style.cursor = 'default';
         });
 
-        this.$('width', id).live('keyup', function(e) {
+        $('body').on('keyup', this.selector('width', id), function(e) {
             if (e.keyCode == 13) {
                 model.setWidth($(this).val());
                 self.$('right', id).val(model.getRight());
             }
         });
 
-        this.$('height', id).live('keyup', function(e) {
+        $('body').on('keyup', this.selector('height', id), function(e) {
             if (e.keyCode == 13) {
                 model.setHeight($(this).val());
                 self.$('bottom', id).val(model.getBottom());
             }
         });
 
-        this.$('top', id).live('keyup', function(e) {
+        $('body').on('keyup', this.selector('top', id), function(e) {
             if (e.keyCode == 13) {
                 model.setTop($(this).val());
                 self.$('bottom', id).val(model.getBottom());
             }
         });
 
-        this.$('left', id).live('keyup', function(e) {
+        $('body').on('keyup', this.selector('left', id), function(e) {
             if (e.keyCode == 13) {
                 model.setLeft($(this).val());
                 self.$('right', id).val(model.getRight());
             }
         });
 
-        this.$('right', id).live('keyup', function(e) {
+        $('body').on('keyup', this.selector('right', id), function(e) {
             if (e.keyCode == 13) {
                 model.setRight($(this).val());
                 self.$('left', id).val(model.getLeft());
             }
         });
 
-        this.$('bottom', id).live('keyup', function(e) {
+        $('body').on('keyup', this.selector('bottom', id), function(e) {
             if (e.keyCode == 13) {
                 model.setBottom($(this).val());
                 self.$('top', id).val(model.getTop());
             }
         });
 
-        this.$('remove', id).live('click', function() {
+        $('body').on('click', this.selector('remove', id), function() {
             model.destroy();
         });
     },
@@ -116,35 +120,35 @@ window.WebvfxWidgetView = WebvfxBaseView.extend({
         var id = model.id;
         var self = this;
 
-        this.$('text', id).live('keyup', function(e) {
+        $('body').on('keyup', this.selector('text', id), function(e) {
             model.reload({text: $(this).val()});
         });
 
-        this.$('animation', id).live('change', function() {
+        $('body').on('change', this.selector('animation', id), function() {
             model.reload({animation: $(this).val()});
         });
 
-        this.$('interval', id).live('keyup', function(e) {
+        $('body').on('keyup', this.selector('interval', id), function(e) {
             if (e.keyCode == 13) {
                 model.reload({interval: $(this).val()});
             }
         });
 
-        this.$('font-size', id).live('keyup', function(e) {
+        $('body').on('keyup', this.selector('font-size', id), function(e) {
             if (e.keyCode == 13) {
                 model.reload({style: { 'font-size': $(this).val() + 'px' }});
             }
         });
 
-        this.$('color', id).live('change', function(e) {
+        $('body').on('change', this.selector('color', id), function(e) {
             model.reload({style: { 'color': $(this).val() }});
         });
 
-        this.$('border-color', id).live('change', function(e) {
+        $('body').on('change', this.selector('border-color', id), function(e) {
             model.reload({style: { 'border-color': $(this).val() }});
         });
 
-        this.$('style', id).live('change', function() {
+        $('body').on('change', this.selector('style', id), function() {
             var name = $(this).val();
             if (name) {
                 var style = $.extend({}, WebvfxSimpleWidgetStyles[name]);
