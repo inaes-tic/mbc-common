@@ -1,6 +1,7 @@
 window.WebvfxBaseView = Backbone.View.extend({
     tagName: 'div',
     className: 'webvfx-obj',
+    collectionEl: 'webvfx-collection',
 
     events: {
         drop: 'drop'
@@ -41,7 +42,7 @@ window.WebvfxBaseView = Backbone.View.extend({
 
     addCommonEvents: function(model) {
         var id = model.id;
-        var el = $('#webvfx-collection');
+        var el = $('#' + this.collectionEl);
         var self = this;
 
         var title = this.selector('title', id);
@@ -121,7 +122,7 @@ window.WebvfxImageView = WebvfxBaseView.extend({
 window.WebvfxWidgetView = WebvfxBaseView.extend({
     addEvents: function(model) {
         var id = model.id;
-        var el = $('#webvfx-collection');
+        var el = $('#' + this.collectionEl);
         var self = this;
 
         el.on('keyup', this.selector('text', id), function(e) {
