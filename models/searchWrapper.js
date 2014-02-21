@@ -1,5 +1,6 @@
 module.exports = function(middleware) {
     var _ = require('underscore');
+    var logger = require('../logger')().addLogger('search_wrapper');
 
     // cache up all this, it's just syntactical
     var collection = middleware.collection;
@@ -41,14 +42,16 @@ module.exports = function(middleware) {
                             _.map(data.fields, function(field) {
                                 var ok = _.contains(options.search.facets, field);
                                 if (!ok) {
-                                    res.end({'error':'Facet field is not valid - read ' + field});
+                                    logger.error('Facet field is not valid - read' + field);
+                                    delete data.fields[field];
                                 }
                             });
                         }
                         _.map(_.keys(query), function(key) {
                             var ok = _.contains(options.search.facets, key);
                             if (!ok) {
-                                res.end({'error':'query field is not valid - read ' + key});
+                                logger.error('Query field is not valid - read ' + key);
+                                delete query[key];
                             }
                         });
 
@@ -59,11 +62,13 @@ module.exports = function(middleware) {
                             var options_values  = _.values(options.search.criteria);
 
                             if (!(_.difference(criteria_keys, options_keys))) {
-                                res.end({'error':'criteria is not valid - read ' + criteria_keys });
+                                logger.error('Criteria is not valid - read ' + criteria_keys);
+                                data.query.criteria = {};
                             }
 
                             if(!(_.every(criteria_values, function(val) { return _.isArray(val); }))) {
-                                res.end({'error':'criteria is not an array - read '});
+                                logger.error('Criteria is not an array - read ');
+                                options.search.criteria = {};
                             }
                         }
 
