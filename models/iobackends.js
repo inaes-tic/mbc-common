@@ -75,7 +75,7 @@ var iobackends = module.exports = exports = function (db, backends) {
 
 
         /* adds a debugging middleware before the storage (see below) */
-        backend.io.use (self.middleware.debug);
+        //backend.io.use (self.middleware.debug);
 
         /*
          * adds the io compatibility layer middleware that forwards changes
