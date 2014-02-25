@@ -151,6 +151,10 @@ iocompat.eventMiddleware = function (backend) {
  * so sync() and bindBackend() work on the server.
  */
 iocompat.patchBackbone = function (iobackend) {
+    if (Backbone._iocompatPatched == true) {
+        return;
+    }
+    Backbone._iocompatPatched = true;
 
    /*
     * In the models we have backend: blahbackend
