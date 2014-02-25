@@ -21,7 +21,6 @@ describe("WebvfxEditor", function() {
             scale: .5,
         });
         window.webvfxEditor = this.webvfxEditor;
-        console.log('hey');
     });
 
     it("The scaled width must be 960", function() {
