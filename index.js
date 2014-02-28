@@ -4,4 +4,5 @@ exports = module.exports = {
     config: require('config'),
     logger: require('./logger'),
     iobackends: require('./models/iobackends'),
+    utils: require('./utils'),
 }
