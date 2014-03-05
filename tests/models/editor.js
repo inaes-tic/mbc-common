@@ -1,11 +1,4 @@
 /* Mocks */
-var Kinetic = {
-    Stage: function() {
-        this.add = function() {};
-    },
-    Layer: function() {},
-};
-
 var Sketch = {
     LiveCollection: function() {}
 };
