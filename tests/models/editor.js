@@ -2,6 +2,12 @@
 var Sketch = {
     LiveCollection: function() {}
 };
+var appCollection = {models: [{get: function() {
+    return {
+        Widgets: {WeatherWoeid: 54},
+        General: {fps: 30}
+    }
+}}]};
 /* end Mocks */
 
 
@@ -25,3 +31,26 @@ describe("WebvfxEditor", function() {
     });
 
 });
+
+describe("WebvfxImage", function() {
+
+    before(function() {
+        window.webvfxEditor = new WebvfxEditor({
+            width: 1920,
+            height: 1080,
+            scale: .5,
+        });
+        this.webvfxImage = new WebvfxImage({
+        });
+    });
+
+    it("isImage() must return true", function() {
+        expect( this.webvfxImage.isImage() ).equals(true);
+    });
+
+    it("isAnimation() must return false", function() {
+        expect( this.webvfxImage.isAnimation() ).equals(false);
+    });
+
+});
+
