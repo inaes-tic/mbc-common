@@ -302,6 +302,14 @@ window.EditorView = Backbone.View.extend({
             if (webvfxEditor.get('videoPreview')) {
                 self.videoPreview();
             }
+            if (webvfxEditor.get('liveCollection')) {
+                var liveCollection = webvfxEditor.get('liveCollection');
+                liveCollection.fetch({success: function(col) {
+                    col.forEach(function(widget){
+                        self.loadWidget(widget.toJSON());
+                    });
+                }});
+            }
         });
     },
     colapse:function(ev) {
@@ -376,17 +384,7 @@ window.EditorView = Backbone.View.extend({
         this.webvfxCollection.destroyAll();
 
         _.each(this.sketchs.findWhere({name: key}).get('data'), function(s) {
-            if (s.type == 'image' || s.type == 'animation') {
-                s.image = new Image();
-                s.image.onload = function() {
-                    self.webvfxCollection.add(
-                        self.createObjectFactory(s.type, s)
-                    );
-                };
-                s.image.src = self.options.server + 'uploads/' + s.name;
-            } else {
-                self.webvfxCollection.add(new WebvfxWidget(s));
-            }
+            self.loadWidget(s);
         });
 
         console.log('sketch "' + key + '" loaded');
@@ -436,6 +434,20 @@ window.EditorView = Backbone.View.extend({
                 $('#sketchs').append($(opt).html(k));
             }
         });
+    },
+    loadWidget: function(widget) {
+        var self = this;
+        if (widget.type == 'image' || widget.type == 'animation') {
+            widget.image = new Image();
+            widget.image.onload = function() {
+                self.webvfxCollection.add(
+                    self.createObjectFactory(widget.type, widget)
+                );
+            };
+            widget.image.src = self.options.server + 'uploads/' + widget.name;
+        } else {
+            self.webvfxCollection.add(new WebvfxWidget(widget));
+        }
     },
     safeArea: function() {
         if (this.safeAreaLayer === undefined) {
