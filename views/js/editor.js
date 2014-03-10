@@ -938,6 +938,19 @@ window.EditorView = Backbone.View.extend({
         $('#modal').html(new ModalPrompt({ title: title, description: description, submitCallback: submitCallback, cancelCallback: cancelCallback }).render().el);
         window.scrollTo(0,0);
     },
+    schedulePrompt: function (time, duration, submitCallback, cancelCallback) {
+        var submitCallback = submitCallback || function() {};
+        var cancelCallback = cancelCallback || function() {};
+        var title = i18n.gettext('Schedule');
+        var time = time || i18n.gettext('Wait there was a problem');
+        var duration = duration || i18n.gettext('Wait there was a problem');
+        $('#modal').html(new ScheduleModalPrompt({ title: title, 
+                                                    time: time, 
+                                                    duration: duration, 
+                                                    submitCallback: submitCallback, 
+                                                    cancelCallback: cancelCallback }).render().el);
+        window.scrollTo(0,0);
+    },
     canNavigateAway: function (options) {
         this.viewCleanup();
         options['ok']();
@@ -995,6 +1008,33 @@ var ModalPrompt = Backbone.Modal.extend({
     saveOnEnter: function (e) {
         if (e.keyCode != 13) return;
         this.save();
+    }
+});
+
+var ScheduleModalPrompt = Backbone.Modal.extend({
+    initialize: function (options) {
+        this.options = options || {};
+    },
+    template: function() {
+        var parse_tpl = template.schedule_prompt(this.options);
+        return _.template(parse_tpl);
+    },
+    submitEl: '.submit',
+    cancelEl: '.cancel',
+    events: {
+        "click .submit"              : "save",
+        "keypress input[id=textkey]" : "saveOnEnter",
+        "click .cancel"              : "cancel"
+    },
+    save: function () {
+        this.options.submitCallback($('#time').val(), $('#duration').val());
+    },
+    saveOnEnter: function (e) {
+        if (e.keyCode != 13) return;
+        this.save();
+    },
+    cancel: function() {
+        this.options.cancelCallback();
     }
 });
 
