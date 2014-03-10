@@ -268,8 +268,20 @@ window.EditorView = Backbone.View.extend({
         if (this.webvfxCollection == undefined) {
             this.webvfxCollection = new WebvfxCollection();
             this.sketchs = new Sketch.Collection();
+            this.schedules = new Sketch.ScheduleCollection();
             this.sketchs.fetch({ success: function() {
                     self.getSketchs();
+                    self.schedules.fetch( { success: function() {
+                            self.getSchedules();
+                            self.schedules.on("remove", function(model) {
+                                $('#schedules option').filter(
+                                    function() {
+                                        return $(this).html() == self.schedToString(model);
+                                    }
+                                ).remove();
+                            });
+                        }
+                    });
                 }
             });
         }
@@ -434,6 +446,26 @@ window.EditorView = Backbone.View.extend({
                 $('#sketchs').append($(opt).html(k));
             }
         });
+    },
+    getSchedules: function () {
+        var self = this;
+        this.schedules.forEach(function(sched) {
+            var k = self.schedToString(sched);
+            var selector = "#schedules option[value='" + k + "']";
+            var exist_key = $(selector).length;
+            if (!exist_key) {
+                var opt = '<option value="' + k + '">';
+                $('#schedules').append($(opt).html(k));
+            }
+        });
+    },
+    schedToString: function(sched) {
+        var sketch = this.sketchs.findWhere({_id: sched.get('sketch_id')});
+        var seconds = 'infinite';
+        if (sched.get('length') && sched.get('length') !== 0)
+            seconds = sched.get('length') / 1000 + " sec";
+        var k = moment(sched.get('date')).format("DD/MM/YYYY HH:mm:ss") + " | " + seconds + " | " + sketch.get('name');
+        return k;
     },
     loadWidget: function(widget) {
         var self = this;
