@@ -140,6 +140,10 @@ window.WebvfxBase = Backbone.Model.extend({
         }
     },
 
+    getId: function() {
+        return this.cid;
+    },
+
     isImage: function() {
         return this.getType() == 'image';
     },
