@@ -112,6 +112,7 @@ module.exports = {
             Sketchs: 'sketchs',
             Auth: 'users',
             Transcoding: 'transcode_queue'
+            SketchSchedules: 'sketchschedules',
         },
         Widgets: {
             Files: [
