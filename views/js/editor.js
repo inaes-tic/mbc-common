@@ -608,7 +608,7 @@ window.EditorView = Backbone.View.extend({
     clearVideo:  function () {
         console.log('manual clear');
         _.each( _.clone(webvfxEditor.get('liveCollection').models), function(model){
-            model.destroy();
+            model.destroy({ignore: true});
         });
     },
     clearAll: function() {
