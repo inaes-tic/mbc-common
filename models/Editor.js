@@ -90,7 +90,8 @@ window.WebvfxBase = Backbone.Model.extend({
     },
 
     initialize: function() {
-        this.id = this.cid;
+        if (!arguments[0].id)
+            this.id = uuid.v1();
         this.zindex = (arguments[0].zindex >= 0) ? arguments[0].zindex : -1;
         this.locked = false;
         this.created = false;
