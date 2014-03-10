@@ -63,7 +63,7 @@ mixin positions
             | px
 
 
-h3(id="title-#{id}")= model.getType() + '  ' + id
+h3(id="title-#{id}")= model.getType() + '  ' + model.getId()
 div(id="webvfx-obj-properties-#{id}", class="webvfx-obj-properties", style="display:none")
     if model.isImage() || model.isAnimation()
         fieldset
