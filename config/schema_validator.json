@@ -490,7 +490,12 @@
                             "type": "string",
                             "title": "Auth",
                             "description" : "Collection name for list of users"
-                        }
+                        },
+                        "SketchSchedules" : {
+                            "type": "string",
+                            "title": "SketchSchedules",
+                            "description" : "Collection name for list of sketch schedules"
+                         }
                     }
                 },
                 "Widgets" : {
