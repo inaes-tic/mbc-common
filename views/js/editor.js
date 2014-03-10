@@ -477,6 +477,8 @@ window.EditorView = Backbone.View.extend({
     },
     loadWidget: function(widget) {
         var self = this;
+        if (widget.element_id)
+            widget.id = widget.element_id;
         if (widget.type == 'image' || widget.type == 'animation') {
             widget.image = new Image();
             widget.image.onload = function() {
