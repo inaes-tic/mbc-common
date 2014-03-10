@@ -470,6 +470,7 @@ window.WebvfxBase = Backbone.Model.extend({
             model.set(data);
             model.save();
         } else {
+            data.origin = 'editor';
             var new_model = new Sketch.Live(data);
             webvfxEditor.get('liveCollection').add(new_model);
             new_model.save();
