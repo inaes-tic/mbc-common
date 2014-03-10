@@ -113,3 +113,8 @@ block content
                                 each val, key in o
                                     - var r = key + ' (' + val + ')'
                                     option(selected=val == resolution, value=val) #{r}
+                    fieldset.well.well-small.schedules
+                        h3.editor= i18n.gettext("Schedules")
+                        select#schedules
+                            option(value='[select]')= i18n.gettext("[select]")
+                        button#del-schedule= i18n.gettext("del")
