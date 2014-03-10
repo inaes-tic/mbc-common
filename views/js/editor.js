@@ -317,6 +317,14 @@ window.EditorView = Backbone.View.extend({
             if (webvfxEditor.get('liveCollection')) {
                 var liveCollection = webvfxEditor.get('liveCollection');
                 liveCollection.fetch({success: function(col) {
+                    liveCollection.on("add", function(model) {
+                        if (model.get('origin') === 'server')
+                            self.loadWidget(model.toJSON());
+                    });
+                    liveCollection.on("remove", function(model, col, opts) {
+                        if (!opts.ignore)
+                            self.unloadWidget(model);
+                    });
                     col.forEach(function(widget){
                         self.loadWidget(widget.toJSON());
                     });
@@ -480,6 +488,11 @@ window.EditorView = Backbone.View.extend({
         } else {
             self.webvfxCollection.add(new WebvfxWidget(widget));
         }
+    },
+    unloadWidget: function(model) {
+        var widget = this.webvfxCollection.findWhere({element_id: model.get('element_id')});
+        if (widget)
+            widget.destroy();
     },
     safeArea: function() {
         if (this.safeAreaLayer === undefined) {
