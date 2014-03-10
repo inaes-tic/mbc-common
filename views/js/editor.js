@@ -455,6 +455,70 @@ window.EditorView = Backbone.View.extend({
             }
         });
     },
+    scheduleSketch: function () {
+        var key = $('#sketchs').val();
+        if (key == '[select]') {
+            var description = i18n.gettext('You must select a sketch to schedule');
+            this.alert(description);
+            return;
+        }
+        var self = this;
+        var time = i18n.gettext('Date and Time (dd/MM/yyyy HH:mm:ss):');
+        var duration = i18n.gettext('Duration (seconds):');
+        this.schedulePrompt(
+            time,
+            duration,
+            function (date, length) {
+                if(date) {    
+                    console.log("Scheduling for date: ", date);
+                    var model = self.sketchs.findWhere({ name: key });
+                    var sched = self.schedules.create({ sketch_id: model.id, date: date, length: length }, {success: function() {
+                        console.log('Success scheduling sketch: '+ model.get('name'));
+                    }});
+                    var k = self.schedToString(sched);
+                    var opt_key = '<option value="' + k + '">';
+                    $('#schedules').append($(opt_key).html(k).prop('selected', true));
+                } else {
+                    var description = i18n.gettext('You must enter date and time to schedule it');
+                    self.alert(description);
+                }
+            },
+            function() {
+                return;
+            }
+        );
+    },
+    delSchedule: function () {
+        var key = $('#schedules').val();
+        var date = key.substring(0, 20)
+        if (key == '[select]') {
+            var description = i18n.gettext('You must select a schedule to delete');
+            this.alert(description);
+            return;
+        }
+        var self = this;
+        var description = i18n.translate('Do you want to delete the schedule "%s" ?').fetch(date);
+        this.confirm(
+            description,
+            function () {
+                var model = self.schedules.findWhere({ date: moment(date, 'DD/MM/YYYY HH:mm:ss').valueOf() });
+                if (model) {
+                    model.destroy();                    
+                    $('#schedules option').filter(
+                        function() {
+                            return $(this).html() == key;
+                        }
+                    ).remove();
+                    console.log('schedule "' + key + '" deleted');
+                } else {
+                    console.log('tried to delete: "' + key + '" but not found in schedules');
+                }
+            },
+            function () {
+                console.log('Not deleting schedule "' + key + '"');
+            }
+        );
+    },
     getSchedules: function () {
         var self = this;
         this.schedules.forEach(function(sched) {
