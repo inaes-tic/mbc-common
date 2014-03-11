@@ -490,6 +490,11 @@
                             "type": "string",
                             "title": "Auth",
                             "description" : "Collection name for list of users"
+                        },
+                        "Transcoding" : {
+                            "type": "string",
+                            "title": "Transcoding",
+                            "description" : "Collection name for list of transcoding jobs"
                         }
                     }
                 },

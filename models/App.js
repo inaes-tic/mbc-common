@@ -91,5 +91,55 @@ App.ProgressStatus = Backbone.Model.extend({
     },
 });
 
+App.TranscodeProgress = Backbone.Model.extend({
+    urlRoot: 'transcode',
+    backend: 'transcodeprogressbackend',
+    idAttribute: '_id',
+    initialize: function () {
+        return Backbone.Model.prototype.initialize.call (this);
+    },
+    defaults: {
+        'input': {
+            'stat': {
+                'size': 0,
+            },
+            'path': '',
+        },
+        'filename': '',
+        'stage':    '',
+        'progress': '0',
+        // list of: {name:'', status:'', message:''}
+        'tasks':  [],
+    }
+});
+
+App.TranscodeProgressCollection = Backbone.Collection.extend({
+    url: 'transcode',
+    model: App.TranscodeProgress,
+    backend: 'transcodebackend',
+    initialize: function () {
+        if(!server) {
+            this.bindBackend();
+        }
+    },
+});
+
+App.TranscodeStatus = Backbone.Model.extend({
+    urlRoot: 'transcodestatus',
+    backend: 'transcodestatusbackend',
+    idAttribute: '_id',
+    initialize: function () {
+        if(!server) {
+            this.bindBackend();
+        }
+        return Backbone.Model.prototype.initialize.call (this);
+    },
+    defaults: {
+        '_id': 1,
+        'running': false,
+    }
+});
+
+
 if(server) module.exports = App;
 else root.App = App;

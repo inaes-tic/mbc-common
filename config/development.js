@@ -110,6 +110,7 @@ module.exports = {
             Mostomessages: 'mostomessages',
             Sketchs: 'sketchs',
             Auth: 'users',
+            Transcoding: 'transcode_queue'
         },
         Widgets: {
             Files: [
