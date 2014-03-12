@@ -59,10 +59,12 @@ Sketch.LiveCollection = Backbone.Collection.extend({
     url: 'live',
     backend: 'livebackend',
     initialize: function() {
-        this.bindBackend();
-        this.bind('backend', function(method, model) {
-            console.log ('got from backend:', method, model);
-        });
+        if (!server) {
+            this.bindBackend();
+            this.bind('backend', function(method, model) {
+                console.log ('got from backend:', method, model);
+            });
+        }
         console.log ('creating new Sketch Live Collection');
         Backbone.Collection.prototype.initialize.call (this);
     }
