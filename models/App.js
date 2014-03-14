@@ -140,6 +140,143 @@ App.TranscodeStatus = Backbone.Model.extend({
     }
 });
 
+// Given a path like 'Caspa.Branding.name', a hash-like with the user config
+// and another one with defaults retrieves both.
+function get_value (path, conf, defaults) {
+    var path = path.split('.');
+    var val = conf;
+    var dfl = defaults;
+
+    var found = false;
+    var key;
+    var ret = {
+        value:   null,
+        default: null,
+        found:   false,
+    };
+
+
+    do {
+        key = path.shift();
+        if (_.has(val, key) ) {
+            val = val[key];
+            if (path.length == 0) {
+                found = true;
+            }
+        }
+
+        if (_.has(dfl, key) ) {
+            dfl = dfl[key];
+        }
+    } while (path.length);
+
+    ret.default = ret.value = dfl;
+    ret.found = found;
+    if (found) {
+        ret.value = val;
+    }
+
+    return ret;
+};
+
+// Given three objects like the ones returned from configStore, merge them
+// in a structure suitable to parse into nested relational models.
+// Guess how big N is...
+function flatten_conf (conf, defaults, descriptions, root) {
+    if (root == undefined) {
+        var root = {
+            properties: [],
+        };
+
+        // XXX: _.omit() returns a copy of the object.
+        _.extend(root, _.omit(descriptions, ['properties', 'type']));
+        if (!_.has(descriptions, 'properties') || descriptions.properties.length==0) {
+            if (descriptions.type && !descriptions.type.match(/config|defaults|descriptions/)) {
+                root.type = descriptions.type;
+            }
+        }
+    }
+
+    _.each(descriptions.properties, function(contents, name, par) {
+        var dfl, dsc, cnf;
+        var ret = get_value(name, conf, defaults);
+
+        dfl = ret.default;
+        cnf = ret.value;
+        dsc = contents;
+
+        if (!ret.found) {
+            return;
+        }
+
+        var elm = {
+            name: name,
+            properties: [],
+        };
+
+        // XXX: _.omit() returns a copy of the object.
+        _.extend(elm, _.omit(contents, ['properties', 'type']));
+        if (!_.has(dsc, 'properties') || dsc.properties.length==0) {
+            elm.value = cnf;
+            elm.default = dfl;
+            if (contents.type && !contents.type.match(/config|defaults|descriptions/)) {
+                elm.type = contents.type;
+            }
+        }
+
+        root.properties.push(elm);
+        flatten_conf(cnf, dfl, dsc, elm);
+    });
+
+    return root;
+};
+
+// Given a nested structure like the one from RelationalConfig.toJSON()
+// transforms it to the format expected by configStore
+function relational_to_server_conf (rel, root) {
+    var root = root || {};
+
+    _.each(rel.properties, function(contents, name, par) {
+        if (!_.has(contents, 'properties') || contents.properties.length==0) {
+            root[contents.name] = contents.value;
+        } else {
+            var elm = { };
+            root[contents.name] = elm;
+            relational_to_server_conf(contents, elm);
+        }
+    });
+
+    return root;
+};
+
+if(!server){
+App.RelationalConfig = Backbone.RelationalModel.extend({
+    idAttribute: '_id',
+    relations: [{
+        type: Backbone.HasMany,
+        key: 'properties',
+        relatedModel: 'App.RelationalConfig',
+        collectionType: 'Backbone.Collection',
+        includeInJSON: true,
+    }],
+    initialize: function () {
+        var self = this;
+        console.log ('creating new RelationalConfig');
+        Backbone.RelationalModel.prototype.initialize.call (this);
+    },
+
+    defaults: {
+        type:           null,
+        widget:         'input',
+        title:          '',
+        description:    '',
+        name:           '',
+        value:          null,
+        default:        null,
+        properties:     [],
+    },
+});
+}
 
 if(server) module.exports = App;
 else root.App = App;
