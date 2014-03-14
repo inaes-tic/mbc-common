@@ -205,6 +205,10 @@ function flatten_conf (conf, defaults, descriptions, root) {
         cnf = ret.value;
         dsc = contents;
 
+        if (!ret.found) {
+            return;
+        }
+
         var elm = {
             name: name,
             properties: [],
