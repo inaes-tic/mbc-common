@@ -10,8 +10,9 @@ exports = module.exports = {
 
 var _      = require('underscore');
 var config = exports.config;
+var schema = config.getSchemaValidator();
 
 var toHide = _.clone(config.Hidden);
 _.each(toHide, function(key) {
-    config.makeHidden(config, key);
+    config.makeHidden(schema.properties, key);
 });
