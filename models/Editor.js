@@ -90,7 +90,8 @@ window.WebvfxBase = Backbone.Model.extend({
     },
 
     initialize: function() {
-        this.id = this.cid;
+        if (!arguments[0].id)
+            this.id = uuid.v1();
         this.zindex = (arguments[0].zindex >= 0) ? arguments[0].zindex : -1;
         this.locked = false;
         this.created = false;
@@ -137,6 +138,10 @@ window.WebvfxBase = Backbone.Model.extend({
         for (key in info) {
             $('#' + key + '-' + this.id).val(info[key]);
         }
+    },
+
+    getId: function() {
+        return this.cid;
     },
 
     isImage: function() {
@@ -465,6 +470,7 @@ window.WebvfxBase = Backbone.Model.extend({
             model.set(data);
             model.save();
         } else {
+            data.origin = 'editor';
             var new_model = new Sketch.Live(data);
             webvfxEditor.get('liveCollection').add(new_model);
             new_model.save();

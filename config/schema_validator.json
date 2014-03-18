@@ -503,7 +503,12 @@
                             "type": "string",
                             "title": "Transcoding",
                             "description" : "Collection name for list of transcoding jobs"
-                        }
+                        },
+                        "SketchSchedules" : {
+                            "type": "string",
+                            "title": "SketchSchedules",
+                            "description" : "Collection name for list of sketch schedules"
+                         }
                     }
                 },
                 "Widgets" : {

@@ -222,24 +222,26 @@ window.EditorView = Backbone.View.extend({
     el: $('#content'),
 
     events: {
-        "click .colapse"        : "colapse",
-        "click #save-sketch"    : "saveSketch",
-        "click #load-sketch"    : "loadSketch",
-        "click #del-sketch"     : "delSketch",
-        "click #new-sketch"     : "newSketch",
-        "click #safe-area"      : "safeArea",
-        "click #video-preview"  : "videoPreview",
+        "click .colapse"           : "colapse",
+        "click #save-sketch"       : "saveSketch",
+        "click #load-sketch"       : "loadSketch",
+        "click #del-sketch"        : "delSketch",
+        "click #new-sketch"        : "newSketch",
+        "click #schedule-sketch"   : "scheduleSketch",
+        "click #del-schedule"      : "delSchedule",
+        "click #safe-area"         : "safeArea",
+        "click #video-preview"     : "videoPreview",
         "click #real-time-edition" : "realTimeEdition",
-        "click #update-video"   : "updateVideo",
-        "click #clear-video"    : "clearVideo",
-        "click #clear-all"      : "clearAll",
-        "dragover #container"   : "dragOver",
-        "dragleave #container"  : "dragLeave",
-        "drop #container"       : "drop",
-        "change #files"         : "filesChange",
-        "change #resolutions"   : "changeResolution",
-        "change #objects"       : "addObject",
-        "change #images"        : "addObjectFromImage",
+        "click #update-video"      : "updateVideo",
+        "click #clear-video"       : "clearVideo",
+        "click #clear-all"         : "clearAll",
+        "dragover #container"      : "dragOver",
+        "dragleave #container"     : "dragLeave",
+        "drop #container"          : "drop",
+        "change #files"            : "filesChange",
+        "change #resolutions"      : "changeResolution",
+        "change #objects"          : "addObject",
+        "change #images"           : "addObjectFromImage",
     },
     initialize: function() {
         var config = appCollection.models[0].get('Webvfx').Editor;
@@ -268,8 +270,20 @@ window.EditorView = Backbone.View.extend({
         if (this.webvfxCollection == undefined) {
             this.webvfxCollection = new WebvfxCollection();
             this.sketchs = new Sketch.Collection();
+            this.schedules = new Sketch.ScheduleCollection();
             this.sketchs.fetch({ success: function() {
                     self.getSketchs();
+                    self.schedules.fetch( { success: function() {
+                            self.getSchedules();
+                            self.schedules.on("remove", function(model) {
+                                $('#schedules option').filter(
+                                    function() {
+                                        return $(this).html() == self.schedToString(model);
+                                    }
+                                ).remove();
+                            });
+                        }
+                    });
                 }
             });
         }
@@ -305,6 +319,14 @@ window.EditorView = Backbone.View.extend({
             if (webvfxEditor.get('liveCollection')) {
                 var liveCollection = webvfxEditor.get('liveCollection');
                 liveCollection.fetch({success: function(col) {
+                    liveCollection.on("add", function(model) {
+                        if (model.get('origin') === 'server')
+                            self.loadWidget(model.toJSON());
+                    });
+                    liveCollection.on("remove", function(model, col, opts) {
+                        if (!opts.ignore)
+                            self.unloadWidget(model);
+                    });
                     col.forEach(function(widget){
                         self.loadWidget(widget.toJSON());
                     });
@@ -435,8 +457,94 @@ window.EditorView = Backbone.View.extend({
             }
         });
     },
+    scheduleSketch: function () {
+        var key = $('#sketchs').val();
+        if (key == '[select]') {
+            var description = i18n.gettext('You must select a sketch to schedule');
+            this.alert(description);
+            return;
+        }
+        var self = this;
+        var time = i18n.gettext('Date and Time (dd/MM/yyyy HH:mm:ss):');
+        var duration = i18n.gettext('Duration (seconds):');
+        this.schedulePrompt(
+            time,
+            duration,
+            function (date, length) {
+                if(date) {    
+                    console.log("Scheduling for date: ", date);
+                    var model = self.sketchs.findWhere({ name: key });
+                    var sched = self.schedules.create({ sketch_id: model.id, date: date, length: length }, {success: function() {
+                        console.log('Success scheduling sketch: '+ model.get('name'));
+                    }});
+                    var k = self.schedToString(sched);
+                    var opt_key = '<option value="' + k + '">';
+                    $('#schedules').append($(opt_key).html(k).prop('selected', true));
+                } else {
+                    var description = i18n.gettext('You must enter date and time to schedule it');
+                    self.alert(description);
+                }
+            },
+            function() {
+                return;
+            }
+        );
+    },
+    delSchedule: function () {
+        var key = $('#schedules').val();
+        var date = key.substring(0, 20)
+        if (key == '[select]') {
+            var description = i18n.gettext('You must select a schedule to delete');
+            this.alert(description);
+            return;
+        }
+        var self = this;
+        var description = i18n.translate('Do you want to delete the schedule "%s" ?').fetch(date);
+        this.confirm(
+            description,
+            function () {
+                var model = self.schedules.findWhere({ date: moment(date, 'DD/MM/YYYY HH:mm:ss').valueOf() });
+                if (model) {
+                    model.destroy();                    
+                    $('#schedules option').filter(
+                        function() {
+                            return $(this).html() == key;
+                        }
+                    ).remove();
+                    console.log('schedule "' + key + '" deleted');
+                } else {
+                    console.log('tried to delete: "' + key + '" but not found in schedules');
+                }
+            },
+            function () {
+                console.log('Not deleting schedule "' + key + '"');
+            }
+        );
+    },
+    getSchedules: function () {
+        var self = this;
+        this.schedules.forEach(function(sched) {
+            var k = self.schedToString(sched);
+            var selector = "#schedules option[value='" + k + "']";
+            var exist_key = $(selector).length;
+            if (!exist_key) {
+                var opt = '<option value="' + k + '">';
+                $('#schedules').append($(opt).html(k));
+            }
+        });
+    },
+    schedToString: function(sched) {
+        var sketch = this.sketchs.findWhere({_id: sched.get('sketch_id')});
+        var seconds = 'infinite';
+        if (sched.get('length') && sched.get('length') !== 0)
+            seconds = sched.get('length') / 1000 + " sec";
+        var k = moment(sched.get('date')).format("DD/MM/YYYY HH:mm:ss") + " | " + seconds + " | " + sketch.get('name');
+        return k;
+    },
     loadWidget: function(widget) {
         var self = this;
+        if (widget.element_id)
+            widget.id = widget.element_id;
         if (widget.type == 'image' || widget.type == 'animation') {
             widget.image = new Image();
             widget.image.onload = function() {
@@ -448,6 +556,11 @@ window.EditorView = Backbone.View.extend({
         } else {
             self.webvfxCollection.add(new WebvfxWidget(widget));
         }
+    },
+    unloadWidget: function(model) {
+        var widget = this.webvfxCollection.findWhere({element_id: model.get('element_id')});
+        if (widget)
+            widget.destroy();
     },
     safeArea: function() {
         if (this.safeAreaLayer === undefined) {
@@ -561,7 +674,7 @@ window.EditorView = Backbone.View.extend({
     clearVideo:  function () {
         console.log('manual clear');
         _.each( _.clone(webvfxEditor.get('liveCollection').models), function(model){
-            model.destroy();
+            model.destroy({ignore: true});
         });
     },
     clearAll: function() {
@@ -891,6 +1004,19 @@ window.EditorView = Backbone.View.extend({
         $('#modal').html(new ModalPrompt({ title: title, description: description, submitCallback: submitCallback, cancelCallback: cancelCallback }).render().el);
         window.scrollTo(0,0);
     },
+    schedulePrompt: function (time, duration, submitCallback, cancelCallback) {
+        var submitCallback = submitCallback || function() {};
+        var cancelCallback = cancelCallback || function() {};
+        var title = i18n.gettext('Schedule');
+        var time = time || i18n.gettext('Wait there was a problem');
+        var duration = duration || i18n.gettext('Wait there was a problem');
+        $('#modal').html(new ScheduleModalPrompt({ title: title, 
+                                                    time: time, 
+                                                    duration: duration, 
+                                                    submitCallback: submitCallback, 
+                                                    cancelCallback: cancelCallback }).render().el);
+        window.scrollTo(0,0);
+    },
     canNavigateAway: function (options) {
         this.viewCleanup();
         options['ok']();
@@ -948,6 +1074,33 @@ var ModalPrompt = Backbone.Modal.extend({
     saveOnEnter: function (e) {
         if (e.keyCode != 13) return;
         this.save();
+    }
+});
+
+var ScheduleModalPrompt = Backbone.Modal.extend({
+    initialize: function (options) {
+        this.options = options || {};
+    },
+    template: function() {
+        var parse_tpl = template.schedule_prompt(this.options);
+        return _.template(parse_tpl);
+    },
+    submitEl: '.submit',
+    cancelEl: '.cancel',
+    events: {
+        "click .submit"              : "save",
+        "keypress input[id=textkey]" : "saveOnEnter",
+        "click .cancel"              : "cancel"
+    },
+    save: function () {
+        this.options.submitCallback($('#time').val(), $('#duration').val());
+    },
+    saveOnEnter: function (e) {
+        if (e.keyCode != 13) return;
+        this.save();
+    },
+    cancel: function() {
+        this.options.cancelCallback();
     }
 });
 

@@ -10,9 +10,12 @@ if (typeof exports !== 'undefined') {
     Sketch = root.Sketch = {};
 }
 
-// Require Underscore, Backbone & BackboneIO, if we're on the server, and it's not already present.
+// Require Underscore, Moment, Backbone & BackboneIO, if we're on the server, and it's not already present.
 var _ = root._;
 if (!_ && (typeof require !== 'undefined')) _ = require('underscore');
+
+var moment = root.moment;
+if (!moment && (typeof require !== 'undefined')) moment = require('moment');
 
 var Backbone = root.Backbone || false;
 var BackboneIO = root.BackboneIO;
@@ -66,6 +69,40 @@ Sketch.LiveCollection = Backbone.Collection.extend({
         console.log ('creating new Sketch Live Collection');
         Backbone.Collection.prototype.initialize.call (this);
     }
+});
+
+Sketch.ScheduleModel = Backbone.Model.extend({
+    urlRoot: 'sketchschedule',
+    idAttribute: '_id',
+    backend: "sketchschedulebackend",
+    defaults: {
+    },
+    initialize: function(attributes, options) {
+        attributes = attributes || {};
+        if (typeof attributes.date === 'string') {
+            attributes.date = moment(attributes.date, 'DD/MM/YYYY HH:mm:ss').valueOf();
+            if (attributes.length)
+                attributes.length = attributes.length * 1000;
+        }
+        this.set(attributes);
+    }
+});
+
+Sketch.ScheduleCollection = Backbone.Collection.extend({
+    model: Sketch.ScheduleModel,
+    url: "sketchschedule",
+    comparator: "date",
+    backend: "sketchschedulebackend",
+    initialize: function () {
+        if (!server) {
+            this.bindBackend();
+            this.bind('backend', function(method, model) {
+                console.log ('got from backend:', method, model);
+            });
+        }
+        console.log ('creating new SketchScheduleCollection');
+        return Backbone.Collection.prototype.initialize.call (this);
+    },
 });
 
 if(server) {

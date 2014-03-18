@@ -95,6 +95,7 @@ block content
                         button#load-sketch= i18n.gettext("load")
                         button#save-sketch= i18n.gettext("save")
                         button#del-sketch= i18n.gettext("del")
+                        button#schedule-sketch= i18n.gettext("schedule")
                     #options.tab
                         h2.colapse= i18n.gettext("Options")
                         .content
@@ -112,3 +113,8 @@ block content
                                 each val, key in o
                                     - var r = key + ' (' + val + ')'
                                     option(selected=val == resolution, value=val) #{r}
+                    fieldset.well.well-small.schedules
+                        h3.editor= i18n.gettext("Schedules")
+                        select#schedules
+                            option(value='[select]')= i18n.gettext("[select]")
+                        button#del-schedule= i18n.gettext("del")
