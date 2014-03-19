@@ -19,6 +19,8 @@
         "sprintf"           : "v0.7",
         "moment"            : "1.7.x",
         "d3"                : "3.2.x"
-
+    },
+    "resolutions": {
+        "jquery": "1.9.x"
     }
 }
