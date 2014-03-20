@@ -253,6 +253,8 @@ window.EditorView = Backbone.View.extend({
             realTimeEdition: config.realTimeEdition,
             showSafeArea: config.showSafeArea,
             videoPreview: config.videoPreview,
+            selectedSketch: '',
+            selectedSched: '',
         };
         var debounce_resize = _.debounce( _.bind(this.render, this), 300);
         $(window).on('resize', debounce_resize);
@@ -286,6 +288,11 @@ window.EditorView = Backbone.View.extend({
                     });
                 }
             });
+        } else {
+            self.getSketchs();
+            $("#sketchs").val(self.options.selectedSketch);
+            self.getSchedules();
+            $("#schedules").val(self.options.selectedSched);
         }
 
         this.webvfxCollectionView = new WebvfxCollectionView({
@@ -332,6 +339,14 @@ window.EditorView = Backbone.View.extend({
                     });
                 }});
             }
+
+            $(self.el).on('change', '#sketchs', function(e) {
+                self.options.selectedSketch = e.currentTarget.value;
+            });
+
+            $(self.el).on('change', '#schedules', function(e) {
+                self.options.selectedSched = e.currentTarget.value;
+            });
         });
     },
     colapse:function(ev) {
