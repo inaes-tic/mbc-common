@@ -38,6 +38,7 @@ module.exports = {
             min_scheduled_hours: "4",
             timer_interval: 1000,
             blank: path.join(cwd, 'images', 'blank.xml'),
+            blank_length: 15000,
             reload_timer_diff: 20000,
             playlist_server: "mongo",
             mvcp_server: "melted",
