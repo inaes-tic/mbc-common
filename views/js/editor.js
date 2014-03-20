@@ -471,7 +471,7 @@ window.EditorView = Backbone.View.extend({
             time,
             duration,
             function (date, length) {
-                if(date) {    
+                if(date) {
                     console.log("Scheduling for date: ", date);
                     var model = self.sketchs.findWhere({ name: key });
                     var sched = self.schedules.create({ sketch_id: model.id, date: date, length: length }, {success: function() {
@@ -505,7 +505,7 @@ window.EditorView = Backbone.View.extend({
             function () {
                 var model = self.schedules.findWhere({ date: moment(date, 'DD/MM/YYYY HH:mm:ss').valueOf() });
                 if (model) {
-                    model.destroy();                    
+                    model.destroy();
                     $('#schedules option').filter(
                         function() {
                             return $(this).html() == key;
@@ -1010,10 +1010,10 @@ window.EditorView = Backbone.View.extend({
         var title = i18n.gettext('Schedule');
         var time = time || i18n.gettext('Wait there was a problem');
         var duration = duration || i18n.gettext('Wait there was a problem');
-        $('#modal').html(new ScheduleModalPrompt({ title: title, 
-                                                    time: time, 
-                                                    duration: duration, 
-                                                    submitCallback: submitCallback, 
+        $('#modal').html(new ScheduleModalPrompt({ title: title,
+                                                    time: time,
+                                                    duration: duration,
+                                                    submitCallback: submitCallback,
                                                     cancelCallback: cancelCallback }).render().el);
         window.scrollTo(0,0);
     },
