@@ -168,6 +168,11 @@
                             "title": "Blank Clip",
                             "description" : "Clip to play if nothing scheduled"
                         },
+                        "blank_length" : {
+                            "type": "integer",
+                            "title": "Blank Clip length (frames)",
+                            "description" : ""
+                        },
                         "reload_timer_diff" : {
                             "type": "integer",
                             "title": "Reload time difference",
