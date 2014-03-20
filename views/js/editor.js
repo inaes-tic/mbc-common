@@ -325,7 +325,7 @@ window.EditorView = Backbone.View.extend({
                     });
                     liveCollection.on("remove", function(model, col, opts) {
                         if (!opts.ignore)
-                            self.unloadWidget(model);
+                            self.unloadWidget(model.toJSON());
                     });
                     col.forEach(function(widget){
                         self.loadWidget(widget.toJSON());
@@ -545,6 +545,7 @@ window.EditorView = Backbone.View.extend({
         var self = this;
         if (widget.element_id)
             widget.id = widget.element_id;
+        self.unloadWidget(widget);
         if (widget.type == 'image' || widget.type == 'animation') {
             widget.image = new Image();
             widget.image.onload = function() {
@@ -558,7 +559,7 @@ window.EditorView = Backbone.View.extend({
         }
     },
     unloadWidget: function(model) {
-        var widget = this.webvfxCollection.findWhere({element_id: model.get('element_id')});
+        var widget = this.webvfxCollection.findWhere({element_id: model.element_id});
         if (widget)
             widget.destroy();
     },
