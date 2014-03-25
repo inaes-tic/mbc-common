@@ -867,7 +867,7 @@ window.EditorView = Backbone.View.extend({
     },
     updateImagesList: function() {
         $.ajax({
-            url: this.options.server + 'images',
+            url: this.options.server + 'images/',
             dataType: 'json',
             success: function(data) {
                 $('#images option:gt(0)').remove();
