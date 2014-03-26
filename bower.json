@@ -20,7 +20,8 @@
         "spark-md5"             : "0.0.x",
         "sprintf"               : "v0.7",
         "moment"                : "1.7.x",
-        "d3"                    : "3.2.x"
+        "d3"                    : "3.2.x",
+        "backbone.memento"      : "git://github.com/inaes-tic/backbone.memento.git#6a3d08a52428598895187f8427c6774baa06abc5"
     },
     "resolutions": {
         "jquery": "1.9.x"
