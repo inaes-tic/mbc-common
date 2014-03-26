@@ -97,6 +97,13 @@ module.exports = {
             dbUser: "",
             dbPassword: "",
         },
+        TestingDB: {
+            dbName: "mediadb_test",
+            dbHost: "localhost",
+            dbPort: 27017,
+            dbUser: "",
+            dbPassword: "",
+        },
         Redis: {
             host: "localhost",
             port: 6379,

@@ -432,6 +432,38 @@
                         }
                     }
                 },
+                "TestingDB" : {
+                    "type" : "object",
+                    "title" : "Database for tests.",
+                    "description" : "Authentication params for the database used by tests.",
+                    "properties" : {
+                        "dbName" : {
+                            "type": "string",
+                            "title": "Name",
+                            "description" : ""
+                        },
+                        "dbHost" : {
+                            "type": "string",
+                            "title": "Host",
+                            "description" : ""
+                        },
+                        "dbPort" : {
+                            "type": "integer",
+                            "title": "Port",
+                            "description" : ""
+                        },
+                        "dbUser" : {
+                            "type": "string",
+                            "title": "User",
+                            "description" : ""
+                        },
+                        "dbPassword" : {
+                            "type": "string",
+                            "title": "Password",
+                            "description" : ""
+                        }
+                    }
+                },
                 "Redis" : {
                     "type" : "object",
                     "title" : "Redis",

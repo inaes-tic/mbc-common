@@ -97,6 +97,13 @@ module.exports = {
             dbUser: process.env.DBUSER,
             dbPassword: process.env.DBPASSWORD,
         },
+        TestingDB: {
+            dbName: process.env.TESTDBNAME,
+            dbHost: process.env.DBHOST,
+            dbPort: parseInt(process.env.DBPORT),
+            dbUser: process.env.DBUSER,
+            dbPassword: process.env.DBPASSWORD,
+        },
         Redis: {
             host: process.env.REDISHOST,
             port: parseInt(process.env.REDISPORT),
