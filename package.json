@@ -10,6 +10,7 @@
         "url": "https://github.com/inaes-tic/mbc-common"
     },
     "dependencies" : {
+        "bower"     : "1.3.x",
         "mongoskin" : "0.4.x",
         "redis"     : "0.8.x",
         "underscore": "1.4.x",
@@ -23,6 +24,9 @@
         "winston"   : "0.7.x",
         "mdns2"     : "2.1.3",
         "moment"    : "1.7.x"
+    },
+    "scripts" : {
+        "postinstall" : "node_modules/.bin/bower install"
     },
     "license": "agplv3",
     "engines": {
