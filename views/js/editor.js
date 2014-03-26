@@ -843,7 +843,7 @@ window.EditorView = Backbone.View.extend({
     },
     updateStatusBar: function() {
         var getStatusBarInfo = function() {
-            var pos = webvfxEditor.get('stage').getMousePosition();
+            var pos = webvfxEditor.get('stage').getPointerPosition();
 
             if (pos === undefined) {
                 var mouseX = 0;
