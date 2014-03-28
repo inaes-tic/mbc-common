@@ -835,6 +835,10 @@ window.EditorView = Backbone.View.extend({
             width: webvfxEditor.getScaledWidth() + 'px',
             height: webvfxEditor.getScaledHeight() + 'px'
         });
+
+        $('#action-messages').css({
+            width: webvfxEditor.getScaledWidth() + 'px'
+        });
     },
     updateVideoStream: function() {
         window.video = $('#player').get(0);
