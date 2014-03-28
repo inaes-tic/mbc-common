@@ -228,11 +228,11 @@ window.WebvfxBase = Backbone.Model.extend({
             var image = sprite.getImage();
             var x = realWidth / (image.width / this.get('frames'));
             var y = realHeight / image.height;
-            sprite.setScale(x, y);
+            sprite.scale({ x: x, y: y });
         } else {
-            this.getImage().setSize(realWidth, realHeight);
+            this.getImage().setSize({ width: realWidth, height: realHeight });
         }
-        this.kObj.setSize(realWidth, realHeight);
+        this.kObj.setSize({ width: realWidth, height: realHeight });
         this.setPosition(this.get('left'), this.get('top'));
     },
 
@@ -242,17 +242,17 @@ window.WebvfxBase = Backbone.Model.extend({
         this.set('right', webvfxEditor.get('width') - x - this.get('width'));
         this.set('bottom', webvfxEditor.get('height') - y - this.get('height'));
 
-        this.kObj.setAbsolutePosition(
-            x * webvfxEditor.get('scale'),
-            y * webvfxEditor.get('scale')
-        );
-        this.getImage().setPosition(0, 0);
+        this.kObj.setAbsolutePosition({
+            x: x * webvfxEditor.get('scale'),
+            y: y * webvfxEditor.get('scale')
+        });
+        this.getImage().setPosition({ x: 0, y: 0 });
 
         var size = this.kObj.getSize();
-        this.kObj.get('.topLeft')[0].setPosition(0, 0);
-        this.kObj.get('.topRight')[0].setPosition(size.width, 0);
-        this.kObj.get('.bottomRight')[0].setPosition(size.width, size.height);
-        this.kObj.get('.bottomLeft')[0].setPosition(0, size.height);
+        this.kObj.get('.topLeft')[0].setPosition({ x: 0, y: 0 });
+        this.kObj.get('.topRight')[0].setPosition({ x: size.width, y: 0 });
+        this.kObj.get('.bottomRight')[0].setPosition({ x: size.width, y: size.height });
+        this.kObj.get('.bottomLeft')[0].setPosition({ x: 0, y: size.height });
     },
 
     setTop: function(top) {
@@ -319,7 +319,7 @@ window.WebvfxBase = Backbone.Model.extend({
         });
 
         anchor.on('mousedown touchstart', function() {
-            group.setDraggable(false);
+            group.draggable(false);
             this.moveToTop();
         });
 
@@ -328,7 +328,7 @@ window.WebvfxBase = Backbone.Model.extend({
         });
 
         anchor.on('dragend', function() {
-            group.setDraggable(true);
+            group.draggable(true);
             self.locked = false;
             if (self.isWidget()) {
                 var fontSize = Math.ceil(self.get('height') * self.getFontSize() / self._startHeight);
@@ -419,15 +419,15 @@ window.WebvfxBase = Backbone.Model.extend({
 
         var width = topRight.getAbsolutePosition().x - topLeft.getAbsolutePosition().x;
         var height = bottomLeft.getAbsolutePosition().y - topLeft.getAbsolutePosition().y;
-        group.setSize(width, height);
-        object.setSize(width, height);
+        group.setSize({ width: width, height: height });
+        object.setSize({ width: width, height: height });
 
         if (this.isAnimation()) {
             var scale = webvfxEditor.get('scale');
             var image = object.getImage();
             var x = width / (image.width / this.get('frames'));
             var y = height / image.height;
-            object.setScale(x, y);
+            object.scale({ x: x, y: y});
         }
 
         var pos = topLeft.getAbsolutePosition();
@@ -502,7 +502,7 @@ window.WebvfxImage = WebvfxBase.extend({
         var realWidth = this.get('width') * webvfxEditor.get('scale');
         var realHeight = this.get('height') * webvfxEditor.get('scale');
 
-        kImage.setSize(realWidth, realHeight);
+        kImage.setSize({ width: realWidth, height: realHeight });
 
         var group = new Kinetic.Group({
             width: realWidth,
@@ -875,12 +875,12 @@ window.WebvfxAnimation = WebvfxBase.extend({
         var animations = {animation: []};
 
         for (var i = 0; i < args.frames; i++) {
-            animations.animation.push({
-                x: (args.image.width / args.frames) * i,
-                y: 0,
-                width: (args.image.width / args.frames),
-                height: args.image.height,
-            })
+            animations.animation.push(
+                (args.image.width / args.frames) * i,
+                0,
+                (args.image.width / args.frames),
+                args.image.height
+            );
         }
 
         var sprite = new Kinetic.Sprite({
@@ -893,10 +893,10 @@ window.WebvfxAnimation = WebvfxBase.extend({
             animations: animations,
             frameRate: this.frameRate,
         })
-        sprite.setScale(
-            realWidth / (sprite.getImage().width / this.get('frames')),
-            realHeight / sprite.getImage().height
-        );
+        sprite.scale({
+            x: realWidth / (sprite.getImage().width / this.get('frames')),
+            y: realHeight / sprite.getImage().height
+        });
 
         var group = new Kinetic.Group({
             width: realWidth,
@@ -988,7 +988,7 @@ window.WebvfxAnimation = WebvfxBase.extend({
         var realWidth = width * webvfxEditor.get('scale');
         var sprite = this.getImage();
         var x = realWidth / (sprite.getImage().width / this.get('frames'));
-        sprite.setScale(x, sprite.getScaleY());
+        sprite.scale({ x: x, y: sprite.getScaleY() });
         this.kObj.setWidth(realWidth);
         var leftX = this.kObj.get('.topLeft')[0].getX();
         this.kObj.get('.topRight')[0].setX(leftX + realWidth);
@@ -1002,7 +1002,7 @@ window.WebvfxAnimation = WebvfxBase.extend({
         var realHeight = height * webvfxEditor.get('scale');
         var sprite = this.getImage();
         var y = realHeight / sprite.getImage().height;
-        sprite.setScale(sprite.getScaleX(), y);
+        sprite.scale({ x: sprite.scaleX(), y: y });
         this.kObj.setHeight(realHeight);
         var topY = this.kObj.get('.topLeft')[0].getY();
         this.kObj.get('.bottomLeft')[0].setY(topY + realHeight);

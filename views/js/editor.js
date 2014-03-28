@@ -835,6 +835,10 @@ window.EditorView = Backbone.View.extend({
             width: webvfxEditor.getScaledWidth() + 'px',
             height: webvfxEditor.getScaledHeight() + 'px'
         });
+
+        $('#action-messages').css({
+            width: webvfxEditor.getScaledWidth() + 'px'
+        });
     },
     updateVideoStream: function() {
         window.video = $('#player').get(0);
@@ -843,7 +847,7 @@ window.EditorView = Backbone.View.extend({
     },
     updateStatusBar: function() {
         var getStatusBarInfo = function() {
-            var pos = webvfxEditor.get('stage').getMousePosition();
+            var pos = webvfxEditor.get('stage').getPointerPosition();
 
             if (pos === undefined) {
                 var mouseX = 0;
