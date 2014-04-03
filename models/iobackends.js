@@ -85,7 +85,7 @@ var iobackends = module.exports = exports = function (db, backends) {
          * other servers and also broadcasts ours.
          */
         if (backend.redis) {
-            backend.io.use (iocompat.redisMiddleware(backend, name, backend.redis.chain));
+            backend.io.use (iocompat.redisMiddleware(backend, name, backend.redis));
         }
 
         /*
