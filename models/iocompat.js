@@ -37,6 +37,7 @@ function inherits(Parent, Child, mixins) {
  * listener, so we add a unike token to distinguish them.
  */
 var _client_id = uuid.v4();
+iocompat.client_id = _client_id;
 
 /*
  * redisMiddleware.
