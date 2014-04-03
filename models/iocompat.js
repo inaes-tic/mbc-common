@@ -46,7 +46,7 @@ iocompat.client_id = _client_id;
  * 'redis' and 'redis:[create|update|delete]' events to update
  * our models here in the server.
  */
-iocompat.redisMiddleware = function (backend, name, chain) {
+iocompat.redisMiddleware = function (backend, name, options) {
     var _chan = '_RedisSync.' + name;
     var io = backend.io;
 
@@ -99,7 +99,7 @@ iocompat.redisMiddleware = function (backend, name, chain) {
     */
     function _middleware(req, res, next) {
         if (req._redis_source) {
-            if (chain) {
+            if (options.chain) {
                 next();
             } else {
                 res.end(req.model);
