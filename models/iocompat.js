@@ -106,9 +106,13 @@ iocompat.redisMiddleware = function (backend, name, options) {
             }
             return;
         }
-        if (req.method.match(/create|update|delete/)) {
+
+        if (req.method.match(/create|update|delete/) ||
+           (options.customMethods && options.customMethods.match('\b'+ req.method +'\b'))
+        ) {
             publisher.publishJSON(_chan, { model: req.model, method:req.method, _redis_source:_client_id});
         }
+
         next();
     };
 
