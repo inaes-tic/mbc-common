@@ -67,6 +67,7 @@ var iobackends = module.exports = exports = function (db, backends) {
     var binded = [];
     _(this.backends).each (function (backend, name) {
         backend.io = backboneio.createBackend();
+        backend.io.name = name;
         if (backend.use) {
             _(backend.use).each (function (usefn) {
                 backend.io.use(usefn);
