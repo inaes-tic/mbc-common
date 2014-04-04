@@ -192,6 +192,7 @@ var Collection = {
     model: Media.Model,
     url: 'media',
     backend: 'mediabackend',
+    typeahead: 'stat.name',
     initialize: function () {
         if (!server) {
             this.bindBackend();
@@ -294,6 +295,7 @@ var Universe = {
     url: 'list',
     model: Media.Playlist,
     backend: 'listbackend',
+    typeahead: 'name',
     comparator: '_id',
     initialize: function () {
         if (!server) {
@@ -373,6 +375,7 @@ var Schedule = {
     url: 'occur',
     model: Media.Occurrence,
     backend: 'schedbackend',
+    typeahead: 'title',
     initialize: function () {
         if (!server) {
             this.bindBackend();
