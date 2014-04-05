@@ -15,10 +15,10 @@ var logger = require("../logger")().addLogger('common-views'),
 var _views = {};
 _views.editor = {
     js:        ['editor.js'],
-    templates: ['alert.jade', 'confirm.jade', 'editor.jade', 'objects.jade', 'prompt.jade'],
+    templates: ['alert.jade', 'confirm.jade', 'editor.jade', 'objects.jade', 'prompt.jade', 'schedule_prompt.jade'],
     styles:    [],
     images:    [],
-    models:    ['Editor.js', 'App.js', 'Default.js']
+    models:    ['Editor.js', 'App.js', 'Default.js', 'Sketch.js']
 };
 
 _views.config = {
