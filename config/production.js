@@ -118,8 +118,8 @@ module.exports = {
         Widgets: {
             Files: [
                 'WebvfxSimpleWidget',
-                'fonts/ShareRegular',
-                'fonts/ShareBold',
+                'ShareRegular',
+                'ShareBold',
             ],
             WeatherWoeid: 468739, // Autonomous City of Buenos Aires
         },

@@ -1,6 +1,7 @@
 exports = module.exports = {};
 
 var logger = require("../logger")().addLogger('common-views'),
+    conf = require('config'),
     _      = require("underscore"),
     path   = require("path"),
     folio = require('folio'),
@@ -18,7 +19,8 @@ _views.editor = {
     templates: ['alert.jade', 'confirm.jade', 'editor.jade', 'objects.jade', 'prompt.jade', 'schedule_prompt.jade'],
     styles:    [],
     images:    [],
-    models:    ['Editor.js', 'App.js', 'Default.js', 'Sketch.js']
+    models:    ['Editor.js', 'App.js', 'Default.js', 'Sketch.js'],
+    widgets:   conf.Common.Widgets.Files,
 };
 
 _views.config = {
@@ -26,7 +28,8 @@ _views.config = {
     templates: ['confview.jade', 'conftemplates.jade', 'widgets.jade'],
     styles:    [],
     images:    [],
-    models:    ['App.js', 'Default.js']
+    models:    ['App.js', 'Default.js'],
+    widgets:   [],
 };
 
 
