@@ -42,30 +42,36 @@ function setupView (view) {
         return;
     }
 
-    function buildPath (key, fn) {
-            return path.join(__dirname, key, fn);
+    function useCommonPath(fn) {
+        return (path.basename(fn) == fn);
     };
-    function buildModelPath (key, fn) {
-            return require.resolve(path.join('../models', fn));
+    function buildDefaultPath (key, fn) {
+        return path.join(__dirname, key, fn);
+    };
+    function buildPath (key, fn) {
+        return require.resolve(path.join('../', key, fn));
     };
 
     var mappings = {
-        models: buildModelPath,
+        models: buildPath,
+        widgets: buildPath,
     };
     var ret = {}
 
     _.each(view, function(value, key) {
         ret[key] = value.map(function(fn) {
+            if (!useCommonPath(fn)) return fn;
             if (mappings[key]) {
                 return mappings[key](key, fn);
             } else {
-                return buildPath(key, fn);
+                return buildDefaultPath(key, fn);
             }
         });
     });
 
     return ret;
 };
+exports.setupView = setupView;
 
 /*
  * All the views with absolute paths to its resources.
