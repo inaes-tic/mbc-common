@@ -122,11 +122,14 @@ exports.mergeViews = mergeViews;
  * prepends the full path to it and adds the .jade extension if needed.
  * Mostly useful inside a jade compiler.
  */
-function getTemplateFilename(template) {
-    if (!template.match(/\.jade$/)) {
-        template = template + '.jade';
-    }
-    return path.join(__dirname, 'templates', template);
+function getTemplateFilename(templates, name) {
+    return templates.filter( function(template) {
+        var basename = path.basename(template);
+        if (!name.match(/\.jade$/)) {
+            name = name + '.jade';
+        }
+        return (basename == name);
+    });
 };
 exports.getTemplateFilename = getTemplateFilename;
 
@@ -137,11 +140,12 @@ exports.getTemplateFilename = getTemplateFilename;
  * Returns: an object with keys that map from the resources to a folio.Glossary.
  */
 function makeViewFolios(view) {
+    var template_init = path.join(__dirname, '..', 'views/templates/js/header.js');
     var jade_runtime = require.resolve('jade/runtime.js');
     var jade_compiler = function (name, source) {
         var ret =  'template[\'' + name + '\'] = ' +
             jade.compile(source, {
-                filename: getTemplateFilename(name),
+                filename: getTemplateFilename(view.templates, name),
                 client: true,
                 compileDebug: false
             }) + ';';
@@ -150,7 +154,7 @@ function makeViewFolios(view) {
 
     function makeTemplateFolio(templates) {
         var ret = new folio.Glossary(
-            [ jade_runtime ].concat(templates),
+            [ jade_runtime, template_init ].concat(templates),
             {
                 compilers: {
                     jade: jade_compiler,
