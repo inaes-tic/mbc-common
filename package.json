@@ -23,7 +23,9 @@
         "backbone.io"         : "git://github.com/inaes-tic/backbone.io",
         "winston"   : "0.7.x",
         "mdns2"     : "2.1.3",
-        "moment"    : "1.7.x"
+        "moment"    : "1.7.x",
+        "folio"     : "git://github.com/inaes-tic/folio.git#newer_uglify",
+        "jade"      : "0.30.x"
     },
     "scripts" : {
         "postinstall" : "node_modules/.bin/bower install"
