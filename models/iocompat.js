@@ -37,6 +37,7 @@ function inherits(Parent, Child, mixins) {
  * listener, so we add a unike token to distinguish them.
  */
 var _client_id = uuid.v4();
+iocompat.client_id = _client_id;
 
 /*
  * redisMiddleware.
@@ -45,7 +46,7 @@ var _client_id = uuid.v4();
  * 'redis' and 'redis:[create|update|delete]' events to update
  * our models here in the server.
  */
-iocompat.redisMiddleware = function (backend, name, chain) {
+iocompat.redisMiddleware = function (backend, name, options) {
     var _chan = '_RedisSync.' + name;
     var io = backend.io;
 
@@ -98,16 +99,20 @@ iocompat.redisMiddleware = function (backend, name, chain) {
     */
     function _middleware(req, res, next) {
         if (req._redis_source) {
-            if (chain) {
+            if (options.chain) {
                 next();
             } else {
                 res.end(req.model);
             }
             return;
         }
-        if (req.method.match(/create|update|delete/)) {
+
+        if (req.method.match(/create|update|delete/) ||
+           (options.customMethods && options.customMethods.match('\b'+ req.method +'\b'))
+        ) {
             publisher.publishJSON(_chan, { model: req.model, method:req.method, _redis_source:_client_id});
         }
+
         next();
     };
 

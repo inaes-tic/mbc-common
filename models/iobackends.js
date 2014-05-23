@@ -67,6 +67,7 @@ var iobackends = module.exports = exports = function (db, backends) {
     var binded = [];
     _(this.backends).each (function (backend, name) {
         backend.io = backboneio.createBackend();
+        backend.io.name = name;
         if (backend.use) {
             _(backend.use).each (function (usefn) {
                 backend.io.use(usefn);
@@ -84,7 +85,7 @@ var iobackends = module.exports = exports = function (db, backends) {
          * other servers and also broadcasts ours.
          */
         if (backend.redis) {
-            backend.io.use (iocompat.redisMiddleware(backend, name, backend.redis.chain));
+            backend.io.use (iocompat.redisMiddleware(backend, name, backend.redis));
         }
 
         /*

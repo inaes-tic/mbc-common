@@ -2,7 +2,7 @@ var path = require('path'),
     cwd  = process.cwd();
 
 module.exports = {
-    Hidden: ['Hidden', 'Search'],
+    Hidden: ['Hidden', 'Search', 'timestamp'],
     Caspa: {
         Branding: {
             name: 'MBC Playout {mlt edition}',
